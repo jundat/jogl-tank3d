@@ -57,7 +57,7 @@ public class ResourceManager {
      */
     public void LoadIntro(GLAutoDrawable drawable) {
         if (isLoadIntro == false) {
-            ttBgIntro = TextureLoader.Load(drawable, "../data/ttBgIntro.png", true, GL.GL_REPEAT);
+            ttBgIntro = TextureLoader.Load(drawable, "/data/ttBgIntro.png", true, GL.GL_REPEAT);
 
             ResourceManager.isLoadIntro = true;
         }

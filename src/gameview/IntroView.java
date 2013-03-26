@@ -5,8 +5,8 @@
 package gameview;
 
 import com.sun.opengl.util.texture.Texture;
-import tank3d.GameEngine;
 import javax.media.opengl.GLAutoDrawable;
+import tank3d.GameEngine;
 import utils.Renderer;
 import utils.ResourceManager;
 
