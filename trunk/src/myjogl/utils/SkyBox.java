@@ -2,11 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package utils;
+package myjogl.utils;
 
 import com.sun.opengl.util.texture.Texture;
 import javax.media.opengl.GL;
-import javax.media.opengl.GLAutoDrawable;
+import myjogl.Global;
 
 /**
  *
@@ -20,10 +20,10 @@ public class SkyBox
     //texture
     private Texture ttUp;
     private Texture ttDown;
-    private Texture ttLeft;
-    private Texture ttRight;
     private Texture ttFront;
     private Texture ttBack;
+    private Texture ttLeft;
+    private Texture ttRight;
     
     public SkyBox()
     {
@@ -35,23 +35,28 @@ public class SkyBox
         this.m_size = size;
     }
     
-    //imgFormat is "png" or "tga" or somethings else
-    //
-    public boolean LoadTextures(GLAutoDrawable drawable, String up, String down, String front, String back, String left, String right, String imgFormat)
-    {
-        this.ttUp = TextureLoader.Load(drawable, up, true, GL.GL_CLAMP_TO_EDGE);
-        this.ttDown = TextureLoader.Load(drawable, down, true, GL.GL_CLAMP_TO_EDGE);
-        this.ttFront = TextureLoader.Load(drawable, front, true, GL.GL_CLAMP_TO_EDGE);
-        this.ttBack = TextureLoader.Load(drawable, back, true, GL.GL_CLAMP_TO_EDGE);
-        this.ttLeft = TextureLoader.Load(drawable, left, true, GL.GL_CLAMP_TO_EDGE);
-        this.ttRight = TextureLoader.Load(drawable, right, true, GL.GL_CLAMP_TO_EDGE);
-
-	return true;
+    public void LoadTextures(Texture up, Texture down, Texture front, Texture back, Texture left, Texture right) {
+        ttUp = up;
+        ttDown = down;
+        ttFront = front;
+        ttBack = back;
+        ttLeft = left;
+        ttRight = right;
     }
     
-    public void Render(GLAutoDrawable drawable, float cameraX, float cameraY, float cameraZ)
+    public void LoadTextures(String up, String down, String front, String back, String left, String right)
     {
-        GL gl = drawable.getGL();
+        this.ttUp = TextureLoader.Load(up, true, GL.GL_CLAMP_TO_EDGE);
+        this.ttDown = TextureLoader.Load(down, true, GL.GL_CLAMP_TO_EDGE);
+        this.ttFront = TextureLoader.Load(front, true, GL.GL_CLAMP_TO_EDGE);
+        this.ttBack = TextureLoader.Load(back, true, GL.GL_CLAMP_TO_EDGE);
+        this.ttLeft = TextureLoader.Load(left, true, GL.GL_CLAMP_TO_EDGE);
+        this.ttRight = TextureLoader.Load(right, true, GL.GL_CLAMP_TO_EDGE);
+    }
+    
+    public void Render(float cameraX, float cameraY, float cameraZ)
+    {
+        GL gl = Global.drawable.getGL();
 
         gl.glPushMatrix();
 

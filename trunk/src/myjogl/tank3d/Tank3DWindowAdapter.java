@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package tank3d;
+package myjogl.tank3d;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -38,15 +38,6 @@ class Tank3DRunnable implements Runnable {
     public void run() {
         //unload resource here
 
-        this.tank3d.unloadResource();
-        
-        if (tank3d.IS_FULL_SCREEN) {
-            tank3d.fullscreen.exit();
-        }
-        
-        this.tank3d.animator.stop();
-
-
-        System.exit(0);
+        this.tank3d.exit();
     }
 }
