@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package utils;
+package myjogl.utils;
 
 import java.awt.DisplayMode;
 import java.awt.Frame;

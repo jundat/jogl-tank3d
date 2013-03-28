@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package utils;
+package myjogl.utils;
 
 import java.awt.AWTException;
 import java.awt.Robot;
@@ -28,7 +28,7 @@ public class Camera
      * Mean mPos farther mView
      * @param speed 
      */
-    void Move_Character_Farther(float speed)
+    public void Move_Character_Farther(float speed)
     {
         Vector3 vVector = mView.Sub(mPos);	// Get the view vector
 
@@ -41,7 +41,7 @@ public class Camera
      * Move camera left and right, all eyes and view
      * @param speed 
      */
-    void Move_Left_Right(float speed)
+    public void Move_Left_Right(float speed)
     {
         Vector3 vVector = mView.Sub(mPos);	// Get the view vector
 	Vector3 vOrthoVector = new Vector3();              // Orthogonal vector for the view vector
@@ -61,7 +61,7 @@ public class Camera
      * Mean mPos and mView up and down
      * @param speed 
      */
-    void Move_Up_Down(float speed)
+    public void Move_Up_Down(float speed)
     {
         mPos.y += 5 * speed;
 	mView.y += 5 * speed;
@@ -73,7 +73,7 @@ public class Camera
      * Mean mView is center, move mPos
      * @param speed 
      */
-    void Rotate_Position(float speed)
+    public void Rotate_Position(float speed)
     {
         Vector3 vVector = mPos.Sub(mView);
 
@@ -85,7 +85,7 @@ public class Camera
      * Move you straight ahead or back ahead
      * @param speed 
      */
-    void Move_Camera(float speed)
+    public void Move_Camera(float speed)
     {
         Vector3 vVector = mView.Sub(mPos);	// Get the view vector
 	
@@ -105,7 +105,7 @@ public class Camera
      * @param wndWidth
      * @param wndHeight 
      */
-    void Mouse_Move(int mouseX, int mouseY, int wndWidth, int wndHeight)
+    public void Mouse_Move(int mouseX, int mouseY, int wndWidth, int wndHeight)
     {
 	int mid_x = wndWidth / 2;
 	int mid_y = wndHeight / 2;
@@ -141,7 +141,7 @@ public class Camera
      * Mean mView is center, you move around
      * @param speed 
      */
-    void Rotate_View(float speed)
+    public void Rotate_View(float speed)
     {
         Vector3 vVector = mView.Sub(mPos);	// Get the view vector
 
@@ -161,7 +161,7 @@ public class Camera
      * @param up_y
      * @param up_z 
      */
-    void Position_Camera(float pos_x,  float pos_y,  float pos_z,
+    public void Position_Camera(float pos_x,  float pos_y,  float pos_z,
                                                 float view_x, float view_y, float view_z,
                                                 float up_x,   float up_y,   float up_z)
     {

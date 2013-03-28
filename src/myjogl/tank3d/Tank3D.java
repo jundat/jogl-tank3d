@@ -1,7 +1,5 @@
-package tank3d;
+package myjogl.tank3d;
 
-import utils.FullscreenSetting;
-import com.sun.opengl.util.Animator;
 import com.sun.opengl.util.FPSAnimator;
 import java.awt.BorderLayout;
 import java.awt.Frame;
@@ -11,6 +9,11 @@ import javax.media.opengl.GLCanvas;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
+import myjogl.GameEngine;
+import myjogl.Global;
+import myjogl.gameview.IntroView;
+import myjogl.utils.FullscreenSetting;
+import myjogl.utils.ResourceManager;
 
 /**
  * Tank3D.java <BR> author: Brian Paul (converted to Java by Ron Cemer and Sven
@@ -20,41 +23,44 @@ import javax.swing.JFrame;
  */
 public class Tank3D implements GLEventListener {
 
-    public final int FPS = 60;
-    public final boolean IS_FULL_SCREEN = false;
     public String name = "Tank 3D";
-    public int wndWidth = 800;
-    public int wndHeight = 600;
-    public GLAutoDrawable drawable;
     public Frame frame;
     public GLCanvas canvas;
     public FPSAnimator animator;
     public FullscreenSetting fullscreen;
-    public GameEngine engine;
 
     public Tank3D() {
         frame = new Frame(this.name);
 
         //---------------------
         //Th? t? c?a các setting fullscreen ? ?ây r?t quan tr?ng, n?u thay ??i s? khác
-        if (IS_FULL_SCREEN) {
+        if (Global.isFullScreen) {
             fullscreen = new FullscreenSetting();
-            int width = fullscreen.getWidth();
-            int height = fullscreen.getHeight();
-            frame.setSize(width, height);
+            Global.wndWidth = fullscreen.getWidth();
+            Global.wndHeight = fullscreen.getHeight();
+            frame.setSize(Global.wndWidth, Global.wndHeight);
             fullscreen.init(frame);
             frame.setFocusable(true);
             frame.setLayout(new BorderLayout());
         }
         //---------------------
 
-        if (!IS_FULL_SCREEN) {
-            frame.setSize(wndWidth, wndHeight);
+        if (!Global.isFullScreen) {
+            frame.setSize(Global.wndWidth, Global.wndHeight);
         }
 
         canvas = new GLCanvas();
         canvas.setAutoSwapBufferMode(false);
+        
+        GameEngine engine = GameEngine.getInst();
+        engine.init(this);
+        
         canvas.addGLEventListener(this);
+        canvas.addKeyListener(engine);
+        canvas.addMouseListener(engine);
+        canvas.addMouseMotionListener(engine);
+        canvas.addMouseWheelListener(engine);
+        
         frame.add(canvas);
         animator = new FPSAnimator(canvas, 60, false);
         frame.addWindowListener(new Tank3DWindowAdapter(this));
@@ -63,7 +69,7 @@ public class Tank3D implements GLEventListener {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-        if (IS_FULL_SCREEN) {
+        if (Global.isFullScreen) {
             frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         }
         
@@ -76,9 +82,7 @@ public class Tank3D implements GLEventListener {
     }
 
     public void init(GLAutoDrawable drawable) {
-        // Use debug pipeline
-        // drawable.setGL(new DebugGL(drawable.getGL()));
-        this.drawable = drawable;
+        Global.drawable = drawable;
 
         GL gl = drawable.getGL();
         System.err.println("INIT GL IS: " + gl.getClass().getName());
@@ -90,21 +94,22 @@ public class Tank3D implements GLEventListener {
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         gl.glShadeModel(GL.GL_SMOOTH); // try setting this to GL_FLAT and see what happens.
         
-        
         //mycode
         this.loadResource(drawable);
         
-        this.engine = new GameEngine(this);
-        this.engine.init();
-        
+        GameEngine engine = GameEngine.getInst();
+        engine.init(this);
+        engine.attach(new IntroView());
     }
 
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+        Global.drawable = drawable;
+        
         GL gl = drawable.getGL();
         GLU glu = new GLU();
 
-        this.wndWidth = width;
-        this.wndHeight = height;
+        Global.wndWidth = width;
+        Global.wndHeight = height;
 
         if (height <= 0) { // avoid a divide by zero error!
 
@@ -118,12 +123,14 @@ public class Tank3D implements GLEventListener {
         gl.glMatrixMode(GL.GL_MODELVIEW);
         gl.glLoadIdentity();
 
-        if (IS_FULL_SCREEN) {
+        if (Global.isFullScreen) {
             this.frame.setExtendedState(this.frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
         }
     }
 
     public void display(GLAutoDrawable drawable) {
+        Global.drawable = drawable;
+        
         GL gl = drawable.getGL();
 
         // Clear the drawing area
@@ -131,7 +138,7 @@ public class Tank3D implements GLEventListener {
         // Reset the current matrix to the "identity"
         gl.glLoadIdentity();
 
-        this.engine.run(drawable);
+        GameEngine.getInst().run();
 
         // Flush all drawing operations to the graphics card
         gl.glFlush();
@@ -142,10 +149,25 @@ public class Tank3D implements GLEventListener {
     }
 
     public void loadResource(GLAutoDrawable drawable) {
-        
+        ResourceManager.getInst().LoadOutGame();
+        ResourceManager.getInst().LoadInGame();
     }
 
     public void unloadResource() {
         
     }
+    
+    public void exit(){
+        this.unloadResource();
+        
+        if (Global.isFullScreen) {
+            fullscreen.exit();
+        }
+        
+        this.animator.stop();
+
+        System.exit(0);
+    }
+    
+            
 }
