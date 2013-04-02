@@ -12,11 +12,9 @@ import myjogl.Global;
  *
  * @author Jundat
  */
+public class SkyBox {
 
-public class SkyBox
-{
-    private float     m_size;
-    
+    private float m_size;
     //texture
     private Texture ttUp;
     private Texture ttDown;
@@ -24,17 +22,14 @@ public class SkyBox
     private Texture ttBack;
     private Texture ttLeft;
     private Texture ttRight;
-    
-    public SkyBox()
-    {
-        
+
+    public SkyBox() {
     }
 
-    public void Initialize(float size)
-    {
+    public void Initialize(float size) {
         this.m_size = size;
     }
-    
+
     public void LoadTextures(Texture up, Texture down, Texture front, Texture back, Texture left, Texture right) {
         ttUp = up;
         ttDown = down;
@@ -43,104 +38,121 @@ public class SkyBox
         ttLeft = left;
         ttRight = right;
     }
-    
-    public void LoadTextures(String up, String down, String front, String back, String left, String right)
-    {
-        this.ttUp = TextureLoader.Load(up, true, GL.GL_CLAMP_TO_EDGE);
-        this.ttDown = TextureLoader.Load(down, true, GL.GL_CLAMP_TO_EDGE);
-        this.ttFront = TextureLoader.Load(front, true, GL.GL_CLAMP_TO_EDGE);
-        this.ttBack = TextureLoader.Load(back, true, GL.GL_CLAMP_TO_EDGE);
-        this.ttLeft = TextureLoader.Load(left, true, GL.GL_CLAMP_TO_EDGE);
-        this.ttRight = TextureLoader.Load(right, true, GL.GL_CLAMP_TO_EDGE);
+
+    public void LoadTextures(String up, String down, String front, String back, String left, String right) {
+        this.ttUp = TextureLoader.Load(up, false, GL.GL_CLAMP_TO_EDGE);
+        this.ttDown = TextureLoader.Load(down, false, GL.GL_CLAMP_TO_EDGE);
+        this.ttFront = TextureLoader.Load(front, false, GL.GL_CLAMP_TO_EDGE);
+        this.ttBack = TextureLoader.Load(back, false, GL.GL_CLAMP_TO_EDGE);
+        this.ttLeft = TextureLoader.Load(left, false, GL.GL_CLAMP_TO_EDGE);
+        this.ttRight = TextureLoader.Load(right, false, GL.GL_CLAMP_TO_EDGE);
     }
-    
-    public void Render(float cameraX, float cameraY, float cameraZ)
-    {
+
+    public void Render(float cameraX, float cameraY, float cameraZ) {
         GL gl = Global.drawable.getGL();
 
         gl.glPushMatrix();
 
-	// Move the skybox so that it's centered on the camera.
-	gl.glTranslatef(cameraX, cameraY, cameraZ);
+        // Move the skybox so that it's centered on the camera.
+        gl.glTranslatef(cameraX, cameraY, cameraZ);
 
-	gl.glPushAttrib(GL.GL_FOG_BIT | GL.GL_DEPTH_BUFFER_BIT | GL.GL_LIGHTING_BIT);
-	gl.glDisable(GL.GL_DEPTH_TEST);
+        gl.glPushAttrib(GL.GL_FOG_BIT | GL.GL_DEPTH_BUFFER_BIT | GL.GL_LIGHTING_BIT);
+        gl.glDisable(GL.GL_DEPTH_TEST);
 
-	gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_REPLACE);
+        gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_REPLACE);
 
-	// Up
+//		Top
         ttUp.enable();
         ttUp.bind();
-	gl.glBegin(GL.GL_QUADS);
-		gl.glTexCoord2f(1.0f, 1.0f); gl.glVertex3f(-m_size, m_size, -m_size);
-		gl.glTexCoord2f(0.0f, 1.0f); gl.glVertex3f(m_size, m_size, -m_size);
-		gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3f(m_size, m_size, m_size);
-		gl.glTexCoord2f(1.0f, 0.0f); gl.glVertex3f(-m_size, m_size, m_size);
-	gl.glEnd();
+        gl.glBegin(GL.GL_QUADS);
+            gl.glTexCoord2f(0.0f, 1.0f);
+            gl.glVertex3f(-m_size, m_size, -m_size);
+            gl.glTexCoord2f(1.0f, 1.0f);
+            gl.glVertex3f(m_size, m_size, -m_size);
+            gl.glTexCoord2f(1.0f, 0.0f);
+            gl.glVertex3f(m_size, m_size, m_size);
+            gl.glTexCoord2f(0.0f, 0.0f);
+            gl.glVertex3f(-m_size, m_size, m_size);
+        gl.glEnd();
         ttUp.disable();
-
-	// Down
+//		Bottom
         ttDown.enable();
-	ttDown.bind();
-	gl.glBegin(GL.GL_QUADS);
-		gl.glTexCoord2f(1.0f, 1.0f); gl.glVertex3f(m_size, -m_size, -m_size); //
-		gl.glTexCoord2f(0.0f, 1.0f); gl.glVertex3f(-m_size, -m_size, -m_size);
-		gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3f(-m_size, -m_size, m_size);
-		gl.glTexCoord2f(1.0f, 0.0f); gl.glVertex3f(m_size, -m_size, m_size);
-	gl.glEnd();
+        ttDown.bind();
+        gl.glBegin(GL.GL_QUADS);
+            gl.glTexCoord2f(1.0f, 0.0f);
+            gl.glVertex3f(m_size, -m_size, -m_size);
+            gl.glTexCoord2f(0.0f, 0.0f);
+            gl.glVertex3f(-m_size, -m_size, -m_size);
+            gl.glTexCoord2f(0.0f, 1.0f);
+            gl.glVertex3f(-m_size, -m_size, m_size);
+            gl.glTexCoord2f(1.0f, 1.0f);
+            gl.glVertex3f(m_size, -m_size, m_size);
+        gl.glEnd();
         ttDown.disable();
-
-	// Left
+//		Font
+        ttFront.enable();
+        ttFront.bind();
+        gl.glBegin(GL.GL_QUADS);
+            gl.glTexCoord2f(0.0f, 1.0f);
+            gl.glVertex3f(-m_size, -m_size, -m_size);
+            gl.glTexCoord2f(1.0f, 1.0f);
+            gl.glVertex3f(m_size, -m_size, -m_size);
+            gl.glTexCoord2f(1.0f, 0.0f);
+            gl.glVertex3f(m_size, m_size, -m_size);
+            gl.glTexCoord2f(0.0f, 0.0f);
+            gl.glVertex3f(-m_size, m_size, -m_size);
+        gl.glEnd();
+        ttFront.disable();
+//		Back
+        ttBack.enable();
+        ttBack.bind();
+        gl.glBegin(GL.GL_QUADS);
+            gl.glTexCoord2f(0.0f, 1.0f);
+            gl.glVertex3f(m_size, -m_size, m_size);
+            gl.glTexCoord2f(1.0f, 1.0f);
+            gl.glVertex3f(-m_size, -m_size, m_size);
+            gl.glTexCoord2f(1.0f, 0.0f);
+            gl.glVertex3f(-m_size, m_size, m_size);
+            gl.glTexCoord2f(0.0f, 0.0f);
+            gl.glVertex3f(m_size, m_size, m_size);
+        gl.glEnd();
+        ttBack.disable();
+//		Left
         ttLeft.enable();
-	ttLeft.bind();
-	gl.glBegin(GL.GL_QUADS);
-            gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3f(-m_size, -m_size, -m_size);
-            gl.glTexCoord2f(1.0f, 0.0f); gl.glVertex3f(m_size, -m_size, -m_size);
-            gl.glTexCoord2f(1.0f, 1.0f); gl.glVertex3f(m_size, m_size, -m_size);
-            gl.glTexCoord2f(0.0f, 1.0f); gl.glVertex3f(-m_size, m_size, -m_size);
-	gl.glEnd();
+        ttLeft.bind();
+        gl.glBegin(GL.GL_QUADS);
+            gl.glTexCoord2f(1.0f, 1.0f);
+            gl.glVertex3f(-m_size, -m_size, -m_size);
+            gl.glTexCoord2f(1.0f, 0.0f);
+            gl.glVertex3f(-m_size, m_size, -m_size);
+            gl.glTexCoord2f(0.0f, 0.0f);
+            gl.glVertex3f(-m_size, m_size, m_size);
+            gl.glTexCoord2f(0.0f, 1.0f);
+            gl.glVertex3f(-m_size, -m_size, m_size);
+        gl.glEnd();
         ttLeft.disable();
-
-	// Right
+        
+//		Right
         ttRight.enable();
-	ttRight.bind();
-	gl.glBegin(GL.GL_QUADS);
-		gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3f(m_size, -m_size, m_size);
-		gl.glTexCoord2f(1.0f, 0.0f); gl.glVertex3f(-m_size, -m_size, m_size);
-		gl.glTexCoord2f(1.0f, 1.0f); gl.glVertex3f(-m_size, m_size, m_size);
-		gl.glTexCoord2f(0.0f, 1.0f); gl.glVertex3f(m_size, m_size, m_size);
-	gl.glEnd();
+        ttRight.bind();
+        gl.glBegin(GL.GL_QUADS);
+            gl.glTexCoord2f(1.0f, 1.0f);
+            gl.glVertex3f(m_size, -m_size, m_size);
+            gl.glTexCoord2f(1.0f, 0.0f);
+            gl.glVertex3f(m_size, m_size, m_size);
+            gl.glTexCoord2f(0.0f, 0.0f);
+            gl.glVertex3f(m_size, m_size, -m_size);
+            gl.glTexCoord2f(0.0f, 1.0f);
+            gl.glVertex3f(m_size, -m_size, -m_size);
+        gl.glEnd();
         ttRight.disable();
 
-	// Back
-        ttBack.enable();
-	ttBack.bind();
-	gl.glBegin(GL.GL_QUADS);
-		gl.glTexCoord2f(1.0f, 0.0f); gl.glVertex3f(m_size, -m_size, m_size);
-		gl.glTexCoord2f(1.0f, 1.0f); gl.glVertex3f(m_size, m_size, m_size);
-		gl.glTexCoord2f(0.0f, 1.0f); gl.glVertex3f(m_size, m_size, -m_size);
-		gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3f(m_size, -m_size, -m_size);
-	gl.glEnd();
-        ttBack.disable();
-
-	// Front
-        ttFront.enable();
-	ttFront.bind();
-	gl.glBegin(GL.GL_QUADS);
-                gl.glTexCoord2f(1.0f, 0.0f); gl.glVertex3f(-m_size, -m_size, -m_size);
-		gl.glTexCoord2f(1.0f, 1.0f); gl.glVertex3f(-m_size, m_size, -m_size); 
-		gl.glTexCoord2f(0.0f, 1.0f); gl.glVertex3f(-m_size, m_size, m_size);
-		gl.glTexCoord2f(0.0f, 0.0f); gl.glVertex3f(-m_size, -m_size, m_size);
-	gl.glEnd();
-        ttFront.disable();
-
-	gl.glPopAttrib();
-	gl.glEndList();
-	gl.glPopMatrix();
+        gl.glPopAttrib();
+        gl.glEndList();
+        gl.glPopMatrix();
     }
-    
-    public void Release()
-    {
+
+    public void Release() {
         ttUp.dispose();
         ttDown.dispose();
         ttFront.dispose();
@@ -149,13 +161,12 @@ public class SkyBox
         ttRight.dispose();
     }
 
-    public enum POSITION{
-            SKY_UP,
-            SKY_DOWN,
-            SKY_FRONT,
-            SKY_BACK,
-            SKY_LEFT,
-            SKY_RIGHT
+    public enum POSITION {
+        SKY_UP,
+        SKY_DOWN,
+        SKY_FRONT,
+        SKY_BACK,
+        SKY_LEFT,
+        SKY_RIGHT
     };
 };
-

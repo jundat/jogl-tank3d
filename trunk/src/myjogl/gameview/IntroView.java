@@ -4,25 +4,20 @@
  */
 package myjogl.gameview;
 
-import com.sun.opengl.util.texture.Texture;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import myjogl.GameEngine;
-import myjogl.Global;
 import myjogl.utils.Renderer;
 import myjogl.utils.ResourceManager;
+import myjogl.utils.Writer;
 
 /**
  *
  * @author Jundat
  */
 public class IntroView implements GameView {
-
-    public Texture ttBgIntro;
-    public Texture ttLogo;
-    boolean isDead = false;
-    int x = 0;
-    int y = 300;
 
     public IntroView() {
     }
@@ -31,6 +26,10 @@ public class IntroView implements GameView {
     }
 
     public void keyReleased(KeyEvent e) {
+        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+            GameEngine.getInst().attach(new MenuView());
+            GameEngine.getInst().detach(this);
+        }
     }
 
     public void pointerPressed(MouseEvent e) {
@@ -44,32 +43,20 @@ public class IntroView implements GameView {
     
     public void load() {
         ResourceManager.getInst().LoadOutGame();
-
-        ttBgIntro = ResourceManager.ttBgIntro;
-        ttLogo = ResourceManager.ttLogo;
-        x = - ttLogo.getWidth();
     }
 
     public void unload() {
-        ResourceManager.getInst().LoadOutGame();
+        ResourceManager.getInst().UnLoadOutGame();
     }
 
     public void update(long elapsedTime) {
-        x += (elapsedTime / 2);
-        if (x >= Global.wndWidth && isDead == false) {
-            isDead = true;
-
-            GameEngine.getInst().attach(new MenuView());
-            GameEngine.getInst().detach(this);
-        }
     }
 
     public void display() {
         if (ResourceManager.isLoadOutGame) {
-            Renderer.Render(ttBgIntro, 0, 0);
-
-            float alpha = (float) x / (float) Global.wndWidth;
-            Renderer.Render(ttLogo, x, y, alpha);
+            Renderer.Render(ResourceManager.ttBgIntro, 0, 0);
+            Renderer.Render(ResourceManager.ttLogo, 400, 300);
+            Writer.Render("press Enter to skip!", "Constantia", Font.BOLD, 20, 200, 200, Color.RED);
         }
     }
 

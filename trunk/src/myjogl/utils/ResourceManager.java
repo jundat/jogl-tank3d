@@ -5,10 +5,12 @@
 package myjogl.utils;
 
 import com.sun.opengl.util.texture.Texture;
+import java.security.AuthProvider;
+import java.util.Hashtable;
 import javax.media.opengl.GL;
 
 /**
- *
+ *All game resource must be loaded into before run game.
  * @author Jundat
  */
 public class ResourceManager {
@@ -16,18 +18,28 @@ public class ResourceManager {
     public static boolean isLoadOutGame = false;
     public static boolean isLoadInGame = false;
     //Resource
+    
     //IntroView
     public static Texture ttBgIntro;
     public static Texture ttLogo;
+    
     //MenuView
     public static Texture ttBgMenu;
     public static Texture ttButtonNormal;
     public static Texture ttButtonClick;
+    
     //AboutView
     public static Texture ttBgAbout;
 
     //GameView
     public static Texture ttBgGame;
+    public static Texture ttGachTuong;
+    public static Texture ttGachMen;
+    
+    //model texture
+    public static Texture ttTank;
+    public static Texture ttKnight;
+    
     //skybox
     public static Texture ttSkyUp;
     public static Texture ttSkyDown;
@@ -50,7 +62,7 @@ public class ResourceManager {
 
     //MenuView
     /**
-     * Load menu view resource
+     * Load menu, intro, about, view resource
      *
      * @param drawable
      */
@@ -68,46 +80,50 @@ public class ResourceManager {
             //about
             ttBgAbout = TextureLoader.Load("data/ttBgAbout.png", true, GL.GL_REPEAT);
 
+            
             ResourceManager.isLoadOutGame = true;
         }
     }
 
     /**
-     * Load menuview resource
+     * Load menu, intro, about, view resource
      */
     public void UnLoadOutGame() {
-//        if (isLoadOutGame == true) {
-//            ResourceManager.isLoadOutGame = false;
-//        }
     }
 
     //GameView
     /**
-     * Load gameview resource
+     * Load maingameview resource
      *
      * @param drawable
      */
     public void LoadInGame() {
         if (isLoadInGame == false) {
             ttBgGame = TextureLoader.Load("data/ttBgGame.png", true, GL.GL_REPEAT);
+            ttGachTuong = TextureLoader.Load("data/game/gach_tuong.png", true, GL.GL_REPEAT);
+            ttGachMen = TextureLoader.Load("data/game/gach_men.png", true, GL.GL_REPEAT);
+            
+            //model texture
+            ttTank = TextureLoader.Load("data/model/triax_wheels.png", false, GL.GL_REPEAT);
+            ttKnight = TextureLoader.Load("data/model/knight.png", false, GL.GL_REPEAT);
+            
             //skybox
-            ttSkyUp = TextureLoader.Load("data/skybox/up.bmp", true, GL.GL_CLAMP_TO_EDGE);
-            ttSkyDown = TextureLoader.Load("data/skybox/down.bmp", true, GL.GL_CLAMP_TO_EDGE);
-            ttSkyFront = TextureLoader.Load("data/skybox/front.bmp", true, GL.GL_CLAMP_TO_EDGE);
-            ttSkyBack = TextureLoader.Load("data/skybox/back.bmp", true, GL.GL_CLAMP_TO_EDGE);
-            ttSkyLeft = TextureLoader.Load("data/skybox/left.bmp", true, GL.GL_CLAMP_TO_EDGE);
-            ttSkyRight = TextureLoader.Load("data/skybox/right.bmp", true, GL.GL_CLAMP_TO_EDGE);
+            ttSkyUp = TextureLoader.Load("data/skybox/up.jpg", false, GL.GL_CLAMP_TO_EDGE);
+            ttSkyDown = TextureLoader.Load("data/skybox/down.jpg", false, GL.GL_CLAMP_TO_EDGE);
+            ttSkyFront = TextureLoader.Load("data/skybox/front.jpg", false, GL.GL_CLAMP_TO_EDGE);
+            ttSkyBack = TextureLoader.Load("data/skybox/back.jpg", false, GL.GL_CLAMP_TO_EDGE);
+            ttSkyLeft = TextureLoader.Load("data/skybox/left.jpg", false, GL.GL_CLAMP_TO_EDGE);
+            ttSkyRight = TextureLoader.Load("data/skybox/right.jpg", false, GL.GL_CLAMP_TO_EDGE);
 
+            //load your resource here
+            
             ResourceManager.isLoadInGame = true;
         }
     }
 
     /**
-     * Load gameview resource
+     * Load maingameview resource
      */
     public void UnLoadInGame() {
-//        if (isLoadInGame == true) {
-//            ResourceManager.isLoadInGame = false;
-//        }
     }
 }
