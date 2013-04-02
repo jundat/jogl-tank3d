@@ -88,11 +88,15 @@ public class Tank3D implements GLEventListener {
         System.err.println("INIT GL IS: " + gl.getClass().getName());
 
         // Enable VSync
-        gl.setSwapInterval(1);
+        //gl.setSwapInterval(1);
 
         // Setup the drawing area and shading mode
-        gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         gl.glShadeModel(GL.GL_SMOOTH); // try setting this to GL_FLAT and see what happens.
+        gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        gl.glClearDepth(1.0f);
+        gl.glEnable(GL.GL_DEPTH_TEST);
+        gl.glDepthFunc(GL.GL_LEQUAL);
+        gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
         
         //mycode
         this.loadResource(drawable);
@@ -112,14 +116,15 @@ public class Tank3D implements GLEventListener {
         Global.wndHeight = height;
 
         if (height <= 0) { // avoid a divide by zero error!
-
             height = 1;
         }
-        final float h = (float) width / (float) height;
+        
+        //final float h = (float) width / (float) height;
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL.GL_PROJECTION);
         gl.glLoadIdentity();
-        glu.gluPerspective(45.0f, h, 1.0, 20.0);
+        //glu.gluPerspective(45.0f, h, 1.0, 20.0);
+        glu.gluPerspective(45.0f, (float) width / (float) height, 0.1f, 100.0f);
         gl.glMatrixMode(GL.GL_MODELVIEW);
         gl.glLoadIdentity();
 

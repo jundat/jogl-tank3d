@@ -4,7 +4,6 @@
  */
 package myjogl.gameview;
 
-import com.sun.opengl.util.texture.Texture;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
@@ -21,7 +20,7 @@ import myjogl.utils.Writer;
 public class AboutView implements GameView {
 
     private MenuItem itBack;
-    Texture ttBgAbout;
+    //Texture ttBgAbout;
 
     public AboutView() {        
     }
@@ -39,7 +38,6 @@ public class AboutView implements GameView {
     }
 
     public void pointerMoved(MouseEvent e) {
-        System.out.println("menu pointer: " + e.getX() + "" + e.getY());
     }
 
     public void pointerReleased(MouseEvent e) {
@@ -52,7 +50,7 @@ public class AboutView implements GameView {
     }
 
     public void load() {ResourceManager.getInst().LoadOutGame();
-        ttBgAbout = ResourceManager.ttBgAbout;
+        //ttBgAbout = ResourceManager.ttBgAbout;
 
         itBack = new MenuItem(ResourceManager.ttButtonNormal, ResourceManager.ttButtonClick);
 
@@ -68,7 +66,7 @@ public class AboutView implements GameView {
 
     public void display() {
         if (ResourceManager.isLoadOutGame) {
-            Renderer.Render(ttBgAbout, 0, 0);
+            Renderer.Render(ResourceManager.ttBgAbout, 0, 0);
 
             itBack.Render();
 

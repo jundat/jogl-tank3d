@@ -23,7 +23,7 @@ public class MenuView implements GameView {
     private MenuItem itPlay;
     private MenuItem itAbout;
     private MenuItem itExit;
-    Texture ttBgMenu;
+    //Texture ttBgMenu;
 
     public MenuView() {
         
@@ -76,7 +76,7 @@ public class MenuView implements GameView {
 
     public void load() {
         ResourceManager.getInst().LoadOutGame();
-        ttBgMenu = ResourceManager.ttBgMenu;
+        //ttBgMenu = ResourceManager.ttBgMenu;
 
         itPlay = new MenuItem(ResourceManager.ttButtonNormal, ResourceManager.ttButtonClick);
         itAbout = new MenuItem(ResourceManager.ttButtonNormal, ResourceManager.ttButtonClick);
@@ -96,7 +96,7 @@ public class MenuView implements GameView {
 
     public void display() {
         if (ResourceManager.isLoadOutGame) {
-            Renderer.Render(ttBgMenu, 0, 0);
+            Renderer.Render(ResourceManager.ttBgMenu, 0, 0);
 
             itPlay.Render();
             itAbout.Render();
