@@ -20,6 +20,21 @@ public class Vector3			// expanded 3D vector struct
         x = new_x; y = new_y; z = new_z;
     }
     
+    //tieunun
+    public Vector3(float[] p) {
+        x = p[0];
+        y = p[1];
+        z = p[2];
+    }
+    
+    public Vector3(Vector3 v) {
+        x = v.x;
+        y = v.y;
+        z = v.z;
+    }
+    
+    
+    
     // overload + operator so that we easier can add vectors
     public Vector3 Add(Vector3 vVector) {
         return new Vector3(vVector.x+x, vVector.y+y, vVector.z+z);
@@ -62,4 +77,16 @@ public class Vector3			// expanded 3D vector struct
 
             return res;
     }
+    
+    /*----------------------------------------------------------------------------------------------*/
+    //@author bu0i, giang chau
+    public float[] ToArrayFloat() {
+        float[] temp = new float[4];
+        temp[0] = x;
+        temp[1] = y;
+        temp[2] = z;
+        temp[3] = 1;
+        return temp;
+    }
+    /*---------------------------------------------------------------------------------------------*/
 }
