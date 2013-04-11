@@ -103,6 +103,7 @@ public class Tank3D implements GLEventListener {
         
         GameEngine engine = GameEngine.getInst();
         engine.init(this);
+        
         engine.attach(new IntroView());
     }
 
@@ -115,15 +116,11 @@ public class Tank3D implements GLEventListener {
         Global.wndWidth = width;
         Global.wndHeight = height;
 
-        if (height <= 0) { // avoid a divide by zero error!
-            height = 1;
-        }
+        height = height <= 0 ? 1 : height;
         
-        //final float h = (float) width / (float) height;
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL.GL_PROJECTION);
         gl.glLoadIdentity();
-        //glu.gluPerspective(45.0f, h, 1.0, 20.0);
         glu.gluPerspective(45.0f, (float) width / (float) height, 0.1f, 100.0f);
         gl.glMatrixMode(GL.GL_MODELVIEW);
         gl.glLoadIdentity();
@@ -140,6 +137,7 @@ public class Tank3D implements GLEventListener {
 
         // Clear the drawing area
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+        
         // Reset the current matrix to the "identity"
         gl.glLoadIdentity();
 
@@ -172,7 +170,5 @@ public class Tank3D implements GLEventListener {
         this.animator.stop();
 
         System.exit(0);
-    }
-    
-            
+    }       
 }

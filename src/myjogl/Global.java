@@ -12,7 +12,7 @@ import javax.media.opengl.GLAutoDrawable;
  */
 public class Global {
     
-    public static boolean isFullScreen = true;
+    public static boolean isFullScreen = false;
     
     public static int FPS = 60;
     
