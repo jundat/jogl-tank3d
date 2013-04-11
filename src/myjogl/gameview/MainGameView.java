@@ -24,6 +24,9 @@ public class MainGameView implements GameView {
     private Camera objCamera;
     private static Md2 md2Tank;
     private static Md2 model;
+    
+    //tieunun
+    //public static Tank myTank;
 
     public MainGameView() {
     }
@@ -186,24 +189,24 @@ public class MainGameView implements GameView {
             ////////////////////////////////////////////////////////
             //camera
             gl.glPushMatrix();
-            // Always keep the character in the view
-            gl.glTranslatef(objCamera.mView.x, 0.0f, objCamera.mView.z);
-            float dx = objCamera.mView.x - objCamera.mPos.x;
-            float dz = objCamera.mView.z - objCamera.mPos.z;
-            float angle = (float) Math.atan(dz / dx);
-            angle = 180 * angle / 3.141592654f;
-            int angle2 = (int) angle;
-            angle2 %= 360;
-            if (dx < 0) {
-                angle2 = (int) (angle - 180);
-            }
-            gl.glRotatef(-angle2, 0, 1, 0);
+                // Always keep the character in the view
+                gl.glTranslatef(objCamera.mView.x, 0.0f, objCamera.mView.z);
+                float dx = objCamera.mView.x - objCamera.mPos.x;
+                float dz = objCamera.mView.z - objCamera.mPos.z;
+                float angle = (float) Math.atan(dz / dx);
+                angle = 180 * angle / 3.141592654f;
+                int angle2 = (int) angle;
+                angle2 %= 360;
+                if (dx < 0) {
+                    angle2 = (int) (angle - 180);
+                }
+                gl.glRotatef(-angle2, 0, 1, 0);
 
-            //draw tank
-            gl.glRotatef(-90, 0, 0, 1);
-            gl.glRotatef(-90, 0, 1, 0);
-            md2Tank.SetScale(0.03f);
-            md2Tank.DrawModel(gl, 0);
+                //draw tank
+                gl.glRotatef(-90, 0, 0, 1);
+                gl.glRotatef(-90, 0, 1, 0);
+                md2Tank.SetScale(0.03f);
+                md2Tank.DrawModel(gl, 0);
             gl.glPopMatrix();
             ////////////////////////////////////////////////////////
 
