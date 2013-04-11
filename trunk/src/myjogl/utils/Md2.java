@@ -283,7 +283,7 @@ public class Md2 {
             }
         }
         Interpolate();
-        System.out.println(currentFrame);
+        //System.out.println(currentFrame);
         gl.glEnable(GL.GL_TEXTURE);
         m_texture.enable();
         m_texture.bind();

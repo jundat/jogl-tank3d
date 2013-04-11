@@ -5,9 +5,9 @@
 package myjogl.utils;
 
 import com.sun.opengl.util.texture.Texture;
-import java.security.AuthProvider;
-import java.util.Hashtable;
 import javax.media.opengl.GL;
+import myjogl.GameEngine;
+import myjogl.Global;
 
 /**
  *All game resource must be loaded into before run game.
@@ -15,6 +15,7 @@ import javax.media.opengl.GL;
  */
 public class ResourceManager {
 
+    //public static boolean isLoadIntro = false;
     public static boolean isLoadOutGame = false;
     public static boolean isLoadInGame = false;
     //Resource
@@ -50,6 +51,7 @@ public class ResourceManager {
     
     private ResourceManager() {
     }
+    
     public static ResourceManager instance = null;
 
     public static ResourceManager getInst() {
@@ -68,10 +70,11 @@ public class ResourceManager {
      */
     public void LoadOutGame() {
         if (isLoadOutGame == false) {
+            
             //intro
             ttBgIntro = TextureLoader.Load("data/ttBgIntro.png", true, GL.GL_REPEAT);
             ttLogo = TextureLoader.Load("data/ttLogo.png", true, GL.GL_REPEAT);
-
+            
             //menu
             ttBgMenu = TextureLoader.Load("data/ttBgMenu.png", true, GL.GL_REPEAT);
             ttButtonNormal = TextureLoader.Load("data/ttButton.png", true, GL.GL_REPEAT);
@@ -81,6 +84,7 @@ public class ResourceManager {
             ttBgAbout = TextureLoader.Load("data/ttBgAbout.png", true, GL.GL_REPEAT);
 
             
+            //must be in the end of function
             ResourceManager.isLoadOutGame = true;
         }
     }
@@ -99,6 +103,7 @@ public class ResourceManager {
      */
     public void LoadInGame() {
         if (isLoadInGame == false) {
+            
             ttBgGame = TextureLoader.Load("data/ttBgGame.png", true, GL.GL_REPEAT);
             ttGachTuong = TextureLoader.Load("data/game/gach_tuong.png", true, GL.GL_REPEAT);
             ttGachMen = TextureLoader.Load("data/game/gach_men.png", true, GL.GL_REPEAT);
@@ -117,6 +122,8 @@ public class ResourceManager {
 
             //load your resource here
             
+            
+            //must be in the end of function
             ResourceManager.isLoadInGame = true;
         }
     }
