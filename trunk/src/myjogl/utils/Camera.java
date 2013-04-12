@@ -170,6 +170,10 @@ public class Camera {
         mUp = new Vector3(up_x, up_y, up_z); // set the up vector
     }
 
+    /**
+     * Angle rotate in y axis
+     * @return 
+     */
     public float GetAngleY() {
         float dx = mView.x - mPos.x;
         float dz = mView.z - mPos.z;
@@ -178,6 +182,42 @@ public class Camera {
         int angle2 = (int) angle;
         angle2 %= 360;
         if (dx < 0) {
+            angle2 = (int) (angle - 180);
+        }
+
+        return -angle2;
+    }
+    
+    /**
+     * Angle rotate in X axis
+     * @return 
+     */
+    public float GetAngleX() {
+        float dy = mView.y - mPos.y;
+        float dz = mView.z - mPos.z;
+        float angle = (float) Math.atan(dy / dz);
+        angle = 180 * angle / 3.141592654f;
+        int angle2 = (int) angle;
+        angle2 %= 360;
+        if (dz < 0) {
+            angle2 = (int) (angle - 180);
+        }
+
+        return -angle2;
+    }
+    
+    /**
+     * Angle rotate in Z axis
+     * @return 
+     */
+    public float GetAngleZ() {
+        float dy = mView.y - mPos.y;
+        float dx = mView.x - mPos.x;
+        float angle = (float) Math.atan(dx / dy);
+        angle = 180 * angle / 3.141592654f;
+        int angle2 = (int) angle;
+        angle2 %= 360;
+        if (dy < 0) {
             angle2 = (int) (angle - 180);
         }
 
