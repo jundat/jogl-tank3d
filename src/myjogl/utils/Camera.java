@@ -185,7 +185,7 @@ public class Camera {
             angle2 = (int) (angle - 180);
         }
 
-        return -angle2;
+        return 90-angle2;
     }
     
     /**
