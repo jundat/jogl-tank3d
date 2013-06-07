@@ -23,11 +23,9 @@ public class MenuView implements GameView {
     private MenuItem itPlay;
     private MenuItem itAbout;
     private MenuItem itExit;
-    //Texture ttBgMenu;
+    Texture ttBgMenu;
 
-    public MenuView() {
-        
-    }
+    public MenuView() {}
 
     public void keyPressed(KeyEvent e) {
     }
@@ -75,12 +73,14 @@ public class MenuView implements GameView {
     }
 
     public void load() {
-        ResourceManager.getInst().LoadOutGame();
-        //ttBgMenu = ResourceManager.ttBgMenu;
+        ttBgMenu = ResourceManager.getInst().getTexture("data/ttBgMenu.png");
 
-        itPlay = new MenuItem(ResourceManager.ttButtonNormal, ResourceManager.ttButtonClick);
-        itAbout = new MenuItem(ResourceManager.ttButtonNormal, ResourceManager.ttButtonClick);
-        itExit = new MenuItem(ResourceManager.ttButtonNormal, ResourceManager.ttButtonClick);
+        itPlay = new MenuItem( ResourceManager.getInst().getTexture("data/ttButtonNormal.png"),
+                ResourceManager.getInst().getTexture("data/ttButtonClick.png") );
+        itAbout = new MenuItem( ResourceManager.getInst().getTexture("data/ttButtonNormal.png"),
+                ResourceManager.getInst().getTexture("data/ttButtonClick.png") );
+        itExit = new MenuItem( ResourceManager.getInst().getTexture("data/ttButtonNormal.png"),
+                ResourceManager.getInst().getTexture("data/ttButtonClick.png") );
 
         itPlay.SetPosition(84, 0);
         itAbout.SetPosition(384, 0);
@@ -88,15 +88,14 @@ public class MenuView implements GameView {
     }
 
     public void unload() {
-        ResourceManager.getInst().UnLoadOutGame();
+        
     }
 
     public void update(long elapsedTime) {
     }
 
     public void display() {
-        if (ResourceManager.isLoadOutGame) {
-            Renderer.Render(ResourceManager.ttBgMenu, 0, 0);
+            Renderer.Render(ttBgMenu, 0, 0);
 
             itPlay.Render();
             itAbout.Render();
@@ -105,6 +104,5 @@ public class MenuView implements GameView {
             Writer.Render("PLAY", "Constantia", Font.BOLD, 60, itPlay.rect.x + 30, itPlay.rect.y + 30, Color.YELLOW);
             Writer.Render("ABOUT", "Constantia", Font.BOLD, 60, itAbout.rect.x + 30, itAbout.rect.y + 30, Color.YELLOW);
             Writer.Render("EXIT", "Constantia", Font.BOLD, 60, itExit.rect.x + 30, itExit.rect.y + 30, Color.YELLOW);
-        }
     }
 }

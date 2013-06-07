@@ -5,52 +5,25 @@
 package myjogl.utils;
 
 import com.sun.opengl.util.texture.Texture;
+import java.util.HashMap;
 import javax.media.opengl.GL;
 
 /**
- *All game resource must be loaded into before run game.
+ * All game resource must be loaded into before run game.
+ *
  * @author Jundat
  */
 public class ResourceManager {
 
-    //public static boolean isLoadIntro = false;
-    public static boolean isLoadOutGame = false;
-    public static boolean isLoadInGame = false;
-    //Resource
-    
-    //IntroView
-    //public static Texture ttBgIntro;
-    public static Texture ttLogo;
-    
-    //MenuView
-    public static Texture ttBgMenu;
-    public static Texture ttButtonNormal;
-    public static Texture ttButtonClick;
-    
-    //AboutView
-    public static Texture ttBgAbout;
+    private HashMap textures;
+    private HashMap sounds;
 
-    //GameView
-    public static Texture ttBgGame;
-    public static Texture ttGachTuong;
-    public static Texture ttGachMen;
-    
-    //model texture
-    public static Texture ttTank;
-    public static Texture ttKnight;
-    
-    //skybox
-    public static Texture ttSkyUp;
-    public static Texture ttSkyDown;
-    public static Texture ttSkyFront;
-    public static Texture ttSkyBack;
-    public static Texture ttSkyLeft;
-    public static Texture ttSkyRight;
-    
     private ResourceManager() {
+        textures = new HashMap();
+        sounds = new HashMap();
     }
     
-    public static ResourceManager instance = null;
+    private static ResourceManager instance = null;
 
     public static ResourceManager getInst() {
         if (instance == null) {
@@ -60,74 +33,63 @@ public class ResourceManager {
         return instance;
     }
 
-    //MenuView
-    /**
-     * Load menu, intro, about, view resource
-     *
-     * @param drawable
-     */
-    public void LoadOutGame() {
-        if (isLoadOutGame == false) {
-            
-            //intro
-            //ttBgIntro = TextureLoader.Load("data/ttBgIntro.png", true, GL.GL_REPEAT);
-            ttLogo = TextureLoader.Load("data/ttLogo.png", true, GL.GL_REPEAT);
-            
-            //menu
-            ttBgMenu = TextureLoader.Load("data/ttBgMenu.png", true, GL.GL_REPEAT);
-            ttButtonNormal = TextureLoader.Load("data/ttButton.png", true, GL.GL_REPEAT);
-            ttButtonClick = TextureLoader.Load("data/ttButtonClick.png", true, GL.GL_REPEAT);
+    public Texture getTexture(String fileName, boolean wantFlip, int wrap_s, int wrap_t, int minFilter, int magFilter) {
+        if (textures.containsKey(fileName)) {
+            return (Texture) textures.get(fileName);
+        } else {
+            Texture tt = TextureLoader.Load(fileName, wantFlip, wrap_s, wrap_t, minFilter, magFilter);
+            textures.put(fileName, tt);
 
-            //about
-            ttBgAbout = TextureLoader.Load("data/ttBgAbout.png", true, GL.GL_REPEAT);
-            
-            //must be in the end of function
-            ResourceManager.isLoadOutGame = true;
+            return tt;
         }
     }
 
-    /**
-     * Load menu, intro, about, view resource
-     */
-    public void UnLoadOutGame() {
-    }
-
-    //GameView
-    /**
-     * Load maingameview resource
-     *
-     * @param drawable
-     */
-    public void LoadInGame() {
-        if (isLoadInGame == false) {
+    public Texture getTexture(String fileName, boolean wantFlip, int wrap) {
+        if (textures.containsKey(fileName)) {
+            return (Texture) textures.get(fileName);
+        } else {
+            Texture tt = TextureLoader.Load(fileName, wantFlip, wrap, GL.GL_NEAREST);
+            textures.put(fileName, tt);
             
-            ttBgGame = TextureLoader.Load("data/ttBgGame.png", true, GL.GL_REPEAT);
-            ttGachTuong = TextureLoader.Load("data/game/gach_tuong.png", true, GL.GL_REPEAT);
-            ttGachMen = TextureLoader.Load("data/game/gach_men.png", true, GL.GL_REPEAT);
-            
-            //model texture
-            ttTank = TextureLoader.Load("data/model/triax_wheels.png", false, GL.GL_REPEAT);
-            ttKnight = TextureLoader.Load("data/model/knight.png", false, GL.GL_REPEAT);
-            
-            //skybox
-            ttSkyUp = TextureLoader.Load("data/skybox/up.jpg", false, GL.GL_CLAMP_TO_EDGE);
-            ttSkyDown = TextureLoader.Load("data/skybox/down.jpg", false, GL.GL_CLAMP_TO_EDGE);
-            ttSkyFront = TextureLoader.Load("data/skybox/front.jpg", false, GL.GL_CLAMP_TO_EDGE);
-            ttSkyBack = TextureLoader.Load("data/skybox/back.jpg", false, GL.GL_CLAMP_TO_EDGE);
-            ttSkyLeft = TextureLoader.Load("data/skybox/left.jpg", false, GL.GL_CLAMP_TO_EDGE);
-            ttSkyRight = TextureLoader.Load("data/skybox/right.jpg", false, GL.GL_CLAMP_TO_EDGE);
-
-            //load your resource here
-            
-            
-            //must be in the end of function
-            ResourceManager.isLoadInGame = true;
+            return tt;
         }
     }
 
-    /**
-     * Load maingameview resource
-     */
-    public void UnLoadInGame() {
+    public Texture getTexture(String fileName) {
+        if (textures.containsKey(fileName)) {
+            return (Texture) textures.get(fileName);
+        } else {
+            Texture tt = TextureLoader.Load(fileName);
+            textures.put(fileName, tt);
+
+            return tt;
+        }
+    }
+
+    public Sound getSound(String fileName, boolean isLoop) {
+        if (sounds.containsKey(fileName)) {
+            return (Sound) sounds.get(fileName);
+        } else {
+            Sound s = new Sound(fileName, isLoop);
+            sounds.put(fileName, s);
+
+            return s;
+        }
+    }
+
+    public void deleteTexture(String fileName) {
+        textures.remove(fileName);
+    }
+
+    public void deleteSound(String fileName) {
+        sounds.remove(fileName);
+    }
+
+    public void deleteAllTextures() {
+        textures.clear();
+    }
+
+    public void deleteAllSounds() {
+        sounds.clear();
     }
 }

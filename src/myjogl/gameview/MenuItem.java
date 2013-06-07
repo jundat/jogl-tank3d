@@ -9,7 +9,7 @@ import java.awt.Rectangle;
 import javax.media.opengl.GL;
 import javax.swing.JOptionPane;
 import myjogl.utils.Renderer;
-import myjogl.utils.TextureLoader;
+import myjogl.utils.ResourceManager;
 
 /**
  *
@@ -21,18 +21,7 @@ public class MenuItem {
     public Rectangle rect = new Rectangle();
     private Texture ttNormal = null;
     private Texture ttClick = null;
-    
-    public MenuItem(String fileNormal, String fileClick){
-        ttNormal = TextureLoader.Load(fileNormal, true, GL.GL_REPEAT);
         
-        if(fileClick != null && fileClick.compareTo("") != 0){
-            ttClick = TextureLoader.Load(fileClick, true, GL.GL_REPEAT);
-        }
-        
-        if(ttNormal == null && ttClick == null)
-            JOptionPane.showMessageDialog(null, "Can not load MenuItem: " + fileNormal + " and " + fileClick);
-    }
-    
     public MenuItem(Texture ttNormal, Texture ttClick){
         this.ttNormal = ttNormal;
         this.ttClick = ttClick;

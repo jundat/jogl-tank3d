@@ -28,10 +28,11 @@ public class TextureLoader {
      * @param drawable
      * @param filename
      * @param wantFlip
-     * @param GL_REPEAT : GL.GL_REPEAT, GL.GL_CLAMP, ...
+     * @param wrap_s, int wrap_t, int minFilter, int magFilter : GL.GL_REPEAT,
+     * GL.GL_CLAMP, ...
      * @return
      */
-    public static Texture Load(String filename, boolean wantFlip, int GL_REPEAT) {
+    public static Texture Load(String filename, boolean wantFlip, int wrap_s, int wrap_t, int minFilter, int magFilter) {
         GL gl = Global.drawable.getGL();
         Texture tt = null;
 
@@ -42,14 +43,17 @@ public class TextureLoader {
         try {
             is = TextureLoader.class.getResourceAsStream(filename);
             tBufferedImage = ImageIO.read(new BufferedInputStream(is));
-
             if (wantFlip) {
                 tBufferedImage = flipBufferedImageVertical(tBufferedImage);
             }
 
             tt = TextureIO.newTexture(tBufferedImage, true);
-            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL_REPEAT);
-            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL_REPEAT);
+
+            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, wrap_s);
+            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, wrap_s);
+
+            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, minFilter);
+            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, magFilter);
 
         } catch (Exception exc) {
             System.out.println("TextureLoader: Can not load resource: " + exc.getMessage());
@@ -58,14 +62,27 @@ public class TextureLoader {
             try {
                 tBufferedImage.flush();
                 is.close();
-                
+
             } catch (IOException ex) {
                 System.out.println("Can not close inputstream " + ex.getMessage());
                 JOptionPane.showMessageDialog(null, "TextureLoader: Can not close inputstream resource: " + filename + "\n" + ex.getMessage());
             }
         }
-
         return tt;
+    }
+
+    public static Texture Load(String filename, boolean wantFlip, int wrap, int filter) {
+        return TextureLoader.Load(filename, wantFlip, wrap, wrap, filter, filter);
+    }
+
+    /**
+     * Default: GL_REPEAT, GL_NEAREST
+     *
+     * @param filename
+     * @return
+     */
+    public static Texture Load(String filename) {
+        return TextureLoader.Load(filename, true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_NEAREST, GL.GL_NEAREST);
     }
 
     /**

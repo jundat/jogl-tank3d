@@ -4,6 +4,7 @@
  */
 package myjogl.gameview;
 
+import com.sun.opengl.util.texture.Texture;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -25,9 +26,10 @@ public class MainGameView implements GameView {
     private static Md2 md2Tank;
     private static Md2 model;
     
+    private static Texture ttGachMen;
+
     //tieunun
     //public static Tank myTank;
-
     public MainGameView() {
     }
 
@@ -98,8 +100,6 @@ public class MainGameView implements GameView {
     }
 
     public void load() {
-        ResourceManager.getInst().LoadInGame();
-        
         //set hide cursor
         Toolkit t = Toolkit.getDefaultToolkit();
         Image i = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
@@ -107,6 +107,8 @@ public class MainGameView implements GameView {
         GameEngine.getInst().tank3d.frame.setCursor(noCursor);
         //end - set hide cursor
         
+        ttGachMen = ResourceManager.getInst().getTexture("data/game/ttGachMen.png");
+
         //init variable
         objCamera = new Camera();
         objCamera.Position_Camera(-19.760378f, 3.8099978f, -8.027661f, -15.02627f, 3.6239977f, -6.2564106f, 0.0f, 1.0f, 0.0f);
@@ -117,34 +119,31 @@ public class MainGameView implements GameView {
         m_skybox.Initialize(5.0f);
 
         m_skybox.LoadTextures(
-                ResourceManager.ttSkyUp, ResourceManager.ttSkyDown,
-                ResourceManager.ttSkyFront, ResourceManager.ttSkyBack,
-                ResourceManager.ttSkyLeft, ResourceManager.ttSkyRight);
+                "data/skybox/up.jpg", "data/skybox/down.jpg",
+                "data/skybox/front.jpg", "data/skybox/back.jpg",
+                "data/skybox/left.jpg", "data/skybox/right.jpg");
         //init map
         Map.getInst().LoadMap("data/map/MAP0.png");
 
         //model
         md2Tank = new Md2();
         md2Tank.LoadModel("data/model/triax_wheels.md2");
-        md2Tank.LoadSkin(ResourceManager.ttTank);
+        md2Tank.LoadSkin(ResourceManager.getInst().getTexture("data/model/triax_wheels.png"));
 
         model = new Md2();
         model.LoadModel("data/model/knight.md2");
-        model.LoadSkin(ResourceManager.ttKnight);
+        model.LoadSkin(ResourceManager.getInst().getTexture("data/model/knight.png"));
     }
 
     public void unload() {
-        ResourceManager.getInst().UnLoadInGame();
-        //set show cursor
         GameEngine.getInst().tank3d.frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        //end - set show cursor
     }
 
     void DrawPlane() {
         GL gl = Global.drawable.getGL();
 
-        ResourceManager.ttGachMen.enable();
-        ResourceManager.ttGachMen.bind();
+        ttGachMen.enable();
+        ttGachMen.bind();
 
         int repeat = 250;
         gl.glBegin(GL.GL_QUADS);
@@ -170,98 +169,57 @@ public class MainGameView implements GameView {
 
     public void display() {
         Global.drawable.getGL().glLoadIdentity();
-        if (ResourceManager.isLoadInGame) {
-            // use this function for opengl target camera
-            (new GLU()).gluLookAt(
-                    objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z,
-                    objCamera.mView.x, objCamera.mView.y, objCamera.mView.z,
-                    objCamera.mUp.x, objCamera.mUp.y, objCamera.mUp.z);
+        // use this function for opengl target camera
+        (new GLU()).gluLookAt(
+                objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z,
+                objCamera.mView.x, objCamera.mView.y, objCamera.mView.z,
+                objCamera.mUp.x, objCamera.mUp.y, objCamera.mUp.z);
 
-            // skybox origin should be same as camera position
-            m_skybox.Render(objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
+        // skybox origin should be same as camera position
+        m_skybox.Render(objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
 
-            this.DrawPlane();
+        this.DrawPlane();
 
-            //Map.getInst().Render(2, 4);
+        //Map.getInst().Render(2, 4);
 
-            GL gl = Global.drawable.getGL();
+        GL gl = Global.drawable.getGL();
 
-            ////////////////////////////////////////////////////////
-            //camera
-            gl.glPushMatrix();
-                // Always keep the character in the view
-                gl.glTranslatef(objCamera.mView.x, 0.0f, objCamera.mView.z);
-                float dx = objCamera.mView.x - objCamera.mPos.x;
-                float dz = objCamera.mView.z - objCamera.mPos.z;
-                float angle = (float) Math.atan(dz / dx);
-                angle = 180 * angle / 3.141592654f;
-                int angle2 = (int) angle;
-                angle2 %= 360;
-                if (dx < 0) {
-                    angle2 = (int) (angle - 180);
-                }
-                gl.glRotatef(-angle2, 0, 1, 0);
-
-                //draw tank
-                gl.glRotatef(-90, 0, 0, 1);
-                gl.glRotatef(-90, 0, 1, 0);
-                md2Tank.SetScale(0.03f);
-                md2Tank.DrawModel(gl, 0);
-            gl.glPopMatrix();
-            ////////////////////////////////////////////////////////
-//            gl.glPushMatrix();
-//            
-//            for(int i = 0; i < 5; ++i)
-//            {
-//                int x = -2 + 4 * i;
-//                int y = 4;
-//                int z = -10 - 4 * i;
-//                int size = 4;
-//            
-//                gl.glPushMatrix();
-//
-//                gl.glTranslatef(x, y, z);
-//                z = 0;
-//                
-//                gl.glRotatef(objCamera.GetAngleY(), 0, 1, 0);
-//                //gl.glRotatef(-objCamera.GetAngleX(), 1, 0, 0);
-//                //gl.glRotatef(90+objCamera.GetAngleZ(), 0, 0, 1);
-//                
-//
-//                ResourceManager.ttLogo.enable();
-//                ResourceManager.ttLogo.bind();
-//                gl.glBegin(GL.GL_QUADS);
-//                    gl.glTexCoord2f(0.0f, 0.0f);
-//                    gl.glVertex3f(x, y - size, z);
-//
-//                    gl.glTexCoord2f(1.0f, 0.0f);
-//                    gl.glVertex3f(x + size, y - size, z);
-//
-//                    gl.glTexCoord2f(1.0f, 1.0f);
-//                    gl.glVertex3f(x + size, y, z);
-//
-//                    gl.glTexCoord2f(0.0f, 1.0f);
-//                    gl.glVertex3f(x, y, z);
-//                gl.glEnd();
-//                ResourceManager.ttLogo.disable();
-//                gl.glPopMatrix();
-//            }
-//            
-//            gl.glPopMatrix();
-            ////////////////////////////////////////////////////////
-            
-            float h = 20;
-            float scale = h / 256.0f;
-            float transY = h * 9.5f / 100;
-            gl.glPushMatrix();
-                gl.glTranslatef(5.0f, transY, -7);
-                gl.glRotatef(-90, 0, 0, 1);
-                gl.glRotatef(-90, 0, 1, 0);
-                model.SetScale(scale);
-                model.DrawAnimate(gl, 0, 100, 0.05f);
-            gl.glPopMatrix();
-
-            Writer.Render("MAIN GAME VIEW - Escape key back to menu", "Constantia", Font.BOLD, 120, 400, 400, Color.YELLOW);
+        ////////////////////////////////////////////////////////
+        //camera
+        gl.glPushMatrix();
+        // Always keep the character in the view
+        gl.glTranslatef(objCamera.mView.x, 0.0f, objCamera.mView.z);
+        float dx = objCamera.mView.x - objCamera.mPos.x;
+        float dz = objCamera.mView.z - objCamera.mPos.z;
+        float angle = (float) Math.atan(dz / dx);
+        angle = 180 * angle / 3.141592654f;
+        int angle2 = (int) angle;
+        angle2 %= 360;
+        if (dx < 0) {
+            angle2 = (int) (angle - 180);
         }
+        gl.glRotatef(-angle2, 0, 1, 0);
+
+        //draw tank
+        gl.glRotatef(-90, 0, 0, 1);
+        gl.glRotatef(-90, 0, 1, 0);
+        md2Tank.SetScale(0.03f);
+        md2Tank.DrawModel(gl, 0);
+        gl.glPopMatrix();
+        ////////////////////////////////////////////////////////
+
+
+        float h = 20;
+        float scale = h / 256.0f;
+        float transY = h * 9.5f / 100;
+        gl.glPushMatrix();
+        gl.glTranslatef(5.0f, transY, -7);
+        gl.glRotatef(-90, 0, 0, 1);
+        gl.glRotatef(-90, 0, 1, 0);
+        model.SetScale(scale);
+        model.DrawAnimate(gl, 0, 100, 0.05f);
+        gl.glPopMatrix();
+
+        Writer.Render("MAIN GAME VIEW - Escape key back to menu", "Constantia", Font.BOLD, 120, 400, 400, Color.YELLOW);
     }
 }

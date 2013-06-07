@@ -4,6 +4,7 @@
  */
 package myjogl.gameview;
 
+import com.sun.opengl.util.texture.Texture;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
@@ -25,6 +26,8 @@ public class IntroView implements GameView {
     Sound s;
     float x = 0, y = 0;
     float w, h;
+    
+    Texture ttLogo;
 
     public IntroView() {
     }
@@ -33,7 +36,7 @@ public class IntroView implements GameView {
     }
 
     public void keyReleased(KeyEvent e) {
-        if ( drawText && e.getKeyCode() == KeyEvent.VK_ENTER) {
+        if (drawText && e.getKeyCode() == KeyEvent.VK_ENTER) {
             GameEngine.getInst().attach(new MenuView());
             GameEngine.getInst().detach(this);
         }
@@ -49,12 +52,14 @@ public class IntroView implements GameView {
     }
 
     public void load() {
+        ttLogo = ResourceManager.getInst().getTexture("data/ttLogo.png");
+
         w = Global.wndWidth;
-        h = ResourceManager.ttLogo.getHeight() * w / ResourceManager.ttLogo.getWidth();
+        h = ttLogo.getHeight() * w / ttLogo.getWidth();
         x = 0;
         y = (Global.wndHeight - h) / 2;
 
-        s = new Sound("sound/intro.wav", false);
+        s = ResourceManager.getInst().getSound("sound/intro.wav", false);
         s.play();
     }
 
@@ -63,7 +68,7 @@ public class IntroView implements GameView {
     }
 
     public void update(long elapsedTime) {
-        if (w > ResourceManager.ttLogo.getWidth() && h > ResourceManager.ttLogo.getHeight()) {
+        if (w > ttLogo.getWidth() && h > ttLogo.getHeight()) {
             float tempw = w;
             float temph = h;
             w *= scale;
@@ -77,13 +82,11 @@ public class IntroView implements GameView {
     }
 
     public void display() {
-        if (ResourceManager.isLoadOutGame) {
-            Renderer.Render(ResourceManager.ttLogo, x, y, w, h);
-            
-            if(drawText) {
+        Renderer.Render(ttLogo, x, y, w, h);
+
+        if (drawText) {
             Writer.Render("...press enter to continue...",
                     "Constantia", Font.BOLD, 24, 1050, 32, Color.GRAY);
-            }
         }
     }
 }

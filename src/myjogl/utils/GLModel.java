@@ -76,7 +76,7 @@ public class GLModel {
         farpoint = 0.0F;
         nearpoint = 0.0F;
 
-        this.skin = TextureLoader.Load(skin_path, false, GL.GL_REPEAT);
+        this.skin = ResourceManager.getInst().getTexture(skin_path, false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_NEAREST, GL.GL_NEAREST);
 
         this.loadobject(ref);
 
