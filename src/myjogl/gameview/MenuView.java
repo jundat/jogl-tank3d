@@ -54,7 +54,7 @@ public class MenuView implements GameView {
         if (itPlay.contains(e.getX(), e.getY())) {
             itPlay.setIsClick(false);
             
-            GameEngine.getInst().attach(new MainGameView());
+            GameEngine.getInst().attach( new LoadingView( new MainGameView() ));
             GameEngine.getInst().detach(this);
         }
 

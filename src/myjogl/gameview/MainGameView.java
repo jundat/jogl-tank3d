@@ -128,11 +128,11 @@ public class MainGameView implements GameView {
         //model
         md2Tank = new Md2();
         md2Tank.LoadModel("data/model/triax_wheels.md2");
-        md2Tank.LoadSkin(ResourceManager.getInst().getTexture("data/model/triax_wheels.png"));
+        md2Tank.LoadSkin(ResourceManager.getInst().getTexture("data/model/triax_wheels.png", false, GL.GL_REPEAT));
 
         model = new Md2();
         model.LoadModel("data/model/knight.md2");
-        model.LoadSkin(ResourceManager.getInst().getTexture("data/model/knight.png"));
+        model.LoadSkin(ResourceManager.getInst().getTexture("data/model/knight.png", false, GL.GL_REPEAT));
     }
 
     public void unload() {
