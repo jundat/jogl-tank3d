@@ -40,12 +40,12 @@ public class SkyBox {
     }
 
     public void LoadTextures(String up, String down, String front, String back, String left, String right) {
-        this.ttUp = TextureLoader.Load(up, false, GL.GL_CLAMP_TO_EDGE);
-        this.ttDown = TextureLoader.Load(down, false, GL.GL_CLAMP_TO_EDGE);
-        this.ttFront = TextureLoader.Load(front, false, GL.GL_CLAMP_TO_EDGE);
-        this.ttBack = TextureLoader.Load(back, false, GL.GL_CLAMP_TO_EDGE);
-        this.ttLeft = TextureLoader.Load(left, false, GL.GL_CLAMP_TO_EDGE);
-        this.ttRight = TextureLoader.Load(right, false, GL.GL_CLAMP_TO_EDGE);
+        this.ttUp = ResourceManager.getInst().getTexture(up, false, GL.GL_CLAMP_TO_EDGE);
+        this.ttDown = ResourceManager.getInst().getTexture(down, false, GL.GL_CLAMP_TO_EDGE);
+        this.ttFront = ResourceManager.getInst().getTexture(front, false, GL.GL_CLAMP_TO_EDGE);
+        this.ttBack = ResourceManager.getInst().getTexture(back, false, GL.GL_CLAMP_TO_EDGE);
+        this.ttLeft = ResourceManager.getInst().getTexture(left, false, GL.GL_CLAMP_TO_EDGE);
+        this.ttRight = ResourceManager.getInst().getTexture(right, false, GL.GL_CLAMP_TO_EDGE);
     }
 
     public void Render(float cameraX, float cameraY, float cameraZ) {

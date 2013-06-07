@@ -3,6 +3,7 @@ package myjogl;
 import java.awt.event.*;
 import java.util.Enumeration;
 import java.util.Vector;
+import javax.media.opengl.GLAutoDrawable;
 import myjogl.gameview.GameView;
 import myjogl.tank3d.Tank3D;
 
@@ -17,6 +18,9 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
     public Tank3D tank3d;
     public Vector views;
     public long localTime = System.currentTimeMillis();
+    
+    GameView newView = null;
+    boolean hasNewView = false;
     
     private static GameEngine instance = null;
     
@@ -50,8 +54,10 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
 
     public void attach(GameView view) {
         if (!this.views.contains(view)) {
-            view.load();
-            this.views.add(view);
+            //view.load();
+            //this.views.add(view);
+            newView = view;
+            hasNewView = true;
         }
     }
 
@@ -78,7 +84,13 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
         }
     }
 
-    public void run() {
+    public void run(GLAutoDrawable drawable) {
+        if(hasNewView) {
+            newView.load();
+            this.views.add(newView);
+            hasNewView = false;
+        }
+        
         long currentTime = System.currentTimeMillis();
         {
             this.update(currentTime - localTime);

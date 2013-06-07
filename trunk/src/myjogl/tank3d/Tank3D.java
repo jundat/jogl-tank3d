@@ -103,7 +103,7 @@ public class Tank3D implements GLEventListener {
         
         GameEngine engine = GameEngine.getInst();
         engine.init(this);
-        
+//---------------------------------------------        
         engine.attach(new IntroView());
     }
 
@@ -131,7 +131,7 @@ public class Tank3D implements GLEventListener {
     }
 
     public void display(GLAutoDrawable drawable) {
-        Global.drawable = drawable;
+        Global.drawable = drawable; //do not delete this line
         
         GL gl = drawable.getGL();
 
@@ -141,7 +141,7 @@ public class Tank3D implements GLEventListener {
         // Reset the current matrix to the "identity"
         gl.glLoadIdentity();
 
-        GameEngine.getInst().run();
+        GameEngine.getInst().run(drawable);
 
         // Flush all drawing operations to the graphics card
         gl.glFlush();
@@ -152,7 +152,6 @@ public class Tank3D implements GLEventListener {
     }
 
     public void loadResource(GLAutoDrawable drawable) {
-        ResourceManager.getInst().LoadOutGame();
     }
 
     public void unloadResource() {

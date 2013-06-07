@@ -18,8 +18,8 @@ public class LoadingView  implements GameView {
         Thread t;
         t = new Thread(new Runnable(){
             public void run() {
-                ResourceManager.getInst().LoadOutGame();
-                ResourceManager.getInst().LoadInGame();
+                //ResourceManager.getInst().LoadOutGame();
+                //ResourceManager.getInst().LoadInGame();
             }
         });
         

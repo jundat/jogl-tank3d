@@ -4,6 +4,7 @@
  */
 package myjogl.utils;
 
+import com.sun.opengl.util.texture.Texture;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +24,7 @@ public class Map {
     public byte[][] board;
     public int width;
     public int height;
-    //private static Texture ttGachTuong = null;
+    private static Texture ttGachTuong = null;
 
     private static Map instance = null;
     
@@ -36,7 +37,7 @@ public class Map {
     }
     
     private Map() {
-        //Map.ttGachTuong = ResourceManager.ttGachTuong;
+        ttGachTuong = ResourceManager.getInst().getTexture("data/game/ttGachTuong.png");
     }
 
     //only use png file
@@ -109,8 +110,8 @@ public class Map {
         gl.glPushMatrix();
         gl.glTranslatef(x, y, z);
 
-        ResourceManager.ttGachTuong.enable();
-        ResourceManager.ttGachTuong.bind();
+        ttGachTuong.enable();
+        ttGachTuong.bind();
 
         gl.glBegin(GL.GL_QUADS);        // Draw The Cube Using quads
             gl.glNormal3f(0, 1, 0);
@@ -185,6 +186,6 @@ public class Map {
         //reset color
         gl.glColor4f(1, 1, 1, 1);
 
-        ResourceManager.ttGachTuong.disable();
+        ttGachTuong.disable();
     }
 }

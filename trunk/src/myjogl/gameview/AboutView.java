@@ -4,6 +4,7 @@
  */
 package myjogl.gameview;
 
+import com.sun.opengl.util.texture.Texture;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
@@ -20,9 +21,10 @@ import myjogl.utils.Writer;
 public class AboutView implements GameView {
 
     private MenuItem itBack;
+    private Texture ttBgAbout;
     //Texture ttBgAbout;
 
-    public AboutView() {        
+    public AboutView() {
     }
 
     public void keyPressed(KeyEvent e) {
@@ -43,34 +45,31 @@ public class AboutView implements GameView {
     public void pointerReleased(MouseEvent e) {
         if (itBack.contains(e.getX(), e.getY())) {
             itBack.setIsClick(false);
-            
+
             GameEngine.getInst().attach(new MenuView());
             GameEngine.getInst().detach(this);
         }
     }
 
-    public void load() {ResourceManager.getInst().LoadOutGame();
-        //ttBgAbout = ResourceManager.ttBgAbout;
-
-        itBack = new MenuItem(ResourceManager.ttButtonNormal, ResourceManager.ttButtonClick);
-
-        itBack.SetPosition(0, 0);        
+    public void load() {
+        itBack = new MenuItem(ResourceManager.getInst().getTexture("data/ttButtonNormal.png"),
+                ResourceManager.getInst().getTexture("data/ttButtonClick.png"));
+        
+        ttBgAbout = ResourceManager.getInst().getTexture("data/ttBgAbout.png");
+        itBack.SetPosition(0, 0);
     }
 
     public void unload() {
-        ResourceManager.getInst().UnLoadOutGame();
     }
 
     public void update(long elapsedTime) {
     }
 
     public void display() {
-        if (ResourceManager.isLoadOutGame) {
-            Renderer.Render(ResourceManager.ttBgAbout, 0, 0);
+        Renderer.Render(ttBgAbout, 0, 0);
 
-            itBack.Render();
+        itBack.Render();
 
-            Writer.Render("BACK", "Constantia", Font.BOLD, 60, itBack.rect.x + 30, itBack.rect.y + 30, Color.YELLOW);
-        }
+        Writer.Render("BACK", "Constantia", Font.BOLD, 60, itBack.rect.x + 30, itBack.rect.y + 30, Color.YELLOW);
     }
 }
