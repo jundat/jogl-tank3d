@@ -19,7 +19,7 @@ public class ResourceManager {
     //Resource
     
     //IntroView
-    public static Texture ttBgIntro;
+    //public static Texture ttBgIntro;
     public static Texture ttLogo;
     
     //MenuView
@@ -70,7 +70,7 @@ public class ResourceManager {
         if (isLoadOutGame == false) {
             
             //intro
-            ttBgIntro = TextureLoader.Load("data/ttBgIntro.png", true, GL.GL_REPEAT);
+            //ttBgIntro = TextureLoader.Load("data/ttBgIntro.png", true, GL.GL_REPEAT);
             ttLogo = TextureLoader.Load("data/ttLogo.png", true, GL.GL_REPEAT);
             
             //menu
@@ -80,7 +80,6 @@ public class ResourceManager {
 
             //about
             ttBgAbout = TextureLoader.Load("data/ttBgAbout.png", true, GL.GL_REPEAT);
-
             
             //must be in the end of function
             ResourceManager.isLoadOutGame = true;

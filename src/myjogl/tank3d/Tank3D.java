@@ -153,7 +153,6 @@ public class Tank3D implements GLEventListener {
 
     public void loadResource(GLAutoDrawable drawable) {
         ResourceManager.getInst().LoadOutGame();
-        ResourceManager.getInst().LoadInGame();
     }
 
     public void unloadResource() {
