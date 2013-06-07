@@ -226,24 +226,15 @@ public class Md2 {
     public void LoadSkin(GLAutoDrawable drawable, String filename) {
         GL gl = drawable.getGL();
 
-        //Load resource
-        try {
             InputStream stream;
             TextureData data;
 
-            stream = getClass().getResourceAsStream(filename);
-            data = TextureIO.newTextureData(stream, false, "png");
-            m_texture = TextureIO.newTexture(data);
+            m_texture = ResourceManager.getInst().getTexture(filename, false, GL.GL_REPEAT);
 
             gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
             gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
             gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
             gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
-
-        } catch (IOException exc) {
-            System.out.println("LoadSkin: Can not load resource: " + exc.getMessage());
-            System.exit(1);
-        }
     }
     
     public void LoadSkin(Texture texture)
