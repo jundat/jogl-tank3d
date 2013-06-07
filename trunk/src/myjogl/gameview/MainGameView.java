@@ -182,7 +182,7 @@ public class MainGameView implements GameView {
 
             this.DrawPlane();
 
-            Map.getInst().Render(2, 4);
+            //Map.getInst().Render(2, 4);
 
             GL gl = Global.drawable.getGL();
 
@@ -209,7 +209,47 @@ public class MainGameView implements GameView {
                 md2Tank.DrawModel(gl, 0);
             gl.glPopMatrix();
             ////////////////////////////////////////////////////////
-
+//            gl.glPushMatrix();
+//            
+//            for(int i = 0; i < 5; ++i)
+//            {
+//                int x = -2 + 4 * i;
+//                int y = 4;
+//                int z = -10 - 4 * i;
+//                int size = 4;
+//            
+//                gl.glPushMatrix();
+//
+//                gl.glTranslatef(x, y, z);
+//                z = 0;
+//                
+//                gl.glRotatef(objCamera.GetAngleY(), 0, 1, 0);
+//                //gl.glRotatef(-objCamera.GetAngleX(), 1, 0, 0);
+//                //gl.glRotatef(90+objCamera.GetAngleZ(), 0, 0, 1);
+//                
+//
+//                ResourceManager.ttLogo.enable();
+//                ResourceManager.ttLogo.bind();
+//                gl.glBegin(GL.GL_QUADS);
+//                    gl.glTexCoord2f(0.0f, 0.0f);
+//                    gl.glVertex3f(x, y - size, z);
+//
+//                    gl.glTexCoord2f(1.0f, 0.0f);
+//                    gl.glVertex3f(x + size, y - size, z);
+//
+//                    gl.glTexCoord2f(1.0f, 1.0f);
+//                    gl.glVertex3f(x + size, y, z);
+//
+//                    gl.glTexCoord2f(0.0f, 1.0f);
+//                    gl.glVertex3f(x, y, z);
+//                gl.glEnd();
+//                ResourceManager.ttLogo.disable();
+//                gl.glPopMatrix();
+//            }
+//            
+//            gl.glPopMatrix();
+            ////////////////////////////////////////////////////////
+            
             float h = 20;
             float scale = h / 256.0f;
             float transY = h * 9.5f / 100;

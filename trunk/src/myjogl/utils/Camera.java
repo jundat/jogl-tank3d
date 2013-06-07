@@ -172,6 +172,7 @@ public class Camera {
 
     /**
      * Angle rotate in y axis
+     * Luôn luôn song song vs màn hình
      * @return 
      */
     public float GetAngleY() {
