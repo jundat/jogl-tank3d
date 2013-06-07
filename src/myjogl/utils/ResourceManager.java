@@ -6,8 +6,6 @@ package myjogl.utils;
 
 import com.sun.opengl.util.texture.Texture;
 import javax.media.opengl.GL;
-import myjogl.GameEngine;
-import myjogl.Global;
 
 /**
  *All game resource must be loaded into before run game.
