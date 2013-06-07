@@ -15,14 +15,14 @@ import myjogl.Global;
  */
 public class Renderer {
     
-    public static void Render(Texture tt, int x, int y)
+    public static void Render(Texture tt, float x, float y)
     {
         int w = tt.getWidth();
         int h = tt.getHeight();
         Renderer.Render(tt, x, y, w, h);
     }
     
-    public static void Render(Texture tt, int x, int y, int w, int h)
+    public static void Render(Texture tt, float x, float y, float w, float h)
     {
         GL gl = Global.drawable.getGL();
         GLU glu = new GLU();
@@ -82,7 +82,7 @@ public class Renderer {
      * @param y
      * @param alpha between 0.0 -> 1.0
      */
-    public static void Render(Texture tt, int x, int y, float alpha)
+    public static void Render(Texture tt, float x, float y, float alpha)
     {
         int w = tt.getWidth();
         int h = tt.getHeight();

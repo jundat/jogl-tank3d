@@ -40,7 +40,7 @@ public class TextureLoader {
 
         //Load resource
         try {
-            is = (new TextureLoader()).getClass().getResourceAsStream(filename);
+            is = TextureLoader.class.getResourceAsStream(filename);
             tBufferedImage = ImageIO.read(new BufferedInputStream(is));
 
             if (wantFlip) {

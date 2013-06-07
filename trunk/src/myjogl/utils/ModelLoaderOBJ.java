@@ -19,7 +19,7 @@ public class ModelLoaderOBJ {
         GLModel model = null;
 
         try {
-            InputStream r_path1 = (new ModelLoaderOBJ()).getClass().getResourceAsStream(objPath);
+            InputStream r_path1 = ModelLoaderOBJ.class.getResourceAsStream(objPath);
             
             InputStreamReader isr = new InputStreamReader(r_path1);
             
