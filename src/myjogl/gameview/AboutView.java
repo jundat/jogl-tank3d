@@ -25,6 +25,7 @@ public class AboutView implements GameView {
     //Texture ttBgAbout;
 
     public AboutView() {
+        System.out.println("Go to about view------------------------------------");
     }
 
     public void keyPressed(KeyEvent e) {
@@ -60,6 +61,9 @@ public class AboutView implements GameView {
     }
 
     public void unload() {
+        ResourceManager.getInst().deleteTexture("data/ttBgAbout.png");
+        ResourceManager.getInst().deleteTexture("data/ttButtonNormal.png");
+        ResourceManager.getInst().deleteTexture("data/ttButtonClick.png");
     }
 
     public void update(long elapsedTime) {

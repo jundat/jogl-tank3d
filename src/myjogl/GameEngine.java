@@ -6,6 +6,7 @@ import java.util.Vector;
 import javax.media.opengl.GLAutoDrawable;
 import myjogl.gameview.GameView;
 import myjogl.tank3d.Tank3D;
+import myjogl.utils.ResourceManager;
 
 /**
  * GameEngine class provides a basic tank3d engine.
@@ -19,7 +20,11 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
     public Vector views;
     public long localTime = System.currentTimeMillis();
     
-    GameView newView = null;
+    
+    GameView oldView = null; //detaching view
+    boolean hasOldView = false;
+    
+    GameView newView = null; //attaching view
     boolean hasNewView = false;
     
     private static GameEngine instance = null;
@@ -54,8 +59,6 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
 
     public void attach(GameView view) {
         if (!this.views.contains(view)) {
-            //view.load();
-            //this.views.add(view);
             newView = view;
             hasNewView = true;
         }
@@ -63,8 +66,8 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
 
     public void detach(GameView view) {
         if (this.views.contains(view)) {
-            this.views.remove(view);
-            view.unload();
+            oldView = view;
+            hasOldView = true;
         }
     }
 
@@ -85,11 +88,26 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
     }
 
     public void run(GLAutoDrawable drawable) {
+        
+        //always detach first
+        if(hasOldView) {
+            this.views.remove(oldView);
+            oldView.unload();
+            hasOldView = false;
+            
+            System.gc();
+            Runtime.getRuntime().gc();
+        }
+        
+        ResourceManager.getInst().PreUnload();
+        
         if(hasNewView) {
             newView.load();
             this.views.add(newView);
             hasNewView = false;
         }
+        
+        ResourceManager.getInst().PreLoad();
         
         long currentTime = System.currentTimeMillis();
         {

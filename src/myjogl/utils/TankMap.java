@@ -19,24 +19,24 @@ import myjogl.Global;
  *
  * @author Jundat
  */
-public class Map {
+public class TankMap {
 
     public byte[][] board;
     public int width;
     public int height;
     private static Texture ttGachTuong = null;
 
-    private static Map instance = null;
+    private static TankMap instance = null;
     
-    public static Map getInst() {
+    public static TankMap getInst() {
         if(instance == null) {
-            instance = new Map();
+            instance = new TankMap();
         }
         
         return instance;
     }
     
-    private Map() {
+    private TankMap() {
         ttGachTuong = ResourceManager.getInst().getTexture("data/game/ttGachTuong.png");
     }
 
@@ -75,7 +75,7 @@ public class Map {
 
         } catch (IOException ex) {
             System.out.println("Map.LoadMap: can not load map!");
-            Logger.getLogger(Map.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TankMap.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
