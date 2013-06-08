@@ -4,22 +4,11 @@
  */
 package myjogl.utils;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.sound.sampled.DataLine;
 import javax.sound.sampled.FloatControl;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import myjogl.Global;
 
 /**
  *
@@ -27,12 +16,14 @@ import myjogl.Global;
  */
 public class Sound {
 
+    String fileName;
     boolean isPause = false;
     boolean isLoop = false;
     int pausePosition = 0;
-    Clip clip;
+    public Clip clip;
 
     public Sound(String fileName, boolean isLoop) {
+        this.fileName = fileName;
         this.isPause = false;
         this.isLoop = isLoop;
 
@@ -47,19 +38,26 @@ public class Sound {
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
             }
 
+            System.out.println("+ Sound: " + fileName);
         } catch (Exception ex) {
             System.out.println("Can not open sound: " + fileName);
         } finally {
             try {
                 audioIn.close();
+                audioIn = null;
             } catch (IOException ex) {
                 System.out.println("Can not close sound: " + fileName);
             }
         }
     }
 
-    public void close() {
+    /**
+     * release data
+     */
+    public void dispose() {
         clip.close();
+        clip = null;
+        System.out.println("- Sound: " + fileName);
     }
 
     public void play() {
@@ -67,8 +65,9 @@ public class Sound {
             clip.loop(Clip.LOOP_CONTINUOUSLY);
         }
 
-        clip.start();
         clip.setMicrosecondPosition(0);
+        clip.start();
+        System.out.println("Play sound: " + fileName);
     }
 
     public void stop() {
@@ -88,8 +87,8 @@ public class Sound {
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
             }
 
-            clip.start();
             clip.setFramePosition(pausePosition);
+            clip.start();
 
             isPause = false;
         }
@@ -99,4 +98,6 @@ public class Sound {
         FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
         volume.setValue(gainAmount);
     }
+    
+    
 }

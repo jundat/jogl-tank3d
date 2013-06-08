@@ -142,7 +142,7 @@ public class Tank3D implements GLEventListener {
         gl.glLoadIdentity();
 
         GameEngine.getInst().run(drawable);
-
+        
         // Flush all drawing operations to the graphics card
         gl.glFlush();
         canvas.swapBuffers();
@@ -166,7 +166,9 @@ public class Tank3D implements GLEventListener {
         }
         
         this.animator.stop();
-
+        
+        ResourceManager.getInst().GetAllResource();
+        
         System.exit(0);
     }       
 }

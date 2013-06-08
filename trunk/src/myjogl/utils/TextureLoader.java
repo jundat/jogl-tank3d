@@ -55,6 +55,7 @@ public class TextureLoader {
             gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, minFilter);
             gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, magFilter);
 
+            System.out.println("+ Texture: " + filename);
         } catch (Exception exc) {
             System.out.println("TextureLoader: Can not load resource: " + exc.getMessage());
             JOptionPane.showMessageDialog(null, "TextureLoader: Can not load resource: " + filename + "\n" + exc.getMessage());
@@ -82,7 +83,7 @@ public class TextureLoader {
      * @return
      */
     public static Texture Load(String filename) {
-        return TextureLoader.Load(filename, true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_NEAREST, GL.GL_NEAREST);
+        return TextureLoader.Load(filename, true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR, GL.GL_LINEAR);
     }
 
     /**

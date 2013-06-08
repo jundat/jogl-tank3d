@@ -7,6 +7,7 @@ package myjogl.gameview;
 import com.sun.opengl.util.texture.Texture;
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import javax.media.opengl.GL;
@@ -25,12 +26,12 @@ public class MainGameView implements GameView {
     private Camera objCamera;
     private static Md2 md2Tank;
     private static Md2 model;
-    
     private static Texture ttGachMen;
 
     //tieunun
     //public static Tank myTank;
     public MainGameView() {
+        System.out.println("Go to main game!------------------------------------");
     }
 
     public void keyPressed(KeyEvent e) {
@@ -106,7 +107,7 @@ public class MainGameView implements GameView {
         Cursor noCursor = t.createCustomCursor(i, new Point(0, 0), "none");
         GameEngine.getInst().tank3d.frame.setCursor(noCursor);
         //end - set hide cursor
-        
+
         ttGachMen = ResourceManager.getInst().getTexture("data/game/ttGachMen.png");
 
         //init variable
@@ -123,7 +124,7 @@ public class MainGameView implements GameView {
                 "data/skybox/front.jpg", "data/skybox/back.jpg",
                 "data/skybox/left.jpg", "data/skybox/right.jpg");
         //init map
-        Map.getInst().LoadMap("data/map/MAP0.png");
+        TankMap.getInst().LoadMap("data/map/MAP0.png");
 
         //model
         md2Tank = new Md2();
@@ -137,9 +138,23 @@ public class MainGameView implements GameView {
 
     public void unload() {
         GameEngine.getInst().tank3d.frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+
+        //pre-load main game
+        ResourceManager.getInst().deleteTexture("data/game/ttGachMen.png");
+        ResourceManager.getInst().deleteTexture("data/model/triax_wheels.png");
+        ResourceManager.getInst().deleteTexture("data/model/knight.png");
+
+        //skybox
+        ResourceManager.getInst().deleteTexture("data/skybox/up.jpg");
+        ResourceManager.getInst().deleteTexture("data/skybox/down.jpg");
+        ResourceManager.getInst().deleteTexture("data/skybox/left.jpg");
+        ResourceManager.getInst().deleteTexture("data/skybox/right.jpg");
+        ResourceManager.getInst().deleteTexture("data/skybox/front.jpg");
+        ResourceManager.getInst().deleteTexture("data/skybox/back.jpg");
+
     }
 
-    void DrawPlane() {
+    private void DrawPlane() {
         GL gl = Global.drawable.getGL();
 
         ttGachMen.enable();

@@ -13,7 +13,7 @@ import myjogl.utils.ResourceManager;
 import myjogl.utils.Writer;
 
 /**
- * Loading ch?y tr??c
+ * Ch?a dùng ???c!!!
  *
  * @author Jundat
  */
@@ -24,6 +24,7 @@ public class LoadingView implements GameView {
     private float percent = 0.0f;
 
     public LoadingView(final GameView loadingView) {
+        System.out.println("Go to loading view----------------------------------");
         this.loadingView = loadingView;
     }
 
