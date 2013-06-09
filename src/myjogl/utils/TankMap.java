@@ -37,7 +37,7 @@ public class TankMap {
     }
     
     private TankMap() {
-        ttGachTuong = ResourceManager.getInst().getTexture("data/game/ttGachTuong.png");
+        ttGachTuong = ResourceManager.getInst().getTexture("data/game/gach_tuong.png");
     }
 
     //only use png file

@@ -5,15 +5,12 @@
 package myjogl.gameview;
 
 import com.sun.opengl.util.texture.Texture;
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import javax.media.opengl.GLAutoDrawable;
 import myjogl.GameEngine;
 import myjogl.utils.Renderer;
 import myjogl.utils.ResourceManager;
-import myjogl.utils.Writer;
 
 /**
  *
@@ -21,9 +18,15 @@ import myjogl.utils.Writer;
  */
 public class AboutView implements GameView {
 
+    //Point pExceptionTeam = new Point(852, 675);
+    //Point pGameUIT = new Point(1057, 587);
+    //Point p2013 = new Point(1218, 500);
+    Point p = new Point(845, 522);
+    
+    
     private MenuItem itBack;
     private Texture ttBgAbout;
-    //Texture ttBgAbout;
+    private Texture ttText;
 
     public AboutView() {
         System.out.println("Go to about view------------------------------------");
@@ -54,17 +57,21 @@ public class AboutView implements GameView {
     }
 
     public void load() {
-        itBack = new MenuItem(ResourceManager.getInst().getTexture("data/ttButtonNormal.png"),
-                ResourceManager.getInst().getTexture("data/ttButtonClick.png"));
+        itBack = new MenuItem(ResourceManager.getInst().getTexture("data/menu/btn_back.png"),
+                ResourceManager.getInst().getTexture("data/menu/btn_back_press.png"));
         
-        ttBgAbout = ResourceManager.getInst().getTexture("data/ttBgAbout.png");
+        ttBgAbout = ResourceManager.getInst().getTexture("data/menu/bg_menu.png");
+        ttText = ResourceManager.getInst().getTexture("data/about/bg_about.png");
+        
         itBack.SetPosition(0, 0);
     }
 
     public void unload() {
-        ResourceManager.getInst().deleteTexture("data/ttBgAbout.png");
-        ResourceManager.getInst().deleteTexture("data/ttButtonNormal.png");
-        ResourceManager.getInst().deleteTexture("data/ttButtonClick.png");
+        ResourceManager.getInst().deleteTexture("data/menu/bg_menu.png");
+        ResourceManager.getInst().getTexture("data/about/bg_about.png");
+        
+        ResourceManager.getInst().deleteTexture("data/menu/btn_back.png");
+        ResourceManager.getInst().deleteTexture("data/menu/btn_back_press.png");
     }
 
     public void update(long elapsedTime) {
@@ -72,9 +79,11 @@ public class AboutView implements GameView {
 
     public void display() {
         Renderer.Render(ttBgAbout, 0, 0);
-
         itBack.Render();
-
-        Writer.Render("BACK", "Constantia", Font.BOLD, 60, itBack.rect.x + 30, itBack.rect.y + 30, Color.YELLOW);
+        
+        Renderer.Render(ttText, p.x, p.y);
+        //Writer.Render("Exception Team", "Nyala", 76, pExceptionTeam.x, pExceptionTeam.y, Color.ORANGE);
+        //Writer.Render("GameUIT", "Nyala", 76, pGameUIT.x, pGameUIT.y, Color.ORANGE);
+        //Writer.Render("2013", "Nyala", 76, p2013.x, p2013.y, Color.ORANGE);
     }
 }

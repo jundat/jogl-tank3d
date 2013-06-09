@@ -137,7 +137,7 @@ public class MainGameView implements GameView {
         GameEngine.getInst().tank3d.frame.setCursor(noCursor);
         //end - set hide cursor
 
-        ttGachMen = ResourceManager.getInst().getTexture("data/game/ttGachMen.png");
+        ttGachMen = ResourceManager.getInst().getTexture("data/game/gach_men.png");
 
 
         //skybox
@@ -164,7 +164,7 @@ public class MainGameView implements GameView {
         GameEngine.getInst().tank3d.frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
         //pre-load main game
-        ResourceManager.getInst().deleteTexture("data/game/ttGachMen.png");
+        ResourceManager.getInst().deleteTexture("data/game/gach_men.png");
         ResourceManager.getInst().deleteTexture("data/model/triax_wheels.png");
         ResourceManager.getInst().deleteTexture("data/model/knight.png");
 
@@ -220,6 +220,8 @@ public class MainGameView implements GameView {
         m_skybox.Render((float)camera.x, (float)camera.y, (float)camera.z);
 
         this.DrawPlane();
+        
+        TankMap.getInst().Render(2, 6);
 
         // Draw player
         gl.glPushMatrix();
@@ -250,6 +252,6 @@ public class MainGameView implements GameView {
         gl.glPopMatrix();
         // End
 
-        Writer.Render("MAIN GAME VIEW - Escape key back to menu", "Constantia", Font.BOLD, 120, 400, 400, Color.YELLOW);
+        Writer.Render("MAIN GAME VIEW - Escape key back to menu", "Constantia", 120, 400, 400, Color.YELLOW);
     }
 }

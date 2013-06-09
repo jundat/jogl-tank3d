@@ -4,12 +4,14 @@
  */
 package myjogl.gameview;
 
+import com.sun.opengl.util.texture.Texture;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import javax.media.opengl.GLAutoDrawable;
 import myjogl.GameEngine;
+import myjogl.utils.Renderer;
 import myjogl.utils.ResourceManager;
 import myjogl.utils.Writer;
 
@@ -20,13 +22,16 @@ import myjogl.utils.Writer;
  */
 public class LoadingView implements GameView {
 
-    private GameView loadingView;
+    private GameView loadView;
     private boolean isCompleted = false;
-    private float percent = 0.0f;
+    private int beforeLoad = 0;
+    private int currentLoad = 0;
+    private float rotate = 0.0f;
+    private Texture ttLoadingCircle;
 
-    public LoadingView(final GameView loadingView) {
-        System.out.println("Go to loading view----------------------------------");
-        this.loadingView = loadingView;
+    public LoadingView(GameView loadView) {
+        System.out.println("Go to loading view ---------------------------------");
+        this.loadView = loadView;
     }
 
     public void keyPressed(KeyEvent e) {
@@ -45,23 +50,40 @@ public class LoadingView implements GameView {
     }
 
     public void load() {
+        ttLoadingCircle = ResourceManager.getInst().getTexture("data/loading/loading_circle2.png");
+
+        beforeLoad = ResourceManager.getInst().GetNumberPreload();
+        currentLoad = beforeLoad;
+        isCompleted = false;
     }
 
     public void unload() {
+        ResourceManager.getInst().deleteTexture("data/loading/loading_circle2.png");
     }
 
     public void update(long elapsedTime) {
-        loadingView.load();
-        isCompleted = true;
+        rotate += 15.0f;
         
-        if (isCompleted) {
-            GameEngine.getInst().attach(loadingView);
+        currentLoad = ResourceManager.getInst().GetNumberPreload();
+        
+        if (currentLoad == 0 && isCompleted == false) {
+            isCompleted = true;
+            GameEngine.getInst().attach(loadView);
             GameEngine.getInst().detach(this);
         }
     }
 
     public void display() {
+        Renderer.Render(ttLoadingCircle, 
+                683 - ttLoadingCircle.getWidth() /2, 
+                384 - ttLoadingCircle.getHeight() /2, 
+                ttLoadingCircle.getWidth(), 
+                ttLoadingCircle.getHeight(), 
+                rotate);
+
+        currentLoad = ResourceManager.getInst().GetNumberPreload();
+        float percent = (float) (beforeLoad - currentLoad) / (float)beforeLoad;
         Writer.Render("Loading... " + (int) (100 * percent) + " %",
-                "Times New Roman", Font.BOLD, 20, 1050, 40, Color.RED);
+                "Nyala", 20, 1050, 40, Color.RED);
     }
 }
