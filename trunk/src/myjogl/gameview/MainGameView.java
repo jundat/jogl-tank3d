@@ -4,12 +4,21 @@
  */
 package myjogl.gameview;
 
+import GameObjects.EnemyTank;
+import GameObjects.Tank;
+import GamePartical.Debris;
+import GamePartical.Explo;
+import GamePartical.Explo1;
+import GamePartical.ParticalManager;
+import GamePartical.RoundSparks;
 import com.sun.opengl.util.texture.Texture;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
 import myjogl.GameEngine;
@@ -23,56 +32,30 @@ import myjogl.utils.*;
 public class MainGameView implements GameView {
 
     private SkyBox m_skybox;
-    private Camera objCamera;
-    private static Md2 md2Tank;
-    private static Md2 model;
+    private Camera2 camera;
+    public Tank myTank;
+    public static EnemyTank otherTank;
     private static Texture ttGachMen;
-
-    //tieunun
-    //public static Tank myTank;
+    
+    public static boolean[] keysTable = new boolean[256];
+    
     public MainGameView() {
         System.out.println("Go to main game!------------------------------------");
     }
 
     public void keyPressed(KeyEvent e) {
-
-        float CAMERASPEED = 0.03f;
-        /////////////////////
-        //forward
-
-        if (e.getKeyCode()
-                == KeyEvent.VK_UP) {
-            objCamera.Move_Camera(CAMERASPEED);
+        keysTable[e.getKeyCode()] = true;
+        
+        
+        // this is my
+        if (keysTable[KeyEvent.VK_A]) {
+            myTank.TurnLeft();
         }
-
-        //backward
-        if (e.getKeyCode()
-                == KeyEvent.VK_DOWN) {
-            objCamera.Move_Camera(-CAMERASPEED);
+        if (keysTable[KeyEvent.VK_D]) {
+            myTank.TurnRight();
         }
-
-        //left
-        if (e.getKeyCode()
-                == KeyEvent.VK_LEFT) {
-            objCamera.Move_Left_Right(-CAMERASPEED);
-        }
-
-        //right
-        if (e.getKeyCode()
-                == KeyEvent.VK_RIGHT) {
-            objCamera.Move_Left_Right(CAMERASPEED);
-        }
-
-        //up
-        if (e.getKeyCode()
-                == KeyEvent.VK_N) {
-            objCamera.Move_Up_Down(CAMERASPEED / 5);
-        }
-
-        //down
-        if (e.getKeyCode()
-                == KeyEvent.VK_M) {
-            objCamera.Move_Up_Down(-CAMERASPEED / 5);
+        if (keysTable[KeyEvent.VK_W]) {
+            myTank.SetTankVel(0.1f);
         }
     }
 
@@ -82,24 +65,70 @@ public class MainGameView implements GameView {
             GameEngine.getInst().attach(new MenuView());
             GameEngine.getInst().detach(this);
         }
-
+        
+        keysTable[e.getKeyCode()] = false;
+        
+        if (!keysTable[KeyEvent.VK_W]) {
+            myTank.SetTankVel(0.0f);
+        }
     }
 
     public void pointerPressed(MouseEvent e) {
+        System.err.println("Shoot");
+        Line line = myTank.GetLineBullet(); // PT duong thang vien dan
+        Vector3 a = line.IsCollisionWithGameObject(otherTank);
+        if (a!= null) {
+            System.err.println("BAN TRUNG!!!");
+            Explo shootParticle = new Explo(a, 0.1f, 0.5f);
+            shootParticle.LoadingTexture();
+            ParticalManager.getInstance().Add(shootParticle);
+            Explo1 shootParticle2 = new Explo1(a, 0.1f, 0.5f);
+            shootParticle2.LoadingTexture();
+            ParticalManager.getInstance().Add(shootParticle2);
+            RoundSparks shootParticle3 = new RoundSparks(a, 0.1f, 0.3f);
+            shootParticle3.LoadingTexture();
+            ParticalManager.getInstance().Add(shootParticle3);
+            Debris shootParticle4 = new Debris(a, 0.1f, 0.5f);
+            shootParticle4.LoadingTexture();
+            ParticalManager.getInstance().Add(shootParticle4);
+        }
+        else
+            System.err.println("---BAN HUT---");
+        
+        myTank.StartShootParticle();
     }
 
     public void pointerMoved(MouseEvent e) {
         int x = e.getXOnScreen();
         int y = e.getYOnScreen();
+        //System.err.print("\n" + x + " " + y);
+        int mid_x = Global.wndWidth / 2;
+	int mid_y = Global.wndHeight / 2;
+        if( (x == mid_x) && (y == mid_y) ) return;
 
-        if (objCamera != null) {
-            objCamera.Mouse_Move(x, y, Global.wndWidth, Global.wndHeight);
+        Robot r;
+        try {
+            r = new Robot();
+            r.mouseMove(mid_x, mid_y);
+        } catch (AWTException ex) {
+            Logger.getLogger(Camera.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+	// Get the direction from the mouse cursor, set a resonable maneuvering speed
+	float angle_x = (float)( (mid_x - x) ) / 1000;
+        float angle_y = (float)( (mid_y - y) ) / 1000;
+        myTank.TankCamera.beta += angle_x;
+        myTank.TankCamera.alpha += angle_y;
+        //System.err.print("\n" + angle_x);
     }
 
     public void pointerReleased(MouseEvent e) {
     }
-
+    
+    public void mouseMoved(MouseEvent e) {
+        
+    }
+    
     public void load() {
         //set hide cursor
         Toolkit t = Toolkit.getDefaultToolkit();
@@ -110,10 +139,6 @@ public class MainGameView implements GameView {
 
         ttGachMen = ResourceManager.getInst().getTexture("data/game/ttGachMen.png");
 
-        //init variable
-        objCamera = new Camera();
-        objCamera.Position_Camera(-19.760378f, 3.8099978f, -8.027661f, -15.02627f, 3.6239977f, -6.2564106f, 0.0f, 1.0f, 0.0f);
-        //(0, 1.5f, 4.0f, 0, 1.5f, 0, 0, 1.0f, 0);
 
         //skybox
         m_skybox = new SkyBox();
@@ -126,14 +151,13 @@ public class MainGameView implements GameView {
         //init map
         TankMap.getInst().LoadMap("data/map/MAP0.png");
 
-        //model
-        md2Tank = new Md2();
-        md2Tank.LoadModel("data/model/triax_wheels.md2");
-        md2Tank.LoadSkin(ResourceManager.getInst().getTexture("data/model/triax_wheels.png", false, GL.GL_REPEAT));
-
-        model = new Md2();
-        model.LoadModel("data/model/knight.md2");
-        model.LoadSkin(ResourceManager.getInst().getTexture("data/model/knight.png", false, GL.GL_REPEAT));
+        myTank = new Tank(new Vector3(-5.0f, 2, -7), new Vector3(0, 0, 1), 0.00f, 1.0f); // 0.05
+        myTank.Init(Global.drawable);
+        camera = myTank.TankCamera;
+        otherTank = new EnemyTank(new Vector3(2, 2, -10), new Vector3(0, 1, 1), 0.0f, 1.0f);
+        otherTank.Init(Global.drawable);
+        
+        ResourceManagerTest.getInstance().LoadResource(Global.drawable);
     }
 
     public void unload() {
@@ -180,60 +204,51 @@ public class MainGameView implements GameView {
     }
 
     public void update(long elapsedTime) {
+        myTank.Update(0);
+        otherTank.Update(0);
     }
 
     public void display() {
-        Global.drawable.getGL().glLoadIdentity();
+        GL gl = Global.drawable.getGL();
+        GLU glu = new GLU();
         // use this function for opengl target camera
-        (new GLU()).gluLookAt(
-                objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z,
-                objCamera.mView.x, objCamera.mView.y, objCamera.mView.z,
-                objCamera.mUp.x, objCamera.mUp.y, objCamera.mUp.z);
-
+        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+        gl.glLoadIdentity();
+        
+        glu.gluLookAt(camera.x, camera.y, camera.z, camera.lookAtX, camera.lookAtY, camera.lookAtZ, 0, 1, 0);
         // skybox origin should be same as camera position
-        m_skybox.Render(objCamera.mPos.x, objCamera.mPos.y, objCamera.mPos.z);
+        m_skybox.Render((float)camera.x, (float)camera.y, (float)camera.z);
 
         this.DrawPlane();
 
-        //Map.getInst().Render(2, 4);
-
-        GL gl = Global.drawable.getGL();
-
-        ////////////////////////////////////////////////////////
-        //camera
+        // Draw player
         gl.glPushMatrix();
-        // Always keep the character in the view
-        gl.glTranslatef(objCamera.mView.x, 0.0f, objCamera.mView.z);
-        float dx = objCamera.mView.x - objCamera.mPos.x;
-        float dz = objCamera.mView.z - objCamera.mPos.z;
-        float angle = (float) Math.atan(dz / dx);
-        angle = 180 * angle / 3.141592654f;
-        int angle2 = (int) angle;
-        angle2 %= 360;
-        if (dx < 0) {
-            angle2 = (int) (angle - 180);
-        }
-        gl.glRotatef(-angle2, 0, 1, 0);
-
-        //draw tank
-        gl.glRotatef(-90, 0, 0, 1);
-        gl.glRotatef(-90, 0, 1, 0);
-        md2Tank.SetScale(0.03f);
-        md2Tank.DrawModel(gl, 0);
+        myTank.Draw(Global.drawable);
         gl.glPopMatrix();
-        ////////////////////////////////////////////////////////
-
-
-        float h = 20;
-        float scale = h / 256.0f;
-        float transY = h * 9.5f / 100;
         gl.glPushMatrix();
-        gl.glTranslatef(5.0f, transY, -7);
-        gl.glRotatef(-90, 0, 0, 1);
-        gl.glRotatef(-90, 0, 1, 0);
-        model.SetScale(scale);
-        model.DrawAnimate(gl, 0, 100, 0.05f);
+        otherTank.Draw(Global.drawable);
         gl.glPopMatrix();
+        
+        // Partical draw
+        ParticalManager particle = ParticalManager.getInstance();
+        particle.Update();
+        particle.Draw(gl, camera.GetAngleY());
+        
+        // Draw alis
+        gl.glPushMatrix();
+        gl.glBegin(GL.GL_LINES);
+        gl.glColor3f(1, 0, 0);
+        gl.glVertex3f(0.0f, 0.0f, 0.0f);
+        gl.glVertex3f(10, 0, 0);
+        gl.glColor3f(0, 1, 0);
+        gl.glVertex3f(0.0f, 0.0f, 0.0f);
+        gl.glVertex3f(0, 10, 0);
+        gl.glColor3f(0, 0, 1);
+        gl.glVertex3f(0.0f, 0.0f, 0.0f);
+        gl.glVertex3f(0, 0, 10);
+        gl.glEnd();
+        gl.glPopMatrix();
+        // End
 
         Writer.Render("MAIN GAME VIEW - Escape key back to menu", "Constantia", Font.BOLD, 120, 400, 400, Color.YELLOW);
     }

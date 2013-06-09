@@ -10,6 +10,7 @@ import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import javax.media.opengl.GL;
+import javax.media.opengl.GLAutoDrawable;
 import myjogl.*;
 import myjogl.utils.Renderer;
 import myjogl.utils.ResourceManager;

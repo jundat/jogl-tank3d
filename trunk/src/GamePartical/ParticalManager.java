@@ -1,0 +1,54 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package GamePartical;
+
+import java.util.Vector;
+import javax.media.opengl.GL;
+
+/**
+ *
+ * @author bu0i
+ */
+public class ParticalManager {
+    private static ParticalManager m_instance = null;
+    public static ParticalManager getInstance() {
+        if (m_instance == null)
+            m_instance = new ParticalManager();
+        return m_instance;
+    }
+    
+    private Vector m_listPartical;
+    
+    private ParticalManager() {
+        m_listPartical = new Vector();
+    }
+    
+    public void Update() {
+        for (int i = 0; i < m_listPartical.size(); i++) {
+            ParticleEngine par = (ParticleEngine)m_listPartical.elementAt(i);
+            if (par.m_isDie) {
+                m_listPartical.removeElement(par);
+                i--;
+                continue;
+            }
+            par.Update();
+        }
+    }
+    
+    public void Draw(GL gl, float angle) {
+        for (int i = 0; i < m_listPartical.size(); i++) {
+            ParticleEngine temp = (ParticleEngine)m_listPartical.elementAt(i);
+            gl.glPushMatrix();
+            temp.Draw(gl, angle);
+            gl.glPopMatrix();
+        }
+    }
+    
+    public void Add(ParticleEngine par) {
+        if (par == null)
+            return;
+        m_listPartical.add(par);
+    }
+}

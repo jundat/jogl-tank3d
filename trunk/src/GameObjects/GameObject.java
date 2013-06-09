@@ -2,12 +2,18 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package myjogl.utils;
+package GameObjects;
 
 import java.util.Vector;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
+import myjogl.utils.BoundSphere;
+import myjogl.utils.GLModel;
+import myjogl.utils.MathUtil;
+import myjogl.utils.MatrixUtil;
+import myjogl.utils.ModelLoaderOBJ;
+import myjogl.utils.Vector3;
 import sun.security.x509.AttributeNameEnumeration;
 
 /**
@@ -27,8 +33,8 @@ public class GameObject {
     protected float m_scale;
     protected Vector3 m_rotate;
     
-    protected Vector BoundSphereObject; // Luu Bound cho tung object cu the
-    protected Vector BoundSphereTranslated; // DS Bound da transfom
+    public Vector BoundSphereObject; // Luu Bound cho tung object cu the
+    public Vector BoundSphereTranslated; // DS Bound da transfom
     
     public BoundSphere BigBoundTranform; // Bound Big da tranform
     
@@ -62,9 +68,12 @@ public class GameObject {
         m_position.z += m_velocity.z;
         // Update Big Bound
         m_matrixTransform = GetMatrixTransform(); // Luu lai de dung sau
-        //Vector3 pos = MatrixUtil.MatrixMulti4(m_matrixTransform, m_model.BigBound.Position.ToArrayFloat());
+        Vector3 mid = new Vector3((m_model.rightpoint + m_model.leftpoint)/2,
+                (m_model.toppoint + m_model.bottompoint)/2,
+                (m_model.nearpoint + m_model.farpoint)/2);
+        Vector3 pos = MatrixUtil.MatrixMulti4(m_matrixTransform, mid.ToArrayFloat());
         
-        //BigBoundTranform = new BoundSphere(pos, m_model.BigBound.R * m_scale);
+        BigBoundTranform = new BoundSphere(pos, m_model.BigBound.R * m_scale);
         
         
     }

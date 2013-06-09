@@ -2,22 +2,29 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package myjogl.utils;
+package GameObjects;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
+import myjogl.utils.BoundSphere;
+import myjogl.utils.Camera2;
+import myjogl.utils.GLModel;
+import myjogl.utils.Line;
+import myjogl.utils.MathUtil;
+import myjogl.utils.ModelLoaderOBJ;
+import myjogl.utils.Vector3;
 
 /**
  *
  * @author bu0i
  */
-public class Tank extends GameObject{
+public class EnemyTank extends GameObject{
     private GLModel m_dauxe;
-    //public Camera2 TankCamera;
+    public Camera2 TankCamera;
     public Vector3 shootDirect; // Vector ban 
     float gocQuay = 0;
-    public Tank(Vector3 _pos, Vector3 _dir, float _vel, float _scale) {
+    public EnemyTank(Vector3 _pos, Vector3 _dir, float _vel, float _scale) {
         super(_pos, _dir, _vel);
         m_modelDirect = new Vector3(0, 0, 1);// Model xe tank có huong mac dinh là theo truc Z
         m_scale = _scale;
@@ -29,49 +36,43 @@ public class Tank extends GameObject{
         m_dauxe = ModelLoaderOBJ.LoadModel("data/model/obj/Test/DauXe.obj",
                 "data/model/obj/Test/DauXe.mtl", "data/model/obj/Test/untitled.jpg", drawable);
         
-        //TankCamera = new Camera2(0, 0, 0, Math.toRadians(80), Math.toRadians(90), 13);
+        TankCamera = new Camera2(0, 0, 0, Math.toRadians(80), Math.toRadians(90), 13);
+        
         
         // Init Bound
         // Cai nay tuy tung model phai lam tay thoi may bac
-//        BoundSphereObject.add(new BoundSphere(new Vector3(m_model.Mid[0],
-//                m_model.Mid[1], m_model.Mid[2]), 25));
-//        BoundSphereObject.add(new BoundSphere(new Vector3(m_model.Mid[0],
-//                m_model.Mid[1] - 25, m_model.Mid[2]), 25));
-//        BoundSphereObject.add(new BoundSphere(new Vector3(m_model.Mid[0] - 32,
-//                m_model.Mid[1] - 55, m_model.Mid[2] - 15), 15));
-//        
-//        BoundSphereObject.add(new BoundSphere(new Vector3(m_model.Mid[0] + 32,
-//                m_model.Mid[1] - 55, m_model.Mid[2] - 15), 15));
-//        
-//        BoundSphereObject.add(new BoundSphere(new Vector3(m_model.Mid[0] - 32,
-//                m_model.Mid[1] - 25, m_model.Mid[2] - 15), 15));
-//        
-//        BoundSphereObject.add(new BoundSphere(new Vector3(m_model.Mid[0] + 32,
-//                m_model.Mid[1] - 25, m_model.Mid[2] - 15), 15));
-//        
-//        BoundSphereObject.add(new BoundSphere(new Vector3(m_model.Mid[0] - 32,
-//                m_model.Mid[1] + 5, m_model.Mid[2] - 15), 15));
-//        
-//        BoundSphereObject.add(new BoundSphere(new Vector3(m_model.Mid[0] + 32,
-//                m_model.Mid[1] + 5, m_model.Mid[2] - 15), 15));
-//        
-//        BoundSphereObject.add(new BoundSphere(new Vector3(m_model.Mid[0] - 32,
-//                m_model.Mid[1] + 35, m_model.Mid[2] - 15), 15));
-//        
-//        BoundSphereObject.add(new BoundSphere(new Vector3(m_model.Mid[0] + 32,
-//                m_model.Mid[1] + 35, m_model.Mid[2] - 15), 15));
-//        
-//        BoundSphereObject.add(new BoundSphere(new Vector3(m_model.Mid[0] - 32,
-//                m_model.Mid[1] + 60, m_model.Mid[2] - 15), 15));
-//        
-//        BoundSphereObject.add(new BoundSphere(new Vector3(m_model.Mid[0] + 32,
-//                m_model.Mid[1] + 60, m_model.Mid[2] - 15), 15));
+        
+        Vector3 mid = m_model.MidPoint;
+        
+        BoundSphereObject.add(new BoundSphere(new Vector3(mid.x,
+                mid.y - 0.5f, mid.z + 0.2f), 1.2f)); // Cuc o giua
+        BoundSphereObject.add(new BoundSphere(new Vector3(mid.x,
+                mid.y - 0.5f, mid.z + 1.2f), 1.2f));// Cuc o giua
+        BoundSphereObject.add(new BoundSphere(new Vector3(mid.x + 1.1f,
+                mid.y - 0.9f, mid.z + 2.9f), 0.55f));// Cuc o truoc
+        BoundSphereObject.add(new BoundSphere(new Vector3(mid.x - 1.3f,
+                mid.y - 0.9f, mid.z + 2.9f), 0.55f));// Cuc o truoc
+        
+        BoundSphereObject.add(new BoundSphere(new Vector3(mid.x + 1.1f,
+                mid.y - 0.9f, mid.z - 3.35f), 0.55f));// Cuc o sau
+        BoundSphereObject.add(new BoundSphere(new Vector3(mid.x - 1.3f,
+                mid.y - 0.9f, mid.z - 3.35f), 0.55f));// Cuc o sau
+        BoundSphereObject.add(new BoundSphere(new Vector3(mid.x - 0.15f,
+                mid.y - 0.9f, mid.z - 3.35f), 0.55f));// Cuc o sau giua
+        
+        BoundSphereObject.add(new BoundSphere(new Vector3(mid.x + 0.8f,
+                mid.y - 0.85f, mid.z - 2.0f), 0.81f));// Cuc o sau giua
+        BoundSphereObject.add(new BoundSphere(new Vector3(mid.x - 1.0f,
+                mid.y - 0.85f, mid.z - 2.0f), 0.81f));// Cuc o sau giua
+        
+        BoundSphereObject.add(new BoundSphere(new Vector3(mid.x - 0.2f,
+                mid.y - 0.85f, mid.z - 1.2f), 0.81f));// Cuc o sau giua
     }
     
     @Override
     public void Update(float gameTime) {
         super.Update(gameTime);
-        //TankCamera.Update(this);
+        TankCamera.Update(this);
         CalculateShootDirect();
         CalculateAngleDiret();
     }
@@ -104,6 +105,7 @@ public class Tank extends GameObject{
         
         gl.glRotatef((float)Math.toDegrees(angle), 0, 1, 0);
         gl.glScalef(m_scale, m_scale, m_scale);
+        //gl.glColor3f(Color.x, Color.y, Color.z);
         m_model.opengldraw(drawable);
         
         
@@ -117,14 +119,16 @@ public class Tank extends GameObject{
         gl.glPopMatrix();
         GLU glu = new GLU();
         gl.glTranslatef(0, 3.5f, 0);
-        glu.gluSphere(glu.gluNewQuadric(), 0.1, 50, 45);
+        //glu.gluSphere(glu.gluNewQuadric(), 0.1, 50, 45);
         gl.glPopMatrix();
     }
+    
     public void CalculateShootDirect() {
-//        shootDirect = MathUtil.SubVector(
-//                new Vector3((float)TankCamera.lookAtX, (float)TankCamera.lookAtY, (float)TankCamera.lookAtZ),
-//                new Vector3((float)TankCamera.x, (float)TankCamera.y, (float)TankCamera.z));
+        shootDirect = MathUtil.SubVector(
+                new Vector3((float)TankCamera.lookAtX, (float)TankCamera.lookAtY, (float)TankCamera.lookAtZ),
+                new Vector3((float)TankCamera.x, (float)TankCamera.y, (float)TankCamera.z));
     }
+    
     public void CalculateAngleDiret() {
         Vector3 temp = new Vector3(shootDirect);
         temp.y = 0;
@@ -141,6 +145,7 @@ public class Tank extends GameObject{
                 gocQuay =-gocQuay;
         
     }
+    
     public void TurnLeft() {
         final float delta = 0.05f;
         float goc;
@@ -161,6 +166,7 @@ public class Tank extends GameObject{
         m_direct.z = (float)Math.cos(goc) * directC;
         m_direct.x = (float)Math.sin(goc) * directC;
     }
+    
     public void TurnRight() {
         //System.err.print("\nTurn Righ");
         final float delta = 0.05f;
@@ -183,4 +189,13 @@ public class Tank extends GameObject{
         m_direct.x = (float)Math.sin(goc) * directC;
     }
     
+    public Line GetLineBullet() {
+        return new Line(new Vector3((float)TankCamera.lookAtX, (float)TankCamera.lookAtY, (float)TankCamera.lookAtZ),
+                MathUtil.SubVector(new Vector3((float)TankCamera.lookAtX, (float)TankCamera.lookAtY, (float)TankCamera.lookAtZ),
+                new Vector3((float)TankCamera.x, (float)TankCamera.y, (float)TankCamera.z)));
+    }
+   
+    public void SetTankVel(float vel) {
+        this.m_v = vel;
+    }
 }
