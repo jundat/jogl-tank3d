@@ -54,17 +54,14 @@ public class ResourceManager {
             this.isLoop = isLoop;
         }
     }
-
     //pre-load
     private HashMap preTextures;
     private HashMap preSounds;
     //loading
     private HashMap textures;
     private HashMap sounds;
-    
     //pre-unload
     private HashMap preUnloadTextures;
-    
     private static ResourceManager instance = null;
 
     private ResourceManager() {
@@ -82,6 +79,10 @@ public class ResourceManager {
 
         return instance;
     }
+
+    public int GetNumberPreload() {
+        return preSounds.values().size() + preTextures.values().size();
+    }
     
     public int GetAllResource() {
         int preut = preUnloadTextures.values().size();
@@ -89,46 +90,47 @@ public class ResourceManager {
         int pres = preSounds.values().size();
         int tt = textures.values().size();
         int s = sounds.values().size();
-        
+
         System.out.println("ResourceManager at End game ------------------------");
         System.out.println("preUnloadTextures: " + preut);
         System.out.println("preTextures: " + prett);
         System.out.println("preSounds: " + pres);
         System.out.println("textures: " + tt);
         System.out.println("sounds: " + s);
-        
+
         System.out.println("-------detail-------");
-        
-        if(preut > 0) {
+
+        if (preut > 0) {
             System.out.println("Pre-UnloadTextures: ");
             Global.Print(preUnloadTextures);
         }
-        
-        if(prett > 0) {
+
+        if (prett > 0) {
             System.out.println("Pre-Textures: ");
             Global.Print(preTextures);
         }
-        
-        if(pres > 0) {
+
+        if (pres > 0) {
             System.out.println("Pre-Sounds: ");
             Global.Print(preSounds);
         }
-        
-        if(tt > 0) {
+
+        if (tt > 0) {
             System.out.println("Textures: ");
             Global.Print(textures);
         }
-        
-        if(s > 0) {
+
+        if (s > 0) {
             System.out.println("Sounds: ");
             Global.Print(sounds);
         }
-        
+
         System.out.println("------end-detail-------");
-        
+
         return preut + prett + pres + tt + s;
     }
 
+    //load
     public Texture getTexture(String fileName, boolean wantFlip, int wrap_s, int wrap_t, int minFilter, int magFilter) {
         if (textures.containsKey(fileName)) {
 
@@ -169,6 +171,7 @@ public class ResourceManager {
             return s;
         }
     }
+    //end-load
 
     //preload
     /**
@@ -183,7 +186,7 @@ public class ResourceManager {
 
                 TextureInfo ti = (TextureInfo) pairs.getValue();
                 ResourceManager.getInst().getTexture(ti.fileName, ti.wantFlip, ti.wrap_s, ti.wrap_t, ti.minFilter, ti.magFilter);
-                System.out.println(")+ Texture: " + ti.fileName);
+                System.out.println(">+ Texture: " + ti.fileName);
 
                 //remove
                 preTextures.remove(ti.fileName);
@@ -198,7 +201,7 @@ public class ResourceManager {
 
                 SoundInfo si = (SoundInfo) pairs.getValue();
                 ResourceManager.getInst().getSound(si.fileName, si.isLoop);
-                System.out.println(")+ Sound: " + si.fileName);
+                System.out.println(">+ Sound: " + si.fileName);
 
                 //remove
                 preSounds.remove(si.fileName);
@@ -216,12 +219,12 @@ public class ResourceManager {
         preSounds.put(fileName, si);
     }
     //end-preload
-    
+
     //pre-unload
     public void PreUnload() {
         if (preUnloadTextures.isEmpty() == false) {
             Iterator it = preUnloadTextures.entrySet().iterator();
-            
+
             while (it.hasNext()) {
                 Map.Entry pairs = (Map.Entry) it.next();
                 //un-load
@@ -230,15 +233,16 @@ public class ResourceManager {
                 tt.disable();
                 tt.dispose();
                 tt = null;
-                
-                System.out.println("(- Texture: " + fileName);
+
+                System.out.println("<- Texture: " + fileName);
             }
-            
+
             preUnloadTextures.clear();
         }
     }
     //end-pre-unload
-    
+
+    //delete
     public void deleteTexture(String fileName) {
         Texture t = ResourceManager.getInst().getTexture(fileName);
         preUnloadTextures.put(fileName, t);
@@ -265,4 +269,5 @@ public class ResourceManager {
     public void deleteAllSounds() {
         sounds.clear();
     }
+    //end-delete
 }

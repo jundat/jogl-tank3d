@@ -20,8 +20,6 @@ public interface GameView {
 
     public void pointerReleased(MouseEvent e);
     
-    //public void mouseMoved(MouseEvent e);
-    
     public void load();
     
     public void unload();

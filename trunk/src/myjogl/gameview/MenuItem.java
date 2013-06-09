@@ -5,6 +5,7 @@
 package myjogl.gameview;
 
 import com.sun.opengl.util.texture.Texture;
+import java.awt.Point;
 import java.awt.Rectangle;
 import javax.media.opengl.GL;
 import javax.swing.JOptionPane;
@@ -28,6 +29,13 @@ public class MenuItem {
         
         if(ttNormal == null && ttClick == null)
             JOptionPane.showMessageDialog(null, "Can not create MenuItem");
+    }
+    
+    public void SetPosition(Point p) {
+        rect.x = p.x;
+        rect.y = p.y;
+        rect.width = this.ttNormal.getWidth();
+        rect.height = this.ttNormal.getHeight();
     }
     
     public void SetPosition(int x, int y){

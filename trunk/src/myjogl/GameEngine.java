@@ -5,6 +5,8 @@ import java.util.Enumeration;
 import java.util.Vector;
 import javax.media.opengl.GLAutoDrawable;
 import myjogl.gameview.GameView;
+import myjogl.gameview.IntroView;
+import myjogl.gameview.MenuView;
 import myjogl.tank3d.Tank3D;
 import myjogl.utils.ResourceManager;
 
@@ -19,7 +21,6 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
     public Tank3D tank3d;
     public Vector views;
     public long localTime = System.currentTimeMillis();
-    
     
     GameView oldView = null; //detaching view
     boolean hasOldView = false;
@@ -43,6 +44,9 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
         this.tank3d = tank3d;
         this.paused = false;
         this.views = new Vector();
+        
+        //----
+        attach(new IntroView());
     }
 
     public void resume() {

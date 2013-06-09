@@ -6,11 +6,9 @@ package myjogl.gameview;
 
 import com.sun.opengl.util.texture.Texture;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import javax.media.opengl.GL;
-import javax.media.opengl.GLAutoDrawable;
 import myjogl.*;
 import myjogl.utils.Renderer;
 import myjogl.utils.ResourceManager;
@@ -64,8 +62,8 @@ public class IntroView implements GameView {
     }
 
     public void load() {
-        ttLogo = ResourceManager.getInst().getTexture("data/ttLogo.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR, GL.GL_LINEAR);
-        ttLight = ResourceManager.getInst().getTexture("data/ttLight.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR, GL.GL_LINEAR);
+        ttLogo = ResourceManager.getInst().getTexture("data/intro/logo.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR, GL.GL_LINEAR);
+        ttLight = ResourceManager.getInst().getTexture("data/intro/light.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR, GL.GL_LINEAR);
 
         wl = ttLight.getWidth();
         hl = 2 * ttLight.getHeight();
@@ -79,16 +77,11 @@ public class IntroView implements GameView {
 
         s = ResourceManager.getInst().getSound("sound/intro.wav", false);
         s.play();
-
-        //preload menu
-//        ResourceManager.getInst().PreLoadTexture("data/ttBgMenu.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR, GL.GL_LINEAR);
-//        ResourceManager.getInst().PreLoadTexture("data/ttButtonNormal.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR, GL.GL_LINEAR);
-//        ResourceManager.getInst().PreLoadTexture("data/ttButtonClick.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR, GL.GL_LINEAR);
     }
 
     public void unload() {
-        ResourceManager.getInst().deleteTexture("data/ttLight.png");
-        ResourceManager.getInst().deleteTexture("data/ttLogo.png");
+        ResourceManager.getInst().deleteTexture("data/intro/light.png");
+        ResourceManager.getInst().deleteTexture("data/intro/logo.png");
         ResourceManager.getInst().deleteSound(s);
     }
 
@@ -128,7 +121,7 @@ public class IntroView implements GameView {
 
         if (s.clip.getMicrosecondPosition() >= endLight1) {
             Writer.Render("...press anykey to continue...",
-                    "Constantia", Font.BOLD, 24, 1010, 32, Color.GRAY);
+                    "Nyala", 24, 1010, 32, Color.GRAY);
         }
     }
 }

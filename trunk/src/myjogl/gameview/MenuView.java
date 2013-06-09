@@ -7,6 +7,7 @@ package myjogl.gameview;
 import com.sun.opengl.util.texture.Texture;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import javax.media.opengl.GL;
@@ -22,6 +23,10 @@ import myjogl.utils.Writer;
  */
 public class MenuView implements GameView {
 
+    Point pExit = new Point(1033, 20);
+    Point pAbout = new Point(1033, 120);
+    Point pPlay = new Point(1033, 220);
+    //int yb = 
     private MenuItem itPlay;
     private MenuItem itAbout;
     private MenuItem itExit;
@@ -57,8 +62,22 @@ public class MenuView implements GameView {
     public void pointerReleased(MouseEvent e) {
         if (itPlay.contains(e.getX(), e.getY())) {
             itPlay.setIsClick(false);
-            
-            GameEngine.getInst().attach(new MainGameView());
+
+            //pre-load main game
+            ResourceManager.getInst().PreLoadTexture("data/game/gach_tuong.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR, GL.GL_LINEAR);
+            ResourceManager.getInst().PreLoadTexture("data/game/gach_men.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR, GL.GL_LINEAR);
+            ResourceManager.getInst().PreLoadTexture("data/model/triax_wheels.png", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR, GL.GL_LINEAR);
+            ResourceManager.getInst().PreLoadTexture("data/model/knight.png", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR, GL.GL_LINEAR);
+
+            //skybox
+            ResourceManager.getInst().PreLoadTexture("data/skybox/up.jpg", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_CLAMP_TO_EDGE, GL.GL_CLAMP_TO_EDGE);
+            ResourceManager.getInst().PreLoadTexture("data/skybox/down.jpg", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_CLAMP_TO_EDGE, GL.GL_CLAMP_TO_EDGE);
+            ResourceManager.getInst().PreLoadTexture("data/skybox/left.jpg", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_CLAMP_TO_EDGE, GL.GL_CLAMP_TO_EDGE);
+            ResourceManager.getInst().PreLoadTexture("data/skybox/right.jpg", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_CLAMP_TO_EDGE, GL.GL_CLAMP_TO_EDGE);
+            ResourceManager.getInst().PreLoadTexture("data/skybox/front.jpg", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_CLAMP_TO_EDGE, GL.GL_CLAMP_TO_EDGE);
+            ResourceManager.getInst().PreLoadTexture("data/skybox/back.jpg", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_CLAMP_TO_EDGE, GL.GL_CLAMP_TO_EDGE);
+
+            GameEngine.getInst().attach(new LoadingView(new MainGameView()));
             GameEngine.getInst().detach(this);
         }
 
@@ -77,18 +96,18 @@ public class MenuView implements GameView {
     }
 
     public void load() {
-        ttBgMenu = ResourceManager.getInst().getTexture("data/ttBgMenu.png");
+        ttBgMenu = ResourceManager.getInst().getTexture("data/menu/bg_menu.png");
 
-        itPlay = new MenuItem(ResourceManager.getInst().getTexture("data/ttButtonNormal.png"),
-                ResourceManager.getInst().getTexture("data/ttButtonClick.png"));
-        itAbout = new MenuItem(ResourceManager.getInst().getTexture("data/ttButtonNormal.png"),
-                ResourceManager.getInst().getTexture("data/ttButtonClick.png"));
-        itExit = new MenuItem(ResourceManager.getInst().getTexture("data/ttButtonNormal.png"),
-                ResourceManager.getInst().getTexture("data/ttButtonClick.png"));
+        itPlay = new MenuItem(ResourceManager.getInst().getTexture("data/menu/btn_play.png"),
+                ResourceManager.getInst().getTexture("data/menu/btn_play_press.png"));
+        itAbout = new MenuItem(ResourceManager.getInst().getTexture("data/menu/btn_about.png"),
+                ResourceManager.getInst().getTexture("data/menu/btn_about_press.png"));
+        itExit = new MenuItem(ResourceManager.getInst().getTexture("data/menu/btn_exit.png"),
+                ResourceManager.getInst().getTexture("data/menu/btn_exit_press.png"));
 
-        itPlay.SetPosition(84, 0);
-        itAbout.SetPosition(384, 0);
-        itExit.SetPosition(684, 0);
+        itPlay.SetPosition(pPlay);
+        itAbout.SetPosition(pAbout);
+        itExit.SetPosition(pExit);
     }
 
     public void unload() {
@@ -103,9 +122,5 @@ public class MenuView implements GameView {
         itPlay.Render();
         itAbout.Render();
         itExit.Render();
-
-        Writer.Render("PLAY", "Constantia", Font.BOLD, 60, itPlay.rect.x + 30, itPlay.rect.y + 30, Color.YELLOW);
-        Writer.Render("ABOUT", "Constantia", Font.BOLD, 60, itAbout.rect.x + 30, itAbout.rect.y + 30, Color.YELLOW);
-        Writer.Render("EXIT", "Constantia", Font.BOLD, 60, itExit.rect.x + 30, itExit.rect.y + 30, Color.YELLOW);
     }
 }
