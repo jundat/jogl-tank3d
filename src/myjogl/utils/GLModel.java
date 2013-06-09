@@ -47,6 +47,9 @@ public class GLModel {
     private String mtl_path;
     private String skin_path;
     private Texture skin;
+    
+    public Vector3 MidPoint;
+    public BoundSphere BigBound;
 
     //THIS CLASS LOADS THE MODELS
     public GLModel(BufferedReader ref, boolean isCenterit, String path, String skinPath, GLAutoDrawable drawable) {
@@ -225,6 +228,15 @@ public class GLModel {
                     }
                 }
             }
+            // THong tin them
+            MidPoint = new Vector3((this.rightpoint + this.leftpoint)/2,
+                (this.toppoint + this.bottompoint)/2,
+                (this.nearpoint + this.farpoint)/2);
+            float a = getXWidth() / 2;
+            float b = getZDepth() / 2;
+            float c = getYHeight() / 2;
+            float r = (float)Math.sqrt(a*a+b*b+c*c);
+            BigBound = new BoundSphere(MidPoint, r);
         } catch (IOException e) {
 
             System.out.println("GLModel.loadobject(): (line 198) Failed to read file: " + br.toString());
