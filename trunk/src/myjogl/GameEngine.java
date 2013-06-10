@@ -45,6 +45,8 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
         this.paused = false;
         this.views = new Vector();
         
+        tank3d.canvas.addKeyListener(KeyboardState.getState());
+        
         //----
         attach(new MenuView());
     }
@@ -139,7 +141,6 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
             GameView view = (GameView) this.views.lastElement();
             view.keyPressed(e);
         }
-        KeyboardState.getState().Keypress(e);
     }
 
     //
@@ -148,7 +149,6 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
             GameView view = (GameView) this.views.lastElement();
             view.keyReleased(e);
         }
-        KeyboardState.getState().KeyRelease(e);
     }
 
     //

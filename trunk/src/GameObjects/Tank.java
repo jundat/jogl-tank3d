@@ -5,9 +5,11 @@
 package GameObjects;
 
 import GameObjects.GameObject;
+import GamePartical.Debris;
 import GamePartical.Explo;
 import GamePartical.Explo1;
 import GamePartical.ParticalManager;
+import GamePartical.RoundSparks;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
@@ -48,11 +50,12 @@ public class Tank extends GameObject{
         
         TankCamera = new Camera2(0, 0, 0, Math.toRadians(80), Math.toRadians(90), 13);
         
-        
-        //load resource particle
-        //new Explo(gunPoint, 0.1f, 0.2f).LoadingTexture();
-        //new Explo1(gunPoint, 0.1f, 0.2f).LoadingTexture();
-        
+        //load particle resource
+        Vector3 a = new Vector3();
+        new Explo(a, 0.1f, 0.5f).LoadingTexture();
+        new Explo1(a, 0.1f, 0.5f).LoadingTexture();
+        new RoundSparks(a, 0.1f, 0.3f).LoadingTexture();
+        new Debris(a, 0.1f, 0.5f).LoadingTexture();
         
         // Init Bound
         // Cai nay tuy tung model phai lam tay thoi may bac
