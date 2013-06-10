@@ -164,12 +164,6 @@ public class MainGameView implements GameView {
         otherTank.Init(Global.drawable);
         
         //ResourceManagerTest.getInstance().LoadResource(Global.drawable);
-        //load particle resource
-        Vector3 a = new Vector3();
-        new Explo(a, 0.1f, 0.5f).LoadingTexture();
-        new Explo1(a, 0.1f, 0.5f).LoadingTexture();
-        new RoundSparks(a, 0.1f, 0.3f).LoadingTexture();
-        new Debris(a, 0.1f, 0.5f).LoadingTexture();
     }
 
     public void unload() {

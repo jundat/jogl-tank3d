@@ -5,12 +5,13 @@
 package myjogl;
 
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 /**
  *
  * @author Jundat
  */
-public class KeyboardState {
+public class KeyboardState implements KeyListener {
     
     private boolean[] keys = new boolean[256];
     
@@ -31,22 +32,6 @@ public class KeyboardState {
     }
     
     /**
-     * Be called in gameEngine
-     * @param e 
-     */
-    public void Keypress(KeyEvent e) {
-        keys[e.getKeyCode()] = true;
-    }
-    
-     /**
-     * Be called in gameEngine
-     * @param e 
-     */
-    public void KeyRelease(KeyEvent e) {
-        keys[e.getKeyCode()] = false;
-    }
-
-    /**
      * Be called in object
      * @param key
      * @return 
@@ -57,5 +42,17 @@ public class KeyboardState {
     
     public boolean isUp(int key) {
         return ! keys[key];
+    }
+
+    public void keyTyped(KeyEvent ke) {
+        
+    }
+
+    public void keyPressed(KeyEvent ke) {
+        keys[ke.getKeyCode()] = true;
+    }
+
+    public void keyReleased(KeyEvent ke) {
+        keys[ke.getKeyCode()] = false;
     }
 }
