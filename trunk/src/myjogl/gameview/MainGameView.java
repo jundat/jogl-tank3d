@@ -23,6 +23,7 @@ import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
 import myjogl.GameEngine;
 import myjogl.Global;
+import myjogl.KeyboardState;
 import myjogl.utils.*;
 
 /**
@@ -43,20 +44,25 @@ public class MainGameView implements GameView {
         System.out.println("Go to main game!------------------------------------");
     }
 
-    public void keyPressed(KeyEvent e) {
-        keysTable[e.getKeyCode()] = true;
-        
+    public void handleInput() {
+        KeyboardState state = KeyboardState.getState();
         
         // this is my
-        if (keysTable[KeyEvent.VK_A]) {
+        if (state.isDown(KeyEvent.VK_A)) {
             myTank.TurnLeft();
         }
-        if (keysTable[KeyEvent.VK_D]) {
+        if (state.isDown(KeyEvent.VK_D)) {
             myTank.TurnRight();
         }
-        if (keysTable[KeyEvent.VK_W]) {
-            myTank.SetTankVel(0.1f);
+        if (state.isDown(KeyEvent.VK_W)) {
+            myTank.SetTankVel(0.5f);
+        } else {
+            myTank.SetTankVel(0.0f);
         }
+    }
+    
+    public void keyPressed(KeyEvent e) {
+        keysTable[e.getKeyCode()] = true;
     }
 
     public void keyReleased(KeyEvent e) {
@@ -67,10 +73,6 @@ public class MainGameView implements GameView {
         }
         
         keysTable[e.getKeyCode()] = false;
-        
-        if (!keysTable[KeyEvent.VK_W]) {
-            myTank.SetTankVel(0.0f);
-        }
     }
 
     public void pointerPressed(MouseEvent e) {
@@ -79,15 +81,19 @@ public class MainGameView implements GameView {
         Vector3 a = line.IsCollisionWithGameObject(otherTank);
         if (a!= null) {
             System.err.println("BAN TRUNG!!!");
+            
             Explo shootParticle = new Explo(a, 0.1f, 0.5f);
             shootParticle.LoadingTexture();
             ParticalManager.getInstance().Add(shootParticle);
+            
             Explo1 shootParticle2 = new Explo1(a, 0.1f, 0.5f);
             shootParticle2.LoadingTexture();
             ParticalManager.getInstance().Add(shootParticle2);
+            
             RoundSparks shootParticle3 = new RoundSparks(a, 0.1f, 0.3f);
             shootParticle3.LoadingTexture();
             ParticalManager.getInstance().Add(shootParticle3);
+            
             Debris shootParticle4 = new Debris(a, 0.1f, 0.5f);
             shootParticle4.LoadingTexture();
             ParticalManager.getInstance().Add(shootParticle4);
@@ -157,7 +163,13 @@ public class MainGameView implements GameView {
         otherTank = new EnemyTank(new Vector3(2, 2, -10), new Vector3(0, 1, 1), 0.0f, 1.0f);
         otherTank.Init(Global.drawable);
         
-        ResourceManagerTest.getInstance().LoadResource(Global.drawable);
+        //ResourceManagerTest.getInstance().LoadResource(Global.drawable);
+        //load particle resource
+        Vector3 a = new Vector3();
+        new Explo(a, 0.1f, 0.5f).LoadingTexture();
+        new Explo1(a, 0.1f, 0.5f).LoadingTexture();
+        new RoundSparks(a, 0.1f, 0.3f).LoadingTexture();
+        new Debris(a, 0.1f, 0.5f).LoadingTexture();
     }
 
     public void unload() {
@@ -204,6 +216,8 @@ public class MainGameView implements GameView {
     }
 
     public void update(long elapsedTime) {
+        handleInput();
+        
         myTank.Update(0);
         otherTank.Update(0);
     }
@@ -227,6 +241,7 @@ public class MainGameView implements GameView {
         gl.glPushMatrix();
         myTank.Draw(Global.drawable);
         gl.glPopMatrix();
+        
         gl.glPushMatrix();
         otherTank.Draw(Global.drawable);
         gl.glPopMatrix();
@@ -252,6 +267,6 @@ public class MainGameView implements GameView {
         gl.glPopMatrix();
         // End
 
-        Writer.Render("MAIN GAME VIEW - Escape key back to menu", "Constantia", 120, 400, 400, Color.YELLOW);
+        //Writer.Render("MAIN GAME VIEW - Escape key back to menu", "Constantia", 120, 400, 400, Color.YELLOW);
     }
 }

@@ -57,7 +57,7 @@ public class TextureLoader {
 
             System.out.println("+ Texture: " + filename);
         } catch (Exception exc) {
-            System.out.println("TextureLoader: Can not load resource: " + exc.getMessage());
+            System.out.println("TextureLoader: Can not load resource: " + filename + "\n" + exc.getMessage());
             JOptionPane.showMessageDialog(null, "TextureLoader: Can not load resource: " + filename + "\n" + exc.getMessage());
         } finally {
             try {
@@ -65,7 +65,7 @@ public class TextureLoader {
                 is.close();
 
             } catch (IOException ex) {
-                System.out.println("Can not close inputstream " + ex.getMessage());
+                System.out.println("Can not close inputstream " + filename + "\n" + ex.getMessage());
                 JOptionPane.showMessageDialog(null, "TextureLoader: Can not close inputstream resource: " + filename + "\n" + ex.getMessage());
             }
         }

@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.util.Random;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
-import myjogl.utils.ResourceManagerTest;
+import myjogl.utils.ResourceManager;
 import myjogl.utils.Vector3;
 
 /**
@@ -56,25 +56,8 @@ public class Explo1 extends ParticleEngine {
         m_texture = new Texture[m_textureCount];
         //Load resource
         for(int i = 0; i < m_textureCount; i ++) {
-            m_texture[i] = ResourceManagerTest.getInstance().explo1[i];
-//            try {
-//                InputStream stream;
-//                TextureData data;
-//                String temp = filename + "_" + i +".png";
-//                stream = getClass().getResourceAsStream(temp);
-//                data = TextureIO.newTextureData(stream, false, "png");
-//                m_texture[i] = TextureIO.newTexture(data);
-//                //m_texture[i] = new Texture();
-//
-//                gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
-//                gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
-//                gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
-//                gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
-//
-//            } catch (IOException exc) {
-//                System.out.println("LoadSkin: Can not load resource: " + exc.getMessage());
-//                System.exit(1);
-//            }
+            //m_texture[i] = ResourceManagerTest.getInstance().explo1[i];
+            m_texture[i] = ResourceManager.getInst().getTexture("data/particle/Explo1_" + i + ".png");
         }
     }
     

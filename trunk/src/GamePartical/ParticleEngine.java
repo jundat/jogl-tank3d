@@ -12,6 +12,7 @@ import myjogl.utils.Vector3;
  * @author TIEUNUN
  */
 public class ParticleEngine {
+    
     public Particle[] m_ParticleList; // Particles list for this emitter //Danh sach cac particles cua lan phong hien tai - kich thuoc List bang m_numParticles
     public int m_maxParticles;        // Maximum of particle number; //so particle lon nhat trong 1 lan phong
     public int m_numParticles;        // current particles number; //so particle phong hien tai
@@ -20,6 +21,8 @@ public class ParticleEngine {
     public float m_elapsedTime;
     public float m_scale;
     public boolean m_isDie = false;
+    
+    
     public ParticleEngine(){
         
     }
