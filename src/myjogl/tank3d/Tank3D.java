@@ -62,7 +62,7 @@ public class Tank3D implements GLEventListener {
         canvas.addMouseWheelListener(engine);
         
         frame.add(canvas);
-        animator = new FPSAnimator(canvas, 60, false);
+        animator = new FPSAnimator(canvas, Global.FPS, true);
         frame.addWindowListener(new Tank3DWindowAdapter(this));
 
         // Center frame

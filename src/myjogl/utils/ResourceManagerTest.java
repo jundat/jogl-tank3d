@@ -18,7 +18,9 @@ import javax.media.opengl.GLAutoDrawable;
  * @author bu0i
  */
 public class ResourceManagerTest {
+    
     private static ResourceManagerTest m_instance = null;
+    
     public static ResourceManagerTest getInstance() {
         if (m_instance == null)
             m_instance = new ResourceManagerTest();
@@ -163,6 +165,8 @@ public class ResourceManagerTest {
         }
         // End Load SockWave
     }
+    
+    
     public Texture[] explo1 = null;
     public Texture[] explo = null;
     public Texture[] debris = null;

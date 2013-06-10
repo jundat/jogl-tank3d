@@ -46,7 +46,7 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
         this.views = new Vector();
         
         //----
-        attach(new IntroView());
+        attach(new MenuView());
     }
 
     public void resume() {
@@ -117,6 +117,9 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
         {
             this.update(currentTime - localTime);
             this.display();
+            
+            //System.out.println("FPS: " + (float)1000 / (currentTime - localTime));
+            tank3d.frame.setTitle("FPS: " + (float)1000 / (currentTime - localTime));
 
             localTime = currentTime;
         }
@@ -136,7 +139,7 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
             GameView view = (GameView) this.views.lastElement();
             view.keyPressed(e);
         }
-        
+        KeyboardState.getState().Keypress(e);
     }
 
     //
@@ -145,6 +148,7 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
             GameView view = (GameView) this.views.lastElement();
             view.keyReleased(e);
         }
+        KeyboardState.getState().KeyRelease(e);
     }
 
     //

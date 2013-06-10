@@ -16,7 +16,7 @@ import java.io.InputStream;
 import java.util.Random;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
-import myjogl.utils.ResourceManagerTest;
+import myjogl.utils.ResourceManager;
 import myjogl.utils.Vector3;
 
 /**
@@ -45,25 +45,7 @@ public class RoundSparks extends ParticleEngine {
     }
 
     public void LoadingTexture() {
-        m_texture = ResourceManagerTest.getInstance().roundsparks;
-        //Load resource
-//        try {
-//            InputStream stream;
-//            TextureData data;
-//
-//            stream = getClass().getResourceAsStream(filename);
-//            data = TextureIO.newTextureData(stream, false, "png");
-//            m_texture = TextureIO.newTexture(data);
-//
-//            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
-//            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
-//            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
-//            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
-//
-//        } catch (IOException exc) {
-//            System.out.println("LoadSkin: Can not load resource: " + exc.getMessage());
-//            System.exit(1);
-//        }
+        m_texture = ResourceManager.getInst().getTexture("data/particle/explosion.png");
     }
 
     static Random random = new Random();

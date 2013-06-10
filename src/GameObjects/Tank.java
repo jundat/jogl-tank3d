@@ -30,7 +30,10 @@ public class Tank extends GameObject{
     public Vector3 shootDirect; // Vector ban 
     float gocQuay = 0;
     
+    final float deltaRorate = 0.08f;
+    
     Vector3 gunPoint = null;
+    
     public Tank(Vector3 _pos, Vector3 _dir, float _vel, float _scale) {
         super(_pos, _dir, _vel);
         m_modelDirect = new Vector3(0, 0, 1);// Model xe tank có huong mac dinh là theo truc Z
@@ -44,6 +47,11 @@ public class Tank extends GameObject{
                 "data/model/obj/Test/DauXe.mtl", "data/model/obj/Test/untitled.jpg", drawable);
         
         TankCamera = new Camera2(0, 0, 0, Math.toRadians(80), Math.toRadians(90), 13);
+        
+        
+        //load resource particle
+        //new Explo(gunPoint, 0.1f, 0.2f).LoadingTexture();
+        //new Explo1(gunPoint, 0.1f, 0.2f).LoadingTexture();
         
         
         // Init Bound
@@ -169,7 +177,6 @@ public class Tank extends GameObject{
     }
     
     public void TurnLeft() {
-        final float delta = 0.05f;
         float goc;
         if (m_direct.z == 0) {
             if (m_direct.x > 0)
@@ -183,7 +190,7 @@ public class Tank extends GameObject{
         }
         
         float directC = (float)Math.sqrt(m_direct.x*m_direct.x + m_direct.z*m_direct.z);
-        goc += delta;
+        goc += deltaRorate;
         
         m_direct.z = (float)Math.cos(goc) * directC;
         m_direct.x = (float)Math.sin(goc) * directC;
@@ -191,7 +198,6 @@ public class Tank extends GameObject{
     
     public void TurnRight() {
         //System.err.print("\nTurn Righ");
-        final float delta = 0.05f;
         float goc;
         if (m_direct.z == 0) {
             if (m_direct.x > 0)
@@ -205,7 +211,7 @@ public class Tank extends GameObject{
         }
         
         float directC = (float)Math.sqrt(m_direct.x*m_direct.x + m_direct.z*m_direct.z);
-        goc -= delta;
+        goc -= deltaRorate;
         
         m_direct.z = (float)Math.cos(goc) * directC;
         m_direct.x = (float)Math.sin(goc) * directC;
@@ -225,6 +231,7 @@ public class Tank extends GameObject{
         Explo shootParticle = new Explo(gunPoint, 0.1f, 0.2f);
         shootParticle.LoadingTexture();
         ParticalManager.getInstance().Add(shootParticle);
+        
         Explo1 shootParticle2 = new Explo1(gunPoint, 0.1f, 0.2f);
         shootParticle2.LoadingTexture();
         ParticalManager.getInstance().Add(shootParticle2);

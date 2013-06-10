@@ -7,6 +7,7 @@
  Written for OpenGL Game Programming
 *****************************************************************************/
 package GamePartical;
+
 import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureData;
 import com.sun.opengl.util.texture.TextureIO;
@@ -15,7 +16,7 @@ import java.io.InputStream;
 import java.util.Random;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
-import myjogl.utils.ResourceManagerTest;
+import myjogl.utils.ResourceManager;
 import myjogl.utils.Vector3;
 
 /**
@@ -35,6 +36,8 @@ public class Explo extends ParticleEngine {
     int m_textureCount;
     int count = 0;
     int countTime;
+    
+    
     public Explo(Vector3 _origin, float elapsedTime, float scale) {
         m_origin = _origin;
         m_scale = scale;
@@ -48,26 +51,12 @@ public class Explo extends ParticleEngine {
         
         m_textureCount = 4;
         m_texture = new Texture[m_textureCount];
+        
         //Load resource
+        //jundat
         for(int i = 0; i < m_textureCount; i ++) {
-            m_texture[i] = ResourceManagerTest.getInstance().explo[i];
-//            try {
-//                InputStream stream;
-//                TextureData data;
-//                String temp = filename + "_" + i +".png";
-//                stream = getClass().getResourceAsStream(temp);
-//                data = TextureIO.newTextureData(stream, false, "png");
-//                m_texture[i] = TextureIO.newTexture(data);
-//
-//                gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
-//                gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
-//                gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, GL.GL_REPEAT);
-//                gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, GL.GL_REPEAT);
-//
-//            } catch (IOException exc) {
-//                System.out.println("LoadSkin: Can not load resource: " + exc.getMessage());
-//                System.exit(1);
-//            }
+            //m_texture[i] = ResourceManagerTest.getInstance().explo[i];
+            m_texture[i] = ResourceManager.getInst().getTexture("data/particle/Explo_" + i + ".png");
         }
     }
     

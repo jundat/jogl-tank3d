@@ -16,7 +16,7 @@ import java.io.InputStream;
 import java.util.Random;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
-import myjogl.utils.ResourceManagerTest;
+import myjogl.utils.ResourceManager;
 import myjogl.utils.Vector3;
 
 /**
@@ -59,9 +59,12 @@ public class Debris extends ParticleEngine {
     public void LoadingTexture() {
         m_textureCount = 9;
         m_texture = new Texture[m_textureCount];
+        
         //Load resource
+        //jundat
         for(int i = 0; i < m_textureCount; i ++) {
-            m_texture[i] = ResourceManagerTest.getInstance().debris[i];
+            //m_texture[i] = ResourceManagerTest.getInstance().debris[i];
+            m_texture[i] = ResourceManager.getInst().getTexture("data/particle/Debris_" + i + ".png");
         }
     }
     
