@@ -38,12 +38,7 @@ public class MainGameView implements GameView {
     public Tank myTank;
     public static EnemyTank otherTank;
     private static Texture ttGachMen;
-    public static boolean[] keysTable = new boolean[256];
-    //new
-    boolean light = true; // Lighting ON/OFF ( NEW )
-    float LightAmbient[] = {0.5f, 0.5f, 0.5f, 1.0f};
-    float LightDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
-    float LightPosition[] = {0.0f, 10.0f, 0.0f, 0.0f};
+    
 
     public MainGameView() {
         System.out.println("Go to main game!------------------------------------");
@@ -67,11 +62,6 @@ public class MainGameView implements GameView {
     }
 
     public void keyPressed(KeyEvent e) {
-        keysTable[e.getKeyCode()] = true;
-
-        if (e.getKeyCode() == KeyEvent.VK_L) {
-            light = ! light;
-        }
     }
 
     public void keyReleased(KeyEvent e) {
@@ -80,8 +70,6 @@ public class MainGameView implements GameView {
             GameEngine.getInst().attach(new MenuView());
             GameEngine.getInst().detach(this);
         }
-
-        keysTable[e.getKeyCode()] = false;
     }
 
     public void pointerPressed(MouseEvent e) {
@@ -229,12 +217,6 @@ public class MainGameView implements GameView {
         // use this function for opengl target camera
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity();
-        
-//        if(light) {
-//            gl.glEnable(GL.GL_LIGHTING);
-//        } else {
-//            gl.glDisable(GL.GL_LIGHTING);
-//        }
 
         glu.gluLookAt(camera.x, camera.y, camera.z, camera.lookAtX, camera.lookAtY, camera.lookAtZ, 0, 1, 0);
         // skybox origin should be same as camera position
@@ -257,6 +239,8 @@ public class MainGameView implements GameView {
         ParticalManager particle = ParticalManager.getInstance();
         particle.Update();
         particle.Draw(gl, camera.GetAngleY());
+        
+        Renderer.Render(ttGachMen, 0, 0);
 
         // Draw alis
         gl.glPushMatrix();
@@ -273,7 +257,5 @@ public class MainGameView implements GameView {
         gl.glEnd();
         gl.glPopMatrix();
         // End
-
-        //Writer.Render("MAIN GAME VIEW - Escape key back to menu", "Constantia", 120, 400, 400, Color.YELLOW);
     }
 }

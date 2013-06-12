@@ -210,6 +210,8 @@ public class Explo1 extends ParticleEngine {
             
             gl.glEnd();
             gl.glPopMatrix();
+            
+            m_texture[temp].disable();
         }
         
         gl.glDisable(GL.GL_BLEND);

@@ -177,8 +177,6 @@ public class Explo extends ParticleEngine {
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE);
         gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_MODULATE);
         
-        
-        
         for (int i = 0; i < m_numParticles; ++i) {
             int temp = i % m_textureCount;
             m_texture[temp].enable();
@@ -207,10 +205,13 @@ public class Explo extends ParticleEngine {
             
             gl.glEnd();
             gl.glPopMatrix();
+            
+            m_texture[temp].disable(); 
         }
         
-        gl.glDisable(GL.GL_BLEND);
         gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE_MINUS_SRC_ALPHA);
+        gl.glDisable(GL.GL_BLEND);
         gl.glDepthMask(true);
+        gl.glDisable(GL.GL_TEXTURE);
     }
 }
