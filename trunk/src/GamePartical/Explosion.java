@@ -59,71 +59,76 @@ public class Explosion extends ParticleEngine {
             System.exit(1);
         }
     }
-
     static Random random = new Random();
-    
+
     @Override
     public void InitParticle(int index) {
         //float rand = Math.abs((random.nextFloat() * 2) - 1);
         float rand;
-        
+
         //System.out.println(rand);
         //System.out.println(rand);
         m_ParticleList[index] = new Particle();
         rand = Math.abs((random.nextFloat() * 2) - 1);
-        m_ParticleList[index].life = 10.5f + rand/2.0f;
+        m_ParticleList[index].life = 10.5f + rand / 2.0f;
         m_ParticleList[index].seed = 0.05f;
-        
+
         m_ParticleList[index].m_Position = new Vector3();
-        
+
         rand = ((random.nextFloat() * 2) - 1);
-        m_ParticleList[index].m_Position.x = m_origin.x + rand /2;
+        m_ParticleList[index].m_Position.x = m_origin.x + rand / 2;
         rand = Math.abs((random.nextFloat() * 2) - 1);
         m_ParticleList[index].m_Position.y = m_origin.y + rand * 8;
         rand = ((random.nextFloat() * 2) - 1);
         m_ParticleList[index].m_Position.z = m_origin.z + rand * 8;
-        
+
         m_ParticleList[index].m_velocity = new Vector3();
-        
+
         rand = Math.abs((random.nextFloat() * 2) - 1);
-        if(m_ParticleList[index].m_Position.x >= 0)
+        if (m_ParticleList[index].m_Position.x >= 0) {
             m_ParticleList[index].m_velocity.x = VECLOCITY.x + VECLOCITY_VARIATION.x * rand;
-        else m_ParticleList[index].m_velocity.x = -VECLOCITY.x - VECLOCITY_VARIATION.x * rand;
-        
-        
+        } else {
+            m_ParticleList[index].m_velocity.x = -VECLOCITY.x - VECLOCITY_VARIATION.x * rand;
+        }
+
+
         rand = Math.abs((random.nextFloat() * 2) - 1);
         m_ParticleList[index].m_velocity.y = VECLOCITY.y + VECLOCITY_VARIATION.y * rand;
-        
+
         rand = Math.abs((random.nextFloat() * 2) - 1);
-        if(m_ParticleList[index].m_Position.z >= 0)
+        if (m_ParticleList[index].m_Position.z >= 0) {
             m_ParticleList[index].m_velocity.z = VECLOCITY.z + VECLOCITY_VARIATION.z * rand;
-        else m_ParticleList[index].m_velocity.z = -VECLOCITY.z - VECLOCITY_VARIATION.z * rand;
+        } else {
+            m_ParticleList[index].m_velocity.z = -VECLOCITY.z - VECLOCITY_VARIATION.z * rand;
+        }
         //float x1 = m_ParticleList[index].m_velocity.x;
         //System.out.println("VelocX" + x1);
         m_ParticleList[index].m_Gravity = new Vector3();
         m_ParticleList[index].m_Gravity = GRAVITY;
-        if(m_ParticleList[index].m_Position.x < 0)
+        if (m_ParticleList[index].m_Position.x < 0) {
             m_ParticleList[index].m_Gravity.x = -m_ParticleList[index].m_Gravity.x;
-        if(m_ParticleList[index].m_Position.z < 0)
+        }
+        if (m_ParticleList[index].m_Position.z < 0) {
             m_ParticleList[index].m_Gravity.z = -m_ParticleList[index].m_Gravity.z;
+        }
         rand = Math.abs((random.nextFloat() * 2) - 1);
         m_ParticleList[index].m_size = PARTICLE_SIZE + 0.5f * rand;
         m_ParticleList[index].m_sizeDelta = -(m_ParticleList[index].m_size / m_ParticleList[index].life);
-        
-        float tempRed,tempBlue,tempGreen,tempAlpha;
+
+        float tempRed, tempBlue, tempGreen, tempAlpha;
         tempRed = COLOR.x;
         rand = Math.abs((random.nextFloat() * 2) - 1);
         tempGreen = COLOR.y + rand * 0.5f;
         tempBlue = COLOR.z;
         tempAlpha = 1.0f;
-        m_ParticleList[index].m_Color = new GLColor(tempRed,tempBlue,tempGreen,tempAlpha);
-        
+        m_ParticleList[index].m_Color = new GLColor(tempRed, tempBlue, tempGreen, tempAlpha);
+
         tempRed = 0.0f;
-        tempGreen = -(m_ParticleList[index].m_Color.green/2.0f)/m_ParticleList[index].life;
+        tempGreen = -(m_ParticleList[index].m_Color.green / 2.0f) / m_ParticleList[index].life;
         tempBlue = 0.0f;
-        tempAlpha = -1.0f/m_ParticleList[index].life;
-        m_ParticleList[index].m_ColorDelta  = new GLColor(tempRed,tempBlue,tempGreen,tempAlpha);
-        
+        tempAlpha = -1.0f / m_ParticleList[index].life;
+        m_ParticleList[index].m_ColorDelta = new GLColor(tempRed, tempBlue, tempGreen, tempAlpha);
+
     }
 
     //Update list particle
@@ -143,7 +148,7 @@ public class Explosion extends ParticleEngine {
 
             m_ParticleList[i].life -= elapsedTime;
             //m_ParticleList[i].m_size += elapsedTime * PARTICLE_SIZE_DELTA;
-            
+
             m_ParticleList[i].m_Color.green += m_ParticleList[i].m_ColorDelta.green * elapsedTime;
             m_ParticleList[i].m_Color.alpha += m_ParticleList[i].m_ColorDelta.alpha * elapsedTime;
             if (m_ParticleList[i].life <= 0) {
@@ -164,20 +169,20 @@ public class Explosion extends ParticleEngine {
         gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_MODULATE);
         m_texture.enable();
         m_texture.bind();
-        
-        
+
+
         for (int i = 0; i < m_numParticles; ++i) {
-            
-            gl.glPushMatrix();            
-            
+
+            gl.glPushMatrix();
+
             gl.glTranslatef(m_ParticleList[i].m_Position.x, m_ParticleList[i].m_Position.y, m_ParticleList[i].m_Position.z);
             gl.glRotatef(Y, 0, 1, 0);
-            
+
             gl.glBegin(GL.GL_QUADS);
-            
+
             float size = m_ParticleList[i].m_size / 2;
             m_ParticleList[i].m_Color.set(gl);
-            
+
             gl.glTexCoord2f(0.0f, 0.0f);
             gl.glVertex3f(0, 0 - size, 0);
 
@@ -189,13 +194,15 @@ public class Explosion extends ParticleEngine {
 
             gl.glTexCoord2f(0.0f, 1.0f);
             gl.glVertex3f(0, 0, 0);
-            
+
             gl.glEnd();
             gl.glPopMatrix();
         }
-        
+
+        m_texture.disable();
+
         gl.glDisable(GL.GL_BLEND);
-        gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE_MINUS_SRC_ALPHA);
+        gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
         gl.glDepthMask(true);
     }
 }

@@ -19,7 +19,7 @@ import myjogl.utils.Vector3;
  * @author TIEUNUN
  */
 public class FlyingSparks extends ParticleEngine {
-    
+
     private final float SEED = 20.0f;
     private final Vector3 VECLOCITY = new Vector3(0.2f, 0.2f, 0.2f);
     private final Vector3 VECLOCITY_VARIATION = new Vector3(0.02f, 0.02f, 0.02f);
@@ -59,89 +59,97 @@ public class FlyingSparks extends ParticleEngine {
             System.exit(1);
         }
     }
-
     static Random random = new Random();
-    
+
     @Override
     public void InitParticle(int index) {
         float rand;
-        
+
         m_ParticleList[index] = new Particle();
         rand = Math.abs((random.nextFloat() * 2) - 1);
         m_ParticleList[index].life = 30.5f + rand * SEED;
         m_ParticleList[index].seed = 0.05f;
-        
+
         m_ParticleList[index].m_Position = new Vector3();
-        
+
         rand = ((random.nextFloat() * 2) - 1);
         m_ParticleList[index].m_Position.x = m_origin.x + rand * 12;
         rand = ((random.nextFloat() * 2) - 1);
         m_ParticleList[index].m_Position.y = m_origin.y + rand * 12;
         rand = ((random.nextFloat() * 2) - 1);
         m_ParticleList[index].m_Position.z = m_origin.z + rand * 12;
-        
+
         System.out.println("SmokeTrail " + index + " : X : " + m_ParticleList[index].m_Position.x + "Y : " + m_ParticleList[index].m_Position.y + "Z : " + m_ParticleList[index].m_Position.z);
         m_ParticleList[index].m_velocity = new Vector3();
-        
+
         rand = Math.abs((random.nextFloat() * 2) - 1);
-        if(m_ParticleList[index].m_Position.x - m_origin.x >= 0)
+        if (m_ParticleList[index].m_Position.x - m_origin.x >= 0) {
             m_ParticleList[index].m_velocity.x = VECLOCITY.x + VECLOCITY_VARIATION.x * rand;
-        else 
+        } else {
             m_ParticleList[index].m_velocity.x = -(VECLOCITY.x + VECLOCITY_VARIATION.x * rand);
+        }
         rand = Math.abs((random.nextFloat() * 2) - 1);
-        if(m_ParticleList[index].m_Position.y - m_origin.y >= 0)
+        if (m_ParticleList[index].m_Position.y - m_origin.y >= 0) {
             m_ParticleList[index].m_velocity.y = VECLOCITY.y + VECLOCITY_VARIATION.y * rand;
-        else 
+        } else {
             m_ParticleList[index].m_velocity.y = -(VECLOCITY.y + VECLOCITY_VARIATION.y * rand);
+        }
         rand = Math.abs((random.nextFloat() * 2) - 1);
-        if(m_ParticleList[index].m_Position.z - m_origin.z >= 0)
+        if (m_ParticleList[index].m_Position.z - m_origin.z >= 0) {
             m_ParticleList[index].m_velocity.z = VECLOCITY.z + VECLOCITY_VARIATION.z * rand;
-        else 
+        } else {
             m_ParticleList[index].m_velocity.z = -(VECLOCITY.z + VECLOCITY_VARIATION.z * rand);
+        }
 
         m_ParticleList[index].m_Gravity = new Vector3();
-        
+
         rand = Math.abs((random.nextFloat() * 2) - 1);
-        
-        if(m_ParticleList[index].m_Position.x - m_origin.x >= 0)
+
+        if (m_ParticleList[index].m_Position.x - m_origin.x >= 0) {
             m_ParticleList[index].m_Gravity.x = GRAVITY.x * rand * Math.abs(m_ParticleList[index].m_Position.x - m_origin.x);
-        else m_ParticleList[index].m_Gravity.x = -(GRAVITY.x * rand * Math.abs(m_ParticleList[index].m_Position.x - m_origin.x));
+        } else {
+            m_ParticleList[index].m_Gravity.x = -(GRAVITY.x * rand * Math.abs(m_ParticleList[index].m_Position.x - m_origin.x));
+        }
         rand = Math.abs((random.nextFloat() * 2) - 1);
-        if(m_ParticleList[index].m_Position.y - m_origin.y >= 0)
+        if (m_ParticleList[index].m_Position.y - m_origin.y >= 0) {
             m_ParticleList[index].m_Gravity.y = GRAVITY.y * rand * Math.abs(m_ParticleList[index].m_Position.y - m_origin.y);
-        else 
+        } else {
             m_ParticleList[index].m_Gravity.y = -(GRAVITY.y * rand * Math.abs(m_ParticleList[index].m_Position.y - m_origin.y));
+        }
         rand = Math.abs((random.nextFloat() * 2) - 1);
-        if(m_ParticleList[index].m_Position.z - m_origin.z >= 0)
+        if (m_ParticleList[index].m_Position.z - m_origin.z >= 0) {
             m_ParticleList[index].m_Gravity.z = GRAVITY.z * rand * Math.abs(m_ParticleList[index].m_Position.z - m_origin.z);
-        else m_ParticleList[index].m_Gravity.z = -(GRAVITY.z * rand * Math.abs(m_ParticleList[index].m_Position.z - m_origin.z));
+        } else {
+            m_ParticleList[index].m_Gravity.z = -(GRAVITY.z * rand * Math.abs(m_ParticleList[index].m_Position.z - m_origin.z));
+        }
         rand = Math.abs((random.nextFloat() * 2) - 1);
         m_ParticleList[index].m_size = PARTICLE_SIZE + 0.5f * rand;
         //m_ParticleList[index].m_sizeDelta = -(m_ParticleList[index].m_size / m_ParticleList[index].life);
         m_ParticleList[index].m_sizeDelta = PARTICLE_SIZE_DELTA;
-        
-        float tempRed,tempBlue,tempGreen,tempAlpha;
+
+        float tempRed, tempBlue, tempGreen, tempAlpha;
         tempRed = COLOR.x;
         rand = Math.abs((random.nextFloat() * 2) - 1);
         tempGreen = COLOR.y + rand * 0.5f;
         tempBlue = COLOR.z;
         tempAlpha = 1.0f;
-        m_ParticleList[index].m_Color = new GLColor(tempRed,tempGreen,tempBlue,tempAlpha);
-        
+        m_ParticleList[index].m_Color = new GLColor(tempRed, tempGreen, tempBlue, tempAlpha);
+
         tempRed = 0.0f;
-        tempGreen = -(m_ParticleList[index].m_Color.green/2.0f)/m_ParticleList[index].life;
+        tempGreen = -(m_ParticleList[index].m_Color.green / 2.0f) / m_ParticleList[index].life;
         tempBlue = 0.0f;
-        tempAlpha = -1.0f/m_ParticleList[index].life;
-        m_ParticleList[index].m_ColorDelta  = new GLColor(tempRed,tempGreen,tempBlue,tempAlpha);
-        
+        tempAlpha = -1.0f / m_ParticleList[index].life;
+        m_ParticleList[index].m_ColorDelta = new GLColor(tempRed, tempGreen, tempBlue, tempAlpha);
+
     }
 
     //Update list particle
     @Override
     public void Update() {
         float elapsedTime = 0;
-        if(m_numParticles == 0)
+        if (m_numParticles == 0) {
             this.Emit(200);
+        }
         for (int i = 0; i < m_numParticles;) {
             //float rand = (float) (Math.random() * Math.abs(m_numParticles - i) ) / 1000;
             float rand = random.nextFloat();
@@ -152,23 +160,26 @@ public class FlyingSparks extends ParticleEngine {
             m_ParticleList[i].m_velocity.x += elapsedTime * m_ParticleList[i].m_Gravity.x;
             m_ParticleList[i].m_velocity.y += elapsedTime * m_ParticleList[i].m_Gravity.y;
             m_ParticleList[i].m_velocity.z += elapsedTime * m_ParticleList[i].m_Gravity.z;
-            
-            if(m_ParticleList[i].m_Gravity.x >= 0)
+
+            if (m_ParticleList[i].m_Gravity.x >= 0) {
                 m_ParticleList[i].m_Gravity.x += 0.5f * elapsedTime;
-            else 
+            } else {
                 m_ParticleList[i].m_Gravity.x -= 0.5f * elapsedTime;
-            if(m_ParticleList[i].m_Gravity.y >= 0)
+            }
+            if (m_ParticleList[i].m_Gravity.y >= 0) {
                 m_ParticleList[i].m_Gravity.y += 0.5f * elapsedTime;
-            else 
+            } else {
                 m_ParticleList[i].m_Gravity.y -= 0.5f * elapsedTime;
-            if(m_ParticleList[i].m_Gravity.z >= 0)
+            }
+            if (m_ParticleList[i].m_Gravity.z >= 0) {
                 m_ParticleList[i].m_Gravity.z += 0.5f * elapsedTime;
-            else 
+            } else {
                 m_ParticleList[i].m_Gravity.z -= 0.5f * elapsedTime;
-                        
+            }
+
             m_ParticleList[i].life -= 13.5 * elapsedTime;
             //m_ParticleList[i].m_size += elapsedTime * PARTICLE_SIZE_DELTA;
-            
+
             m_ParticleList[i].m_Color.green += m_ParticleList[i].m_ColorDelta.green * elapsedTime;
             m_ParticleList[i].m_Color.alpha += m_ParticleList[i].m_ColorDelta.alpha * elapsedTime;
             if (m_ParticleList[i].life <= 0) {
@@ -186,21 +197,20 @@ public class FlyingSparks extends ParticleEngine {
         gl.glDepthMask(false);
         gl.glEnable(GL.GL_BLEND);
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE);
-        gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_MODULATE);                
-        
+        gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_MODULATE);
+
+        m_texture.enable();
+        m_texture.bind();
         for (int i = 0; i < m_numParticles; ++i) {
-            m_texture.enable();
-            m_texture.bind();
             gl.glPushMatrix();
-            
             gl.glTranslatef(m_ParticleList[i].m_Position.x, m_ParticleList[i].m_Position.y, m_ParticleList[i].m_Position.z);
             //gl.glRotatef(Y, 0, 1, 0);
-            
+
             gl.glBegin(GL.GL_QUADS);
-            
+
             float size = m_ParticleList[i].m_size / 2;
             m_ParticleList[i].m_Color.set(gl);
-            
+
             gl.glTexCoord2f(0.0f, 0.0f);
             gl.glVertex3f(-size, -size, 0);
 
@@ -212,13 +222,15 @@ public class FlyingSparks extends ParticleEngine {
 
             gl.glTexCoord2f(0.0f, 1.0f);
             gl.glVertex3f(-size, size, 0);
-            
+
             gl.glEnd();
             gl.glPopMatrix();
         }
         
+        m_texture.disable();
+
         gl.glDisable(GL.GL_BLEND);
-        gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE_MINUS_SRC_ALPHA);
+        gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
         gl.glDepthMask(true);
     }
 }
