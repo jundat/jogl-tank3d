@@ -128,7 +128,7 @@ public class MainGameView implements GameView {
         //System.err.print("\n" + angle_x);
     }
 
-    public void pointerReleased(MouseEvent e) {
+    public void pointerReleased(MouseEvent e)    {
     }
 
     public void mouseMoved(MouseEvent e) {
