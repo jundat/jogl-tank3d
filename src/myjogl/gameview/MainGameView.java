@@ -164,8 +164,8 @@ public class MainGameView implements GameView {
         
         //demo------------------------------------------------------------------
         knight = new Md2();
-        knight.LoadModel("demo/knight.md2");
-        knight.LoadSkin(ResourceManager.getInst().getTexture("demo/knight.png", false, GL.GL_REPEAT));
+        knight.LoadModel("data/model/knight.md2");
+        knight.LoadSkin(ResourceManager.getInst().getTexture("data/model/knight.png", false, GL.GL_REPEAT));
     }
 
     public void unload() {
