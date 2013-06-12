@@ -34,11 +34,6 @@ public class ParticalManager {
             ParticleEngine par = (ParticleEngine) m_listPartical.elementAt(i);
             if (par.m_isDie) {
                 m_listPartical.removeElement(par);
-
-                if (m_listPartical.size() == 0) {
-                    Writer.Render("size = 0", "Consolas", 20, 300, 300, Color.RED);
-                }
-                
                 i--;
                 continue;
             }
