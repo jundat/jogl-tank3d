@@ -39,6 +39,8 @@ public class MainGameView implements GameView {
     public static EnemyTank otherTank;
     private static Texture ttGachMen;
     
+    //demo----------------------------------------------------------------------
+    private Md2 knight;
 
     public MainGameView() {
         System.out.println("Go to main game!------------------------------------");
@@ -78,7 +80,7 @@ public class MainGameView implements GameView {
         Vector3 a = line.IsCollisionWithGameObject(otherTank);
         if (a != null) {
             System.err.println("BAN TRUNG!!!");
-
+//n?            
             Explo shootParticle = new Explo(a, 0.1f, 0.5f);
             shootParticle.LoadingTexture();
             ParticalManager.getInstance().Add(shootParticle);
@@ -159,6 +161,11 @@ public class MainGameView implements GameView {
         camera = myTank.TankCamera;
         otherTank = new EnemyTank(new Vector3(2, 2, -10), new Vector3(0, 1, 1), 0.0f, 1.0f);
         otherTank.Init(Global.drawable);
+        
+        //demo------------------------------------------------------------------
+        knight = new Md2();
+        knight.LoadModel("demo/knight.md2");
+        knight.LoadSkin(ResourceManager.getInst().getTexture("demo/knight.png", false, GL.GL_REPEAT));
     }
 
     public void unload() {
@@ -209,6 +216,7 @@ public class MainGameView implements GameView {
 
         myTank.Update(0);
         otherTank.Update(0);
+        ParticalManager.getInstance().Update();
     }
 
     public void display() {
@@ -236,9 +244,7 @@ public class MainGameView implements GameView {
         gl.glPopMatrix();
 
         // Partical draw
-        ParticalManager particle = ParticalManager.getInstance();
-        particle.Update();
-        particle.Draw(gl, camera.GetAngleY());
+        ParticalManager.getInstance().Draw(gl, camera.GetAngleY());
         
         Renderer.Render(ttGachMen, 0, 0);
 
@@ -257,5 +263,15 @@ public class MainGameView implements GameView {
         gl.glEnd();
         gl.glPopMatrix();
         // End
+        
+        //demo------------------------------------------------------------------
+        gl.glPushMatrix();
+        
+        gl.glRotatef(-90, 1, 0, 0);
+        gl.glTranslatef(0, 14, 5);
+        gl.glScalef(0.1f, 0.1f, 0.1f);
+        knight.DrawAnimate(gl, 1, 100, 0.2f);
+        
+        gl.glPopMatrix();
     }
 }

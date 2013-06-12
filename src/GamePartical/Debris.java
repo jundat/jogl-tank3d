@@ -191,10 +191,6 @@ public class Debris extends ParticleEngine {
             gl.glBegin(GL.GL_QUADS);
             
             float size = m_ParticleList[i].m_size / 2;
-            //m_ParticleList[i].m_Color.alpha = 1.0f;
-            //m_ParticleList[i].m_Color.set(gl);
-            //gl.glColor4f((float)139/255, (float)137/255, (float)137/255, 0.9f);
-            //gl.glColor4f(1.0f,1.0f,1.0f,0.5f);
             gl.glColor4f(0.5f,0.5f,0.5f,0.5f);
             
             gl.glTexCoord2f(0.0f, 0.0f);
@@ -215,6 +211,7 @@ public class Debris extends ParticleEngine {
             m_texture[temp].disable();
         }
         
+        gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_REPLACE);
         gl.glDisable(GL.GL_BLEND);
         gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE_MINUS_SRC_ALPHA);
         gl.glDepthMask(true);

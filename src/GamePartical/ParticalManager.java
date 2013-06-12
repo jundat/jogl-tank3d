@@ -44,8 +44,8 @@ public class ParticalManager {
     public void Draw(GL gl, float angle) {
         for (int i = 0; i < m_listPartical.size(); i++) {
             gl.glPushMatrix();
-            ParticleEngine temp = (ParticleEngine) m_listPartical.elementAt(i);
-            temp.Draw(gl, angle);
+                ParticleEngine temp = (ParticleEngine) m_listPartical.elementAt(i);
+                temp.Draw(gl, angle);
             gl.glPopMatrix();
         }
     }
