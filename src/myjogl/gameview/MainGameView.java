@@ -17,6 +17,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.nio.FloatBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.media.opengl.GL;
@@ -37,16 +38,20 @@ public class MainGameView implements GameView {
     public Tank myTank;
     public static EnemyTank otherTank;
     private static Texture ttGachMen;
-    
     public static boolean[] keysTable = new boolean[256];
-    
+    //new
+    boolean light = true; // Lighting ON/OFF ( NEW )
+    float LightAmbient[] = {0.5f, 0.5f, 0.5f, 1.0f};
+    float LightDiffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    float LightPosition[] = {0.0f, 10.0f, 0.0f, 0.0f};
+
     public MainGameView() {
         System.out.println("Go to main game!------------------------------------");
     }
 
     public void handleInput() {
         KeyboardState state = KeyboardState.getState();
-        
+
         // this is my
         if (state.isDown(KeyEvent.VK_A)) {
             myTank.TurnLeft();
@@ -60,9 +65,13 @@ public class MainGameView implements GameView {
             myTank.SetTankVel(0.0f);
         }
     }
-    
+
     public void keyPressed(KeyEvent e) {
         keysTable[e.getKeyCode()] = true;
+
+        if (e.getKeyCode() == KeyEvent.VK_L) {
+            light = ! light;
+        }
     }
 
     public void keyReleased(KeyEvent e) {
@@ -71,7 +80,7 @@ public class MainGameView implements GameView {
             GameEngine.getInst().attach(new MenuView());
             GameEngine.getInst().detach(this);
         }
-        
+
         keysTable[e.getKeyCode()] = false;
     }
 
@@ -79,28 +88,28 @@ public class MainGameView implements GameView {
         System.err.println("Shoot");
         Line line = myTank.GetLineBullet(); // PT duong thang vien dan
         Vector3 a = line.IsCollisionWithGameObject(otherTank);
-        if (a!= null) {
+        if (a != null) {
             System.err.println("BAN TRUNG!!!");
-            
+
             Explo shootParticle = new Explo(a, 0.1f, 0.5f);
             shootParticle.LoadingTexture();
             ParticalManager.getInstance().Add(shootParticle);
-            
+
             Explo1 shootParticle2 = new Explo1(a, 0.1f, 0.5f);
             shootParticle2.LoadingTexture();
             ParticalManager.getInstance().Add(shootParticle2);
-            
+
             RoundSparks shootParticle3 = new RoundSparks(a, 0.1f, 0.3f);
             shootParticle3.LoadingTexture();
             ParticalManager.getInstance().Add(shootParticle3);
-            
+
             Debris shootParticle4 = new Debris(a, 0.1f, 0.5f);
             shootParticle4.LoadingTexture();
             ParticalManager.getInstance().Add(shootParticle4);
-        }
-        else
+        } else {
             System.err.println("---BAN HUT---");
-        
+        }
+
         myTank.StartShootParticle();
     }
 
@@ -109,8 +118,10 @@ public class MainGameView implements GameView {
         int y = e.getYOnScreen();
         //System.err.print("\n" + x + " " + y);
         int mid_x = Global.wndWidth / 2;
-	int mid_y = Global.wndHeight / 2;
-        if( (x == mid_x) && (y == mid_y) ) return;
+        int mid_y = Global.wndHeight / 2;
+        if ((x == mid_x) && (y == mid_y)) {
+            return;
+        }
 
         Robot r;
         try {
@@ -120,9 +131,9 @@ public class MainGameView implements GameView {
             Logger.getLogger(Camera.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-	// Get the direction from the mouse cursor, set a resonable maneuvering speed
-	float angle_x = (float)( (mid_x - x) ) / 1000;
-        float angle_y = (float)( (mid_y - y) ) / 1000;
+        // Get the direction from the mouse cursor, set a resonable maneuvering speed
+        float angle_x = (float) ((mid_x - x)) / 1000;
+        float angle_y = (float) ((mid_y - y)) / 1000;
         myTank.TankCamera.beta += angle_x;
         myTank.TankCamera.alpha += angle_y;
         //System.err.print("\n" + angle_x);
@@ -130,11 +141,10 @@ public class MainGameView implements GameView {
 
     public void pointerReleased(MouseEvent e) {
     }
-    
+
     public void mouseMoved(MouseEvent e) {
-        
     }
-    
+
     public void load() {
         //set hide cursor
         Toolkit t = Toolkit.getDefaultToolkit();
@@ -144,7 +154,6 @@ public class MainGameView implements GameView {
         //end - set hide cursor
 
         ttGachMen = ResourceManager.getInst().getTexture("data/game/gach_men.png");
-
 
         //skybox
         m_skybox = new SkyBox();
@@ -162,8 +171,6 @@ public class MainGameView implements GameView {
         camera = myTank.TankCamera;
         otherTank = new EnemyTank(new Vector3(2, 2, -10), new Vector3(0, 1, 1), 0.0f, 1.0f);
         otherTank.Init(Global.drawable);
-        
-        //ResourceManagerTest.getInstance().LoadResource(Global.drawable);
     }
 
     public void unload() {
@@ -211,7 +218,7 @@ public class MainGameView implements GameView {
 
     public void update(long elapsedTime) {
         handleInput();
-        
+
         myTank.Update(0);
         otherTank.Update(0);
     }
@@ -223,28 +230,34 @@ public class MainGameView implements GameView {
         gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity();
         
+//        if(light) {
+//            gl.glEnable(GL.GL_LIGHTING);
+//        } else {
+//            gl.glDisable(GL.GL_LIGHTING);
+//        }
+
         glu.gluLookAt(camera.x, camera.y, camera.z, camera.lookAtX, camera.lookAtY, camera.lookAtZ, 0, 1, 0);
         // skybox origin should be same as camera position
-        m_skybox.Render((float)camera.x, (float)camera.y, (float)camera.z);
+        m_skybox.Render((float) camera.x, (float) camera.y, (float) camera.z);
 
         this.DrawPlane();
-        
+
         TankMap.getInst().Render(2, 6);
 
         // Draw player
         gl.glPushMatrix();
         myTank.Draw(Global.drawable);
         gl.glPopMatrix();
-        
+
         gl.glPushMatrix();
         otherTank.Draw(Global.drawable);
         gl.glPopMatrix();
-        
+
         // Partical draw
         ParticalManager particle = ParticalManager.getInstance();
         particle.Update();
         particle.Draw(gl, camera.GetAngleY());
-        
+
         // Draw alis
         gl.glPushMatrix();
         gl.glBegin(GL.GL_LINES);
