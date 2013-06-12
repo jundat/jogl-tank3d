@@ -38,7 +38,6 @@ public class MainGameView implements GameView {
     public Tank myTank;
     public static EnemyTank otherTank;
     private static Texture ttGachMen;
-    
     //demo----------------------------------------------------------------------
     private Md2 knight;
 
@@ -161,7 +160,7 @@ public class MainGameView implements GameView {
         camera = myTank.TankCamera;
         otherTank = new EnemyTank(new Vector3(2, 2, -10), new Vector3(0, 1, 1), 0.0f, 1.0f);
         otherTank.Init(Global.drawable);
-        
+
         //demo------------------------------------------------------------------
         knight = new Md2();
         knight.LoadModel("data/model/knight.md2");
@@ -245,33 +244,34 @@ public class MainGameView implements GameView {
 
         // Partical draw
         ParticalManager.getInstance().Draw(gl, camera.GetAngleY());
-        
-        Renderer.Render(ttGachMen, 0, 0);
 
         // Draw alis
         gl.glPushMatrix();
-        gl.glBegin(GL.GL_LINES);
-        gl.glColor3f(1, 0, 0);
-        gl.glVertex3f(0.0f, 0.0f, 0.0f);
-        gl.glVertex3f(10, 0, 0);
-        gl.glColor3f(0, 1, 0);
-        gl.glVertex3f(0.0f, 0.0f, 0.0f);
-        gl.glVertex3f(0, 10, 0);
-        gl.glColor3f(0, 0, 1);
-        gl.glVertex3f(0.0f, 0.0f, 0.0f);
-        gl.glVertex3f(0, 0, 10);
-        gl.glEnd();
+        {
+            gl.glBegin(GL.GL_LINES);
+            gl.glColor3f(1, 0, 0);
+            gl.glVertex3f(0.0f, 0.0f, 0.0f);
+            gl.glVertex3f(10, 0, 0);
+            gl.glColor3f(0, 1, 0);
+            gl.glVertex3f(0.0f, 0.0f, 0.0f);
+            gl.glVertex3f(0, 10, 0);
+            gl.glColor3f(0, 0, 1);
+            gl.glVertex3f(0.0f, 0.0f, 0.0f);
+            gl.glVertex3f(0, 0, 10);
+            gl.glEnd();
+        }
         gl.glPopMatrix();
         // End
-        
+
         //demo------------------------------------------------------------------
         gl.glPushMatrix();
-        
-        gl.glRotatef(-90, 1, 0, 0);
-        gl.glTranslatef(0, 14, 5);
-        gl.glScalef(0.1f, 0.1f, 0.1f);
-        knight.DrawAnimate(gl, 1, 100, 0.2f);
-        
+        {
+            gl.glRotatef(-90, 1, 0, 0);
+            gl.glTranslatef(0, 14, 5);
+            gl.glScalef(0.1f, 0.1f, 0.1f);
+            knight.DrawAnimate(gl, 1, 100, 0.2f);
+        }
         gl.glPopMatrix();
+
     }
 }

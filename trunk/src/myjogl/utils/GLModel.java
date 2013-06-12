@@ -312,9 +312,6 @@ public class GLModel {
      * @param gl
      */
     public void opengldrawtolist(GLAutoDrawable drawable) {
-        ////////////////////////////////////////
-        /// With Materials if available ////////
-        ////////////////////////////////////////
         GL gl = drawable.getGL();
 
         this.objectlist = gl.glGenLists(1);
