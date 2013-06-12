@@ -229,6 +229,7 @@ public class FlyingSparks extends ParticleEngine {
         
         m_texture.disable();
 
+        gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_REPLACE);
         gl.glDisable(GL.GL_BLEND);
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
         gl.glDepthMask(true);

@@ -214,6 +214,7 @@ public class Explo1 extends ParticleEngine {
             m_texture[temp].disable();
         }
         
+        gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_REPLACE);
         gl.glDisable(GL.GL_BLEND);
         gl.glDisable(GL.GL_TEXTURE);
         gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE_MINUS_SRC_ALPHA);
