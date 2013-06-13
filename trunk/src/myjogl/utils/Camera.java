@@ -15,8 +15,8 @@ import java.util.logging.Logger;
  */
 public class Camera {
 
-    private final float MAX_UP = 10f;
-    private final float MAX_DOWN = -1.0f;
+    private final float MAX_UP = 100f;
+    private final float MAX_DOWN = -100.0f;
     public Vector3 mPos;
     public Vector3 mView;
     public Vector3 mUp;

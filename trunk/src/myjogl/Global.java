@@ -17,8 +17,8 @@ public class Global {
 
     public static boolean isFullScreen = false;
     public static int FPS = 60;
-    public static int wndWidth = 800;
-    public static int wndHeight = 600;
+    public static int wndWidth = 1366;
+    public static int wndHeight = 768;
     public static GLAutoDrawable drawable = null;
 
     public static void Print(HashMap hm) {

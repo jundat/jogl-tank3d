@@ -119,7 +119,7 @@ public class Tank3D implements GLEventListener {
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL.GL_PROJECTION);
         gl.glLoadIdentity();
-        glu.gluPerspective(45.0f, (float) width / (float) height, 0.1f, 100.0f);
+        glu.gluPerspective(60.0f, (float) width / (float) height, 0.1f, 100.0f);
         gl.glMatrixMode(GL.GL_MODELVIEW);
         gl.glLoadIdentity();
 
@@ -130,7 +130,6 @@ public class Tank3D implements GLEventListener {
 
     public void display(GLAutoDrawable drawable) {
         Global.drawable = drawable; //do not delete this line
-        
         GL gl = drawable.getGL();
 
         // Clear the drawing area

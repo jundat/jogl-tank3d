@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 import javax.media.opengl.GL;
+import javax.media.opengl.glu.GLU;
 import javax.swing.JOptionPane;
 import myjogl.Global;
 
@@ -34,6 +35,7 @@ public class TextureLoader {
      */
     public static Texture Load(String filename, boolean wantFlip, int wrap_s, int wrap_t, int minFilter, int magFilter) {
         GL gl = Global.drawable.getGL();
+        GLU glu = new GLU();
         Texture tt = null;
 
         InputStream is = null;
@@ -52,9 +54,9 @@ public class TextureLoader {
             gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_T, wrap_s);
             gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_WRAP_S, wrap_s);
 
-            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, minFilter);
-            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, magFilter);
-
+            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR_MIPMAP_LINEAR); //minFilter);
+            gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR_MIPMAP_LINEAR); //magFilter);
+            
             System.out.println("+ Texture: " + filename);
         } catch (Exception exc) {
             System.out.println("TextureLoader: Can not load resource: " + filename + "\n" + exc.getMessage());
@@ -83,7 +85,7 @@ public class TextureLoader {
      * @return
      */
     public static Texture Load(String filename) {
-        return TextureLoader.Load(filename, true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR, GL.GL_LINEAR);
+        return TextureLoader.Load(filename, true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
     }
 
     /**
