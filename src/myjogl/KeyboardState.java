@@ -13,7 +13,7 @@ import java.awt.event.KeyListener;
  */
 public class KeyboardState implements KeyListener {
     
-    private boolean[] keys = new boolean[256];
+    private boolean[] keys = new boolean[1024];
     
     private static KeyboardState state;
     

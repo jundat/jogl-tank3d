@@ -16,8 +16,8 @@ public class SkyBox {
 
     private float m_size;
     //texture
-    private Texture ttUp;
-    private Texture ttDown;
+    private Texture ttTop;
+    private Texture ttBottom;
     private Texture ttFront;
     private Texture ttBack;
     private Texture ttLeft;
@@ -30,18 +30,18 @@ public class SkyBox {
         this.m_size = size;
     }
 
-    public void LoadTextures(Texture up, Texture down, Texture front, Texture back, Texture left, Texture right) {
-        ttUp = up;
-        ttDown = down;
+    public void LoadTextures(Texture top, Texture bottom, Texture front, Texture back, Texture left, Texture right) {
+        ttTop = top;
+        ttBottom = bottom;
         ttFront = front;
         ttBack = back;
         ttLeft = left;
         ttRight = right;
     }
 
-    public void LoadTextures(String up, String down, String front, String back, String left, String right) {
-        this.ttUp = ResourceManager.getInst().getTexture(up, false, GL.GL_CLAMP_TO_EDGE);
-        this.ttDown = ResourceManager.getInst().getTexture(down, false, GL.GL_CLAMP_TO_EDGE);
+    public void LoadTextures(String top, String bottom, String front, String back, String left, String right) {
+        this.ttTop = ResourceManager.getInst().getTexture(top, false, GL.GL_CLAMP_TO_EDGE);
+        this.ttBottom = ResourceManager.getInst().getTexture(bottom, false, GL.GL_CLAMP_TO_EDGE);
         this.ttFront = ResourceManager.getInst().getTexture(front, false, GL.GL_CLAMP_TO_EDGE);
         this.ttBack = ResourceManager.getInst().getTexture(back, false, GL.GL_CLAMP_TO_EDGE);
         this.ttLeft = ResourceManager.getInst().getTexture(left, false, GL.GL_CLAMP_TO_EDGE);
@@ -61,9 +61,9 @@ public class SkyBox {
 
         gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_REPLACE);
 
-//		Top
-        ttUp.enable();
-        ttUp.bind();
+        //Top
+        ttTop.enable();
+        ttTop.bind();
         gl.glBegin(GL.GL_QUADS);
             gl.glTexCoord2f(0.0f, 1.0f);
             gl.glVertex3f(-m_size, m_size, -m_size);
@@ -74,10 +74,10 @@ public class SkyBox {
             gl.glTexCoord2f(0.0f, 0.0f);
             gl.glVertex3f(-m_size, m_size, m_size);
         gl.glEnd();
-        ttUp.disable();
+        ttTop.disable();
 //		Bottom
-        ttDown.enable();
-        ttDown.bind();
+        ttBottom.enable();
+        ttBottom.bind();
         gl.glBegin(GL.GL_QUADS);
             gl.glTexCoord2f(1.0f, 0.0f);
             gl.glVertex3f(m_size, -m_size, -m_size);
@@ -88,8 +88,8 @@ public class SkyBox {
             gl.glTexCoord2f(1.0f, 1.0f);
             gl.glVertex3f(m_size, -m_size, m_size);
         gl.glEnd();
-        ttDown.disable();
-//		Font
+        ttBottom.disable();
+//		Front
         ttFront.enable();
         ttFront.bind();
         gl.glBegin(GL.GL_QUADS);
@@ -153,8 +153,8 @@ public class SkyBox {
     }
 
     public void Release() {
-        ttUp.dispose();
-        ttDown.dispose();
+        ttTop.dispose();
+        ttBottom.dispose();
         ttFront.dispose();
         ttBack.dispose();
         ttLeft.dispose();

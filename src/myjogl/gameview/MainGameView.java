@@ -4,26 +4,18 @@
  */
 package myjogl.gameview;
 
-import GameObjects.EnemyTank;
-import GameObjects.Tank;
-import GamePartical.Debris;
-import GamePartical.Explo;
-import GamePartical.Explo1;
-import GamePartical.ParticalManager;
-import GamePartical.RoundSparks;
 import com.sun.opengl.util.texture.Texture;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.nio.FloatBuffer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
 import myjogl.GameEngine;
+import myjogl.GameEngine;
 import myjogl.Global;
+import myjogl.Global;
+import myjogl.KeyboardState;
 import myjogl.KeyboardState;
 import myjogl.utils.*;
 
@@ -34,32 +26,17 @@ import myjogl.utils.*;
 public class MainGameView implements GameView {
 
     private SkyBox m_skybox;
-    private Camera2 camera;
-    public Tank myTank;
-    public static EnemyTank otherTank;
-    private static Texture ttGachMen;
-    //demo----------------------------------------------------------------------
-    private Md2 knight;
-
+    private Camera camera;
+    private static Md2 md2Tank;
+    Texture ttGachMen;
+    final float[] redLightColorAmbient = {0.0f, 0.0f, 0.0f, 0.0f}; //red
+    final float[] redLightColorDisfuse = {2.0f, 2.0f, 2.0f, 1.0f}; //red
+    final float[] redLightColorSpecular = {6.0f, 6.0f, 6.0f, 1.0f}; //red
+    final float[] redLightPos = {32.0f, 20.0f, 32.0f, 1.0f};
+    
     public MainGameView() {
+        super();
         System.out.println("Go to main game!------------------------------------");
-    }
-
-    public void handleInput() {
-        KeyboardState state = KeyboardState.getState();
-
-        // this is my
-        if (state.isDown(KeyEvent.VK_A)) {
-            myTank.TurnLeft();
-        }
-        if (state.isDown(KeyEvent.VK_D)) {
-            myTank.TurnRight();
-        }
-        if (state.isDown(KeyEvent.VK_W)) {
-            myTank.SetTankVel(0.5f);
-        } else {
-            myTank.SetTankVel(0.0f);
-        }
     }
 
     public void keyPressed(KeyEvent e) {
@@ -71,67 +48,34 @@ public class MainGameView implements GameView {
             GameEngine.getInst().attach(new MenuView());
             GameEngine.getInst().detach(this);
         }
+
     }
 
     public void pointerPressed(MouseEvent e) {
-        System.err.println("Shoot");
-        Line line = myTank.GetLineBullet(); // PT duong thang vien dan
-        Vector3 a = line.IsCollisionWithGameObject(otherTank);
-        if (a != null) {
-            System.err.println("BAN TRUNG!!!");
-//n?            
-            Explo shootParticle = new Explo(a, 0.1f, 0.5f);
-            shootParticle.LoadingTexture();
-            ParticalManager.getInstance().Add(shootParticle);
-
-            Explo1 shootParticle2 = new Explo1(a, 0.1f, 0.5f);
-            shootParticle2.LoadingTexture();
-            ParticalManager.getInstance().Add(shootParticle2);
-
-            RoundSparks shootParticle3 = new RoundSparks(a, 0.1f, 0.3f);
-            shootParticle3.LoadingTexture();
-            ParticalManager.getInstance().Add(shootParticle3);
-
-            Debris shootParticle4 = new Debris(a, 0.1f, 0.5f);
-            shootParticle4.LoadingTexture();
-            ParticalManager.getInstance().Add(shootParticle4);
-        } else {
-            System.err.println("---BAN HUT---");
-        }
-
-        myTank.StartShootParticle();
     }
 
     public void pointerMoved(MouseEvent e) {
         int x = e.getXOnScreen();
         int y = e.getYOnScreen();
-        //System.err.print("\n" + x + " " + y);
-        int mid_x = Global.wndWidth / 2;
-        int mid_y = Global.wndHeight / 2;
-        if ((x == mid_x) && (y == mid_y)) {
-            return;
-        }
 
-        Robot r;
-        try {
-            r = new Robot();
-            r.mouseMove(mid_x, mid_y);
-        } catch (AWTException ex) {
-            Logger.getLogger(Camera.class.getName()).log(Level.SEVERE, null, ex);
+        if (camera != null) {
+            camera.Mouse_Move(x, y, Global.wndWidth, Global.wndHeight);
         }
-
-        // Get the direction from the mouse cursor, set a resonable maneuvering speed
-        float angle_x = (float) ((mid_x - x)) / 1000;
-        float angle_y = (float) ((mid_y - y)) / 1000;
-        myTank.TankCamera.beta += angle_x;
-        myTank.TankCamera.alpha += angle_y;
-        //System.err.print("\n" + angle_x);
     }
 
     public void pointerReleased(MouseEvent e)    {
     }
+    
+    private void setLight() {
+        GL gl = Global.drawable.getGL();
 
-    public void mouseMoved(MouseEvent e) {
+        gl.glEnable(GL.GL_LIGHTING);
+        // set up static red light
+        gl.glEnable(GL.GL_LIGHT1);
+        gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, redLightColorAmbient, 0);
+        gl.glLightfv(GL.GL_LIGHT1, GL.GL_DIFFUSE, redLightColorDisfuse, 0);
+        gl.glLightfv(GL.GL_LIGHT1, GL.GL_SPECULAR, redLightColorSpecular, 0);
+        gl.glLightfv(GL.GL_LIGHT1, GL.GL_POSITION, redLightPos, 0);
     }
 
     public void load() {
@@ -142,6 +86,12 @@ public class MainGameView implements GameView {
         GameEngine.getInst().tank3d.frame.setCursor(noCursor);
         //end - set hide cursor
 
+        this.setLight();
+
+        //init variable
+        camera = new Camera();
+        camera.Position_Camera(32.443157f, 38.76995f, 56.465584f, 32.421318f, 37.233974f, 55.778576f, 0.0f, 1.0f, 0.0f);
+
         ttGachMen = ResourceManager.getInst().getTexture("data/game/gach_men.png");
 
         //skybox
@@ -149,22 +99,17 @@ public class MainGameView implements GameView {
         m_skybox.Initialize(5.0f);
 
         m_skybox.LoadTextures(
-                "data/skybox/up.jpg", "data/skybox/down.jpg",
+                "data/skybox/top.jpg", "data/skybox/bottom.jpg",
                 "data/skybox/front.jpg", "data/skybox/back.jpg",
                 "data/skybox/left.jpg", "data/skybox/right.jpg");
+
         //init map
         TankMap.getInst().LoadMap("data/map/MAP0.png");
 
-        myTank = new Tank(new Vector3(-5.0f, 2, -7), new Vector3(0, 0, 1), 0.00f, 1.0f); // 0.05
-        myTank.Init(Global.drawable);
-        camera = myTank.TankCamera;
-        otherTank = new EnemyTank(new Vector3(2, 2, -10), new Vector3(0, 1, 1), 0.0f, 1.0f);
-        otherTank.Init(Global.drawable);
-
-        //demo------------------------------------------------------------------
-        knight = new Md2();
-        knight.LoadModel("data/model/knight.md2");
-        knight.LoadSkin(ResourceManager.getInst().getTexture("data/model/knight.png", false, GL.GL_REPEAT));
+        //model
+        md2Tank = new Md2();
+        md2Tank.LoadModel("data/model/triax_wheels.md2");
+        md2Tank.LoadSkin(ResourceManager.getInst().getTexture("data/model/triax_wheels.png", false, GL.GL_REPEAT));
     }
 
     public void unload() {
@@ -173,105 +118,133 @@ public class MainGameView implements GameView {
         //pre-load main game
         ResourceManager.getInst().deleteTexture("data/game/gach_men.png");
         ResourceManager.getInst().deleteTexture("data/model/triax_wheels.png");
-        ResourceManager.getInst().deleteTexture("data/model/knight.png");
 
         //skybox
-        ResourceManager.getInst().deleteTexture("data/skybox/up.jpg");
-        ResourceManager.getInst().deleteTexture("data/skybox/down.jpg");
+        ResourceManager.getInst().deleteTexture("data/skybox/top.jpg");
+        ResourceManager.getInst().deleteTexture("data/skybox/bottom.jpg");
         ResourceManager.getInst().deleteTexture("data/skybox/left.jpg");
         ResourceManager.getInst().deleteTexture("data/skybox/right.jpg");
         ResourceManager.getInst().deleteTexture("data/skybox/front.jpg");
         ResourceManager.getInst().deleteTexture("data/skybox/back.jpg");
-
     }
 
-    private void DrawPlane() {
-        GL gl = Global.drawable.getGL();
+    public void handleInput() {
+        KeyboardState state = KeyboardState.getState();
 
-        ttGachMen.enable();
-        ttGachMen.bind();
+        //camera controller
+        {
+            float CAMERASPEED = 0.3f;
 
-        int repeat = 250;
-        gl.glBegin(GL.GL_QUADS);
-        gl.glTexCoord2f(repeat, 0);
-        gl.glVertex3f(500, 0, 500);
+            //near-far
 
-        gl.glTexCoord2f(repeat, repeat);
-        gl.glVertex3f(500, 0, -500);
+            //near
+            if (state.isDown(KeyEvent.VK_B)) {
+                camera.Move_Character_Farther(CAMERASPEED / 5);
+            }
 
-        gl.glTexCoord2f(0, repeat);
-        gl.glVertex3f(-500, 0, -500);
 
-        gl.glTexCoord2f(0, 0);
-        gl.glVertex3f(-500, 0, 500);
-        gl.glEnd();
+            //far
+            if (state.isDown(KeyEvent.VK_V)) {
+                camera.Move_Character_Farther(-CAMERASPEED / 5);
+            }
 
-        //reset color
-        gl.glColor4f(1, 1, 1, 1);
+
+            //forward
+            if (state.isDown(KeyEvent.VK_UP)) {
+                camera.Move_Camera(CAMERASPEED / 4);
+            }
+
+            //backward
+            if (state.isDown(KeyEvent.VK_DOWN)) {
+                camera.Move_Camera(-CAMERASPEED / 4);
+            }
+
+            //left
+            if (state.isDown(KeyEvent.VK_LEFT)) {
+                camera.Move_Left_Right(-CAMERASPEED / 4);
+            }
+
+            //right
+            if (state.isDown(KeyEvent.VK_RIGHT)) {
+                camera.Move_Left_Right(CAMERASPEED / 4);
+            }
+
+            //up
+            if (state.isDown(KeyEvent.VK_N)) {
+                camera.Move_Up_Down(CAMERASPEED / 5);
+
+                System.out.println(camera.mPos.x + "f, " + camera.mPos.y + "f, " + camera.mPos.z + "f, "
+                        + camera.mView.x + "f, " + camera.mView.y + "f, " + camera.mView.z + "f, "
+                        + camera.mUp.x + "f, " + camera.mUp.y + "f, " + camera.mUp.z);
+            }
+
+            //down
+            if (state.isDown(KeyEvent.VK_M)) {
+                camera.Move_Up_Down(-CAMERASPEED / 5);
+
+                System.out.println(camera.mPos.x + "f, " + camera.mPos.y + "f, " + camera.mPos.z + "f, "
+                        + camera.mView.x + "f, " + camera.mView.y + "f, " + camera.mView.z + "f, "
+                        + camera.mUp.x + "f, " + camera.mUp.y + "f, " + camera.mUp.z);
+            }
+        }
     }
 
     public void update(long elapsedTime) {
         handleInput();
-
-        myTank.Update(0);
-        otherTank.Update(0);
-        ParticalManager.getInstance().Update();
     }
 
     public void display() {
         GL gl = Global.drawable.getGL();
         GLU glu = new GLU();
-        // use this function for opengl target camera
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
         gl.glLoadIdentity();
+        gl.glEnable(GL.GL_LIGHTING);
 
-        glu.gluLookAt(camera.x, camera.y, camera.z, camera.lookAtX, camera.lookAtY, camera.lookAtZ, 0, 1, 0);
+        gl.glEnable(GL.GL_LINE_SMOOTH);
+        gl.glEnable(GL.GL_POLYGON_SMOOTH);
+        gl.glHint(GL.GL_LINE_SMOOTH_HINT, GL.GL_NICEST);
+        gl.glHint(GL.GL_POLYGON_SMOOTH_HINT, GL.GL_NICEST);
+        
+        gl.glEnable(GL.GL_BLEND); 
+        gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+        
+        gl.glEnable(GL.GL_MULTISAMPLE);
+
+        glu.gluLookAt(
+                camera.mPos.x, camera.mPos.y, camera.mPos.z,
+                camera.mView.x, camera.mView.y, camera.mView.z,
+                camera.mUp.x, camera.mUp.y, camera.mUp.z);
+
         // skybox origin should be same as camera position
-        m_skybox.Render((float) camera.x, (float) camera.y, (float) camera.z);
+        m_skybox.Render(camera.mPos.x, camera.mPos.y, camera.mPos.z);
 
-        this.DrawPlane();
+        //map
+        TankMap.getInst().Render(1, 2);
 
-        TankMap.getInst().Render(2, 6);
-
-        // Draw player
-        gl.glPushMatrix();
-        myTank.Draw(Global.drawable);
-        gl.glPopMatrix();
-
-        gl.glPushMatrix();
-        otherTank.Draw(Global.drawable);
-        gl.glPopMatrix();
-
-        // Partical draw
-        ParticalManager.getInstance().Draw(gl, camera.GetAngleY());
-
-        // Draw alis
+        //camera
         gl.glPushMatrix();
         {
-            gl.glBegin(GL.GL_LINES);
-            gl.glColor3f(1, 0, 0);
-            gl.glVertex3f(0.0f, 0.0f, 0.0f);
-            gl.glVertex3f(10, 0, 0);
-            gl.glColor3f(0, 1, 0);
-            gl.glVertex3f(0.0f, 0.0f, 0.0f);
-            gl.glVertex3f(0, 10, 0);
-            gl.glColor3f(0, 0, 1);
-            gl.glVertex3f(0.0f, 0.0f, 0.0f);
-            gl.glVertex3f(0, 0, 10);
-            gl.glEnd();
-        }
-        gl.glPopMatrix();
-        // End
+            // Always keep the character in the view
+            gl.glTranslatef(camera.mView.x, 0.0f, camera.mView.z);
+            float dx = camera.mView.x - camera.mPos.x;
+            float dz = camera.mView.z - camera.mPos.z;
+            float angle = (float) Math.atan(dz / dx);
+            angle = 180 * angle / 3.141592654f;
+            int angle2 = (int) angle;
+            angle2 %= 360;
+            if (dx < 0) {
+                angle2 = (int) (angle - 180);
+            }
+            gl.glRotatef(-angle2, 0, 1, 0);
 
-        //demo------------------------------------------------------------------
-        gl.glPushMatrix();
-        {
-            gl.glRotatef(-90, 1, 0, 0);
-            gl.glTranslatef(0, 14, 5);
-            gl.glScalef(0.1f, 0.1f, 0.1f);
-            knight.DrawAnimate(gl, 1, 100, 0.2f);
+            //draw tank
+            gl.glRotatef(-90, 0, 0, 1);
+            gl.glRotatef(-90, 0, 1, 0);
+            //md2Tank.SetScale(0.005f);
+            //md2Tank.DrawModel(gl, 0);
         }
+        
         gl.glPopMatrix();
 
+        gl.glDisable(GL.GL_LIGHTING);
     }
 }
