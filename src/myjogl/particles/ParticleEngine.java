@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package GamePartical;
+package myjogl.particles;
 
 import javax.media.opengl.GL;
 import myjogl.utils.Vector3;

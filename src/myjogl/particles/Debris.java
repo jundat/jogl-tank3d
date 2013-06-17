@@ -6,7 +6,8 @@
  Author   :   tieunun - Nguyen Ngoc Thanh Huy
  Written for OpenGL Game Programming
 *****************************************************************************/
-package GamePartical;
+package myjogl.particles;
+
 import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureData;
 import com.sun.opengl.util.texture.TextureIO;
@@ -22,42 +23,48 @@ import myjogl.utils.Vector3;
  *
  * @author TIEUNUN
  */
-public class Explo1 extends ParticleEngine {
+public class Debris extends ParticleEngine {
     private final float SEED = 0.0f;
     private final Vector3 VECLOCITY = new Vector3(1.0f, 1.0f, 1.0f);
     private final Vector3 VECLOCITY_VARIATION = new Vector3(0.5f, 0.5f, 0.5f);
     private final Vector3 GRAVITY = new Vector3(0.0f, 0.0f, 0.0f);
-    private final float PARTICLE_SIZE = 30.0f;
-    private final float PARTICLE_SIZE_DELTA = 15.5f;
+    private final float PARTICLE_SIZE = 3.0f;
+    private final float PARTICLE_SIZE_DELTA = 3.5f;
     private final Vector3 COLOR = new Vector3(1.0f, 0.5f, 0.2f);
     private final int MAXPARTICLES = 300;
     Texture[] m_texture;
     int m_textureCount;
     int count = 0;
     int countTime;
-    
-    /**
-     * 
-     * @param _origin: vi tri cua partical
-     * @param elapsedTime: thoi gian dien ra, anh huong den toc do nhanh cham cua partical
-     * @param scale: ti le cua partical
-     */
-    public Explo1(Vector3 _origin, float elapsedTime, float scale) {
+    // Partical zone
+    Explosion m_par;
+    Explosion m_par1;
+    Smoke m_smoke;
+    Explo m_ex;
+    Explo1 m_ex1;
+    RoundSparks m_ex2;
+    //FlyingSparks m_ex3;
+    Debris m_ex4;
+    Shockwave m_ex5;
+    // End partical
+    public Debris(Vector3 _origin, float elapsedTime, float scale) {
         m_origin = _origin;
         m_scale = scale;
         m_elapsedTime = elapsedTime;
         this.m_maxParticles = MAXPARTICLES;
         this.Init();
-        this.Emit(4);
+        this.Emit(20);
     }
     
     public void LoadingTexture() {
-        m_textureCount = 4;
+        m_textureCount = 9;
         m_texture = new Texture[m_textureCount];
+        
         //Load resource
+        //jundat
         for(int i = 0; i < m_textureCount; i ++) {
-            //m_texture[i] = ResourceManagerTest.getInstance().explo1[i];
-            m_texture[i] = ResourceManager.getInst().getTexture("data/particle/Explo1_" + i + ".png");
+            //m_texture[i] = ResourceManagerTest.getInstance().debris[i];
+            m_texture[i] = ResourceManager.getInst().getTexture("data/particle/Debris_" + i + ".png");
         }
     }
     
@@ -113,7 +120,7 @@ public class Explo1 extends ParticleEngine {
             m_ParticleList[index].m_Gravity.z = GRAVITY.z * rand;
         else m_ParticleList[index].m_Gravity.z = -GRAVITY.z * rand;
         rand = Math.abs((random.nextFloat() * 2) - 1);
-        m_ParticleList[index].m_size = PARTICLE_SIZE + 0.5f * rand;
+        m_ParticleList[index].m_size = PARTICLE_SIZE + 2.5f * rand;
         //m_ParticleList[index].m_sizeDelta = -(m_ParticleList[index].m_size / m_ParticleList[index].life);
         m_ParticleList[index].m_sizeDelta = PARTICLE_SIZE_DELTA;
         
@@ -135,36 +142,26 @@ public class Explo1 extends ParticleEngine {
     
     @Override
     public void Update() {
+        //float m_elapsedTime = 0.05f;
         countTime++;
         if(countTime % 150 == 0)
-            //this.Emit(10);
+            //this.Emit(20);
             m_isDie = true;
         for (int i = 0; i < m_numParticles;) {
             //float rand = random.nextFloat();
-            m_ParticleList[i].m_Position.x += m_elapsedTime * m_ParticleList[i].m_velocity.x / 1.2; //trai phai
-            m_ParticleList[i].m_Position.y += m_elapsedTime * m_ParticleList[i].m_velocity.y / 1.2; // len xuong
-            m_ParticleList[i].m_Position.z += m_elapsedTime * m_ParticleList[i].m_velocity.z / 1.2;// do sau
+            m_ParticleList[i].m_Position.x += m_elapsedTime * m_ParticleList[i].m_velocity.x * 7.5 * m_scale; //trai phai
+            m_ParticleList[i].m_Position.y += m_elapsedTime * m_ParticleList[i].m_velocity.y * 7.5 * m_scale; // len xuong
+            m_ParticleList[i].m_Position.z += m_elapsedTime * m_ParticleList[i].m_velocity.z * 7.5 * m_scale;// do sau
 
             m_ParticleList[i].m_velocity.x += m_elapsedTime * m_ParticleList[i].m_Gravity.x;
             m_ParticleList[i].m_velocity.y += m_elapsedTime * m_ParticleList[i].m_Gravity.y;
             m_ParticleList[i].m_velocity.z += m_elapsedTime * m_ParticleList[i].m_Gravity.z;
 
             m_ParticleList[i].life -= 15 * m_elapsedTime;
-            m_ParticleList[i].m_size += m_elapsedTime * m_ParticleList[i].m_sizeDelta ;
+            //m_ParticleList[i].m_size += m_elapsedTime * m_ParticleList[i].m_sizeDelta ;
             
             m_ParticleList[i].m_Color.green += m_ParticleList[i].m_ColorDelta.green * m_elapsedTime;
             m_ParticleList[i].m_Color.alpha += m_ParticleList[i].m_ColorDelta.alpha * m_elapsedTime;
-            if(m_ParticleList[i].m_size >= 60.0f) {
-                m_ParticleList[i].m_sizeDelta = -PARTICLE_SIZE_DELTA/3;
-                m_ParticleList[i].m_velocity.x = -m_ParticleList[i].m_velocity.x;
-                m_ParticleList[i].m_velocity.x = -m_ParticleList[i].m_velocity.y;
-                m_ParticleList[i].m_velocity.x = -m_ParticleList[i].m_velocity.z;
-                m_ParticleList[i].m_Gravity.x = -m_ParticleList[i].m_Gravity.x;
-                m_ParticleList[i].m_Gravity.y = -m_ParticleList[i].m_Gravity.y;
-                m_ParticleList[i].m_Gravity.z = -m_ParticleList[i].m_Gravity.z;
-                
-                
-            }
             
             if (m_ParticleList[i].life <= 0) {
                 m_ParticleList[i] = m_ParticleList[--m_numParticles];
@@ -194,7 +191,7 @@ public class Explo1 extends ParticleEngine {
             gl.glBegin(GL.GL_QUADS);
             
             float size = m_ParticleList[i].m_size / 2;
-            m_ParticleList[i].m_Color.set(gl);
+            gl.glColor4f(0.5f,0.5f,0.5f,0.5f);
             
             gl.glTexCoord2f(0.0f, 0.0f);
             gl.glVertex3f(-size, -size, 0);
@@ -216,7 +213,6 @@ public class Explo1 extends ParticleEngine {
         
         gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_REPLACE);
         gl.glDisable(GL.GL_BLEND);
-        gl.glDisable(GL.GL_TEXTURE);
         gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE_MINUS_SRC_ALPHA);
         gl.glDepthMask(true);
     }

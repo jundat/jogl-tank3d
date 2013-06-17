@@ -4,42 +4,42 @@
  */
 package myjogl.gameview;
 
-import com.sun.opengl.util.texture.Texture;
+import myjogl.particles.ParticalManager;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
-import myjogl.GameEngine;
-import myjogl.GameEngine;
-import myjogl.Global;
-import myjogl.Global;
-import myjogl.KeyboardState;
-import myjogl.KeyboardState;
+import myjogl.*;
 import myjogl.utils.*;
+import myjogl.gameobjects.*;
 
 /**
  *
  * @author Jundat
  */
 public class MainGameView implements GameView {
+    //
 
     private SkyBox m_skybox;
     private Camera camera;
-    private static Md2 md2Tank;
-    Texture ttGachMen;
+    private Tank tank;
+    //
     final float[] redLightColorAmbient = {0.0f, 0.0f, 0.0f, 0.0f}; //red
     final float[] redLightColorDisfuse = {2.0f, 2.0f, 2.0f, 1.0f}; //red
     final float[] redLightColorSpecular = {6.0f, 6.0f, 6.0f, 1.0f}; //red
     final float[] redLightPos = {32.0f, 20.0f, 32.0f, 1.0f};
-    
+    //
+
     public MainGameView() {
         super();
         System.out.println("Go to main game!------------------------------------");
     }
 
     public void keyPressed(KeyEvent e) {
+        if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+            tank.fire();
+        }
     }
 
     public void keyReleased(KeyEvent e) {
@@ -47,25 +47,27 @@ public class MainGameView implements GameView {
 
             GameEngine.getInst().attach(new MenuView());
             GameEngine.getInst().detach(this);
-        }
-
+        }        
     }
 
     public void pointerPressed(MouseEvent e) {
     }
 
     public void pointerMoved(MouseEvent e) {
-        int x = e.getXOnScreen();
-        int y = e.getYOnScreen();
-
-        if (camera != null) {
-            camera.Mouse_Move(x, y, Global.wndWidth, Global.wndHeight);
-        }
+//        int x = e.getXOnScreen();
+//        int y = e.getYOnScreen();
+//
+//        if (camera != null) {
+//            camera.Mouse_Move(x, y, Global.wndWidth, Global.wndHeight);
+//        }
+//        System.out.println(camera.mPos.x + "f, " + camera.mPos.y + "f, " + camera.mPos.z + "f, "
+//                + camera.mView.x + "f, " + camera.mView.y + "f, " + camera.mView.z + "f, "
+//                + camera.mUp.x + "f, " + camera.mUp.y + "f, " + camera.mUp.z);
     }
 
-    public void pointerReleased(MouseEvent e)    {
+    public void pointerReleased(MouseEvent e) {
     }
-    
+
     private void setLight() {
         GL gl = Global.drawable.getGL();
 
@@ -79,20 +81,11 @@ public class MainGameView implements GameView {
     }
 
     public void load() {
-        //set hide cursor
-        Toolkit t = Toolkit.getDefaultToolkit();
-        Image i = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-        Cursor noCursor = t.createCustomCursor(i, new Point(0, 0), "none");
-        GameEngine.getInst().tank3d.frame.setCursor(noCursor);
-        //end - set hide cursor
-
         this.setLight();
 
         //init variable
         camera = new Camera();
-        camera.Position_Camera(32.443157f, 38.76995f, 56.465584f, 32.421318f, 37.233974f, 55.778576f, 0.0f, 1.0f, 0.0f);
-
-        ttGachMen = ResourceManager.getInst().getTexture("data/game/gach_men.png");
+        camera.Position_Camera(19.482517f, 28.869976f, 38.69388f, 19.481977f, 27.494007f, 38.006523f, 0.0f, 1.0f, 0.0f);
 
         //skybox
         m_skybox = new SkyBox();
@@ -103,13 +96,12 @@ public class MainGameView implements GameView {
                 "data/skybox/front.jpg", "data/skybox/back.jpg",
                 "data/skybox/left.jpg", "data/skybox/right.jpg");
 
+        //tank
+        tank = new Tank();
+        tank.load();
+
         //init map
         TankMap.getInst().LoadMap("data/map/MAP0.png");
-
-        //model
-        md2Tank = new Md2();
-        md2Tank.LoadModel("data/model/triax_wheels.md2");
-        md2Tank.LoadSkin(ResourceManager.getInst().getTexture("data/model/triax_wheels.png", false, GL.GL_REPEAT));
     }
 
     public void unload() {
@@ -130,67 +122,34 @@ public class MainGameView implements GameView {
 
     public void handleInput() {
         KeyboardState state = KeyboardState.getState();
+        
+        //up
+        if (state.isDown(KeyEvent.VK_UP)) {
+            tank.move(CDirections.UP);
+        }
 
-        //camera controller
-        {
-            float CAMERASPEED = 0.3f;
+        //down
+        if (state.isDown(KeyEvent.VK_DOWN)) {
+            tank.move(CDirections.DOWN);
+        }
 
-            //near-far
+        //left
+        if (state.isDown(KeyEvent.VK_LEFT)) {
+            tank.move(CDirections.LEFT);
+        }
 
-            //near
-            if (state.isDown(KeyEvent.VK_B)) {
-                camera.Move_Character_Farther(CAMERASPEED / 5);
-            }
-
-
-            //far
-            if (state.isDown(KeyEvent.VK_V)) {
-                camera.Move_Character_Farther(-CAMERASPEED / 5);
-            }
-
-
-            //forward
-            if (state.isDown(KeyEvent.VK_UP)) {
-                camera.Move_Camera(CAMERASPEED / 4);
-            }
-
-            //backward
-            if (state.isDown(KeyEvent.VK_DOWN)) {
-                camera.Move_Camera(-CAMERASPEED / 4);
-            }
-
-            //left
-            if (state.isDown(KeyEvent.VK_LEFT)) {
-                camera.Move_Left_Right(-CAMERASPEED / 4);
-            }
-
-            //right
-            if (state.isDown(KeyEvent.VK_RIGHT)) {
-                camera.Move_Left_Right(CAMERASPEED / 4);
-            }
-
-            //up
-            if (state.isDown(KeyEvent.VK_N)) {
-                camera.Move_Up_Down(CAMERASPEED / 5);
-
-                System.out.println(camera.mPos.x + "f, " + camera.mPos.y + "f, " + camera.mPos.z + "f, "
-                        + camera.mView.x + "f, " + camera.mView.y + "f, " + camera.mView.z + "f, "
-                        + camera.mUp.x + "f, " + camera.mUp.y + "f, " + camera.mUp.z);
-            }
-
-            //down
-            if (state.isDown(KeyEvent.VK_M)) {
-                camera.Move_Up_Down(-CAMERASPEED / 5);
-
-                System.out.println(camera.mPos.x + "f, " + camera.mPos.y + "f, " + camera.mPos.z + "f, "
-                        + camera.mView.x + "f, " + camera.mView.y + "f, " + camera.mView.z + "f, "
-                        + camera.mUp.x + "f, " + camera.mUp.y + "f, " + camera.mUp.z);
-            }
+        //right
+        if (state.isDown(KeyEvent.VK_RIGHT)) {
+            tank.move(CDirections.RIGHT);
         }
     }
 
     public void update(long elapsedTime) {
         handleInput();
+        ParticalManager.getInstance().Update();
+        
+        //tank
+        tank.update(elapsedTime);
     }
 
     public void display() {
@@ -203,10 +162,10 @@ public class MainGameView implements GameView {
         gl.glEnable(GL.GL_POLYGON_SMOOTH);
         gl.glHint(GL.GL_LINE_SMOOTH_HINT, GL.GL_NICEST);
         gl.glHint(GL.GL_POLYGON_SMOOTH_HINT, GL.GL_NICEST);
-        
-        gl.glEnable(GL.GL_BLEND); 
+
+        gl.glEnable(GL.GL_BLEND);
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-        
+
         gl.glEnable(GL.GL_MULTISAMPLE);
 
         glu.gluLookAt(
@@ -217,8 +176,14 @@ public class MainGameView implements GameView {
         // skybox origin should be same as camera position
         m_skybox.Render(camera.mPos.x, camera.mPos.y, camera.mPos.z);
 
+        //tank
+        tank.draw();
+        
         //map
-        TankMap.getInst().Render(1, 2);
+        TankMap.getInst().Render();
+
+        //particle
+        ParticalManager.getInstance().Draw(gl, 0);
 
         //camera
         gl.glPushMatrix();
@@ -242,7 +207,7 @@ public class MainGameView implements GameView {
             //md2Tank.SetScale(0.005f);
             //md2Tank.DrawModel(gl, 0);
         }
-        
+
         gl.glPopMatrix();
 
         gl.glDisable(GL.GL_LIGHTING);

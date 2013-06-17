@@ -6,8 +6,7 @@
  Author   :   tieunun - Nguyen Ngoc Thanh Huy
  Written for OpenGL Game Programming
 *****************************************************************************/
-package GamePartical;
-
+package myjogl.particles;
 import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureData;
 import com.sun.opengl.util.texture.TextureIO;
@@ -23,13 +22,13 @@ import myjogl.utils.Vector3;
  *
  * @author TIEUNUN
  */
-public class Explo extends ParticleEngine {
+public class Explo1 extends ParticleEngine {
     private final float SEED = 0.0f;
-    private final Vector3 VECLOCITY = new Vector3(2.0f, 2.0f, 2.0f);
-    private final Vector3 VECLOCITY_VARIATION = new Vector3(1.0f, 1.0f, 1.0f);
+    private final Vector3 VECLOCITY = new Vector3(1.0f, 1.0f, 1.0f);
+    private final Vector3 VECLOCITY_VARIATION = new Vector3(0.5f, 0.5f, 0.5f);
     private final Vector3 GRAVITY = new Vector3(0.0f, 0.0f, 0.0f);
-    private final float PARTICLE_SIZE = 25.0f;
-    private final float PARTICLE_SIZE_DELTA = 10.5f;
+    private final float PARTICLE_SIZE = 30.0f;
+    private final float PARTICLE_SIZE_DELTA = 15.5f;
     private final Vector3 COLOR = new Vector3(1.0f, 0.5f, 0.2f);
     private final int MAXPARTICLES = 300;
     Texture[] m_texture;
@@ -37,26 +36,28 @@ public class Explo extends ParticleEngine {
     int count = 0;
     int countTime;
     
-    
-    public Explo(Vector3 _origin, float elapsedTime, float scale) {
+    /**
+     * 
+     * @param _origin: vi tri cua partical
+     * @param elapsedTime: thoi gian dien ra, anh huong den toc do nhanh cham cua partical
+     * @param scale: ti le cua partical
+     */
+    public Explo1(Vector3 _origin, float elapsedTime, float scale) {
         m_origin = _origin;
         m_scale = scale;
         m_elapsedTime = elapsedTime;
         this.m_maxParticles = MAXPARTICLES;
         this.Init();
-        this.Emit(5);
+        this.Emit(4);
     }
     
     public void LoadingTexture() {
-        
         m_textureCount = 4;
         m_texture = new Texture[m_textureCount];
-        
         //Load resource
-        //jundat
         for(int i = 0; i < m_textureCount; i ++) {
-            //m_texture[i] = ResourceManagerTest.getInstance().explo[i];
-            m_texture[i] = ResourceManager.getInst().getTexture("data/particle/Explo_" + i + ".png");
+            //m_texture[i] = ResourceManagerTest.getInstance().explo1[i];
+            m_texture[i] = ResourceManager.getInst().getTexture("data/particle/Explo1_" + i + ".png");
         }
     }
     
@@ -74,21 +75,18 @@ public class Explo extends ParticleEngine {
         m_ParticleList[index].m_Position = new Vector3();
         
         rand = ((random.nextFloat() * 2) - 1);
-        m_ParticleList[index].m_Position.x = m_origin.x + rand * 1 ;
+        m_ParticleList[index].m_Position.x = m_origin.x + rand * 1;
         rand = ((random.nextFloat() * 2) - 1);
         m_ParticleList[index].m_Position.y = m_origin.y + rand * 1;
         rand = ((random.nextFloat() * 2) - 1);
         m_ParticleList[index].m_Position.z = m_origin.z + rand * 1;
-        System.out.println("Explo " + index + " : X : " + m_ParticleList[index].m_Position.x + "Y : " + m_ParticleList[index].m_Position.y + "Z : " + m_ParticleList[index].m_Position.z);
-        
         
         m_ParticleList[index].m_velocity = new Vector3();
         
         rand = Math.abs((random.nextFloat() * 2) - 1);
         if(m_ParticleList[index].m_Position.x - m_origin.x >= 0)
             m_ParticleList[index].m_velocity.x = VECLOCITY.x + VECLOCITY_VARIATION.x * rand;
-        else 
-            m_ParticleList[index].m_velocity.x = -(VECLOCITY.x + VECLOCITY_VARIATION.x * rand);
+        else m_ParticleList[index].m_velocity.x = -(VECLOCITY.x + VECLOCITY_VARIATION.x * rand);
         rand = Math.abs((random.nextFloat() * 2) - 1);
         if(m_ParticleList[index].m_Position.y - m_origin.y >= 0)
             m_ParticleList[index].m_velocity.y = VECLOCITY.y + VECLOCITY_VARIATION.y * rand;
@@ -97,24 +95,23 @@ public class Explo extends ParticleEngine {
         rand = Math.abs((random.nextFloat() * 2) - 1);
         if(m_ParticleList[index].m_Position.z - m_origin.z >= 0)
             m_ParticleList[index].m_velocity.z = VECLOCITY.z + VECLOCITY_VARIATION.z * rand;
-        else 
-            m_ParticleList[index].m_velocity.z = -(VECLOCITY.z + VECLOCITY_VARIATION.z * rand);
+        else m_ParticleList[index].m_velocity.z = -(VECLOCITY.z + VECLOCITY_VARIATION.z * rand);
 
         m_ParticleList[index].m_Gravity = new Vector3();
         
         rand = Math.abs((random.nextFloat() * 2) - 1);
         if(m_ParticleList[index].m_Position.x - m_origin.x >= 0)
             m_ParticleList[index].m_Gravity.x = GRAVITY.x * rand;
-        else m_ParticleList[index].m_Gravity.x = -(GRAVITY.x * rand);
+        else m_ParticleList[index].m_Gravity.x = -GRAVITY.x * rand;
         rand = Math.abs((random.nextFloat() * 2) - 1);
         if(m_ParticleList[index].m_Position.y - m_origin.y >= 0)
             m_ParticleList[index].m_Gravity.y = GRAVITY.y * rand;
         else 
-            m_ParticleList[index].m_Gravity.y = -(GRAVITY.y * rand);
+            m_ParticleList[index].m_Gravity.y = -GRAVITY.y * rand;
         rand = Math.abs((random.nextFloat() * 2) - 1);
         if(m_ParticleList[index].m_Position.z - m_origin.z >= 0)
             m_ParticleList[index].m_Gravity.z = GRAVITY.z * rand;
-        else m_ParticleList[index].m_Gravity.z = -(GRAVITY.z * rand);
+        else m_ParticleList[index].m_Gravity.z = -GRAVITY.z * rand;
         rand = Math.abs((random.nextFloat() * 2) - 1);
         m_ParticleList[index].m_size = PARTICLE_SIZE + 0.5f * rand;
         //m_ParticleList[index].m_sizeDelta = -(m_ParticleList[index].m_size / m_ParticleList[index].life);
@@ -126,41 +123,49 @@ public class Explo extends ParticleEngine {
         rand = Math.abs((random.nextFloat() * 2) - 1);
         tempGreen = COLOR.y + rand * 0.3f;
         tempBlue = COLOR.z;
-        tempAlpha = 0.5f;
+        tempAlpha = 0.4f;
         m_ParticleList[index].m_Color = new GLColor(tempRed,tempGreen,tempBlue,tempAlpha);
         
-        tempRed = -10*(m_ParticleList[index].m_Color.red/2.0f)/m_ParticleList[index].life;
-        tempGreen = -10*(m_ParticleList[index].m_Color.green/2.0f)/m_ParticleList[index].life;
-        tempBlue = -10*(m_ParticleList[index].m_Color.blue/2.0f)/m_ParticleList[index].life;
-        tempAlpha = -1.0f/m_ParticleList[index].life;
+        tempRed = 0.0f;
+        tempGreen = -(m_ParticleList[index].m_Color.green/2.0f)/m_ParticleList[index].life;
+        tempBlue = 0.0f;
+        tempAlpha = -1.3f * 1.0f/m_ParticleList[index].life;
         m_ParticleList[index].m_ColorDelta  = new GLColor(tempRed,tempGreen,tempBlue,tempAlpha);
     }
     
     @Override
     public void Update() {
-
-        //float m_elapsedTime = 0.05f;
         countTime++;
         if(countTime % 150 == 0)
-            //this.Emit(5);
+            //this.Emit(10);
             m_isDie = true;
         for (int i = 0; i < m_numParticles;) {
-            float rand = random.nextFloat();
-            m_ParticleList[i].m_Position.x += m_elapsedTime * m_ParticleList[i].m_velocity.x * 2 * m_scale; //trai phai
-            m_ParticleList[i].m_Position.y += m_elapsedTime * m_ParticleList[i].m_velocity.y * 2 * m_scale; // len xuong
-            m_ParticleList[i].m_Position.z += m_elapsedTime * m_ParticleList[i].m_velocity.z * 2 * m_scale;// do sau
+            //float rand = random.nextFloat();
+            m_ParticleList[i].m_Position.x += m_elapsedTime * m_ParticleList[i].m_velocity.x / 1.2; //trai phai
+            m_ParticleList[i].m_Position.y += m_elapsedTime * m_ParticleList[i].m_velocity.y / 1.2; // len xuong
+            m_ParticleList[i].m_Position.z += m_elapsedTime * m_ParticleList[i].m_velocity.z / 1.2;// do sau
 
             m_ParticleList[i].m_velocity.x += m_elapsedTime * m_ParticleList[i].m_Gravity.x;
             m_ParticleList[i].m_velocity.y += m_elapsedTime * m_ParticleList[i].m_Gravity.y;
             m_ParticleList[i].m_velocity.z += m_elapsedTime * m_ParticleList[i].m_Gravity.z;
 
             m_ParticleList[i].life -= 15 * m_elapsedTime;
-            m_ParticleList[i].m_size += m_elapsedTime * PARTICLE_SIZE_DELTA ;
+            m_ParticleList[i].m_size += m_elapsedTime * m_ParticleList[i].m_sizeDelta ;
             
-            m_ParticleList[i].m_Color.red += m_ParticleList[i].m_ColorDelta.red * m_elapsedTime;
             m_ParticleList[i].m_Color.green += m_ParticleList[i].m_ColorDelta.green * m_elapsedTime;
-            m_ParticleList[i].m_Color.blue += m_ParticleList[i].m_ColorDelta.blue * m_elapsedTime;
             m_ParticleList[i].m_Color.alpha += m_ParticleList[i].m_ColorDelta.alpha * m_elapsedTime;
+            if(m_ParticleList[i].m_size >= 60.0f) {
+                m_ParticleList[i].m_sizeDelta = -PARTICLE_SIZE_DELTA/3;
+                m_ParticleList[i].m_velocity.x = -m_ParticleList[i].m_velocity.x;
+                m_ParticleList[i].m_velocity.x = -m_ParticleList[i].m_velocity.y;
+                m_ParticleList[i].m_velocity.x = -m_ParticleList[i].m_velocity.z;
+                m_ParticleList[i].m_Gravity.x = -m_ParticleList[i].m_Gravity.x;
+                m_ParticleList[i].m_Gravity.y = -m_ParticleList[i].m_Gravity.y;
+                m_ParticleList[i].m_Gravity.z = -m_ParticleList[i].m_Gravity.z;
+                
+                
+            }
+            
             if (m_ParticleList[i].life <= 0) {
                 m_ParticleList[i] = m_ParticleList[--m_numParticles];
             } else {
@@ -206,13 +211,13 @@ public class Explo extends ParticleEngine {
             gl.glEnd();
             gl.glPopMatrix();
             
-            m_texture[temp].disable(); 
+            m_texture[temp].disable();
         }
         
         gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_REPLACE);
-        gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE_MINUS_SRC_ALPHA);
         gl.glDisable(GL.GL_BLEND);
-        gl.glDepthMask(true);
         gl.glDisable(GL.GL_TEXTURE);
+        gl.glBlendFunc(GL.GL_SRC_ALPHA,GL.GL_ONE_MINUS_SRC_ALPHA);
+        gl.glDepthMask(true);
     }
 }

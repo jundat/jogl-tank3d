@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import myjogl.Global;
+import myjogl.gameobjects.CRectangle;
 
 /**
  *
@@ -21,6 +22,9 @@ import myjogl.Global;
  */
 public class TankMap {
 
+    public static final float TILE_WIDTH = 1;
+    public static final float TILE_HEIGHT = 2;
+    public static final float TILE_BORDER = 2;
     public byte[][] board;
     public int width;
     public int height;
@@ -40,9 +44,9 @@ public class TankMap {
     }
 
     private TankMap() {
-        ttGachTuong = ResourceManager.getInst().getTexture("data/game/gach_tuong.png");
-        ttGachTuong2 = ResourceManager.getInst().getTexture("data/game/gach_tuong2.png");
-        ttGachMen = ResourceManager.getInst().getTexture("data/game/gach_men.png");
+        ttGachTuong = ResourceManager.getInst().getTexture("data/game/gach_tuong.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
+        ttGachTuong2 = ResourceManager.getInst().getTexture("data/game/gach_tuong2.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
+        ttGachMen = ResourceManager.getInst().getTexture("data/game/gach_men.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
     }
 
     //only use png file
@@ -90,22 +94,80 @@ public class TankMap {
      * @param h height of cube
      * @param w width of cube
      */
-    public void Render(float w, float h) {
+    public void Render() { /*float w, float h*/
         GL gl = Global.drawable.getGL();
 
-        this.drawPlane(0, 0, 60, 60);
+        this.drawPlane(-(int) TILE_BORDER, -(int) TILE_BORDER, width + (int) TILE_BORDER, height + (int) TILE_BORDER);
         this.drawAsix();
+        this.drawBorder();
 
         int blue = 0;
-        for (int i = 0; i < height; ++i) //y
+        for (int i = 0; i < height; ++i) //z
         {
             for (int j = 0; j < width; ++j) //x
             {
                 blue = board[i][j];
                 if (blue != 0) {
-                    this.DrawCube(j * w, 0, i * w, w, h, w);
+                    this.drawCube(j * TILE_WIDTH, 0, i * TILE_WIDTH,
+                            TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
                 }
             }
+        }
+    }
+
+    public boolean isIntersect(CRectangle rect) {
+        int x = (int) rect.x;
+        int y = (int) rect.y;
+        int r = Math.round(rect.x + rect.w);
+        int b = Math.round(rect.y + rect.h);
+        
+        for (int i = y; i < b; i++) {
+            for (int j = x; j < r; j++) {
+                if (j >= 0 && j < width && i >= 0 && i < height) {
+                    if (board[i][j] != 0) {
+                        return true;
+                    }
+                }
+
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param x
+     * @param y meant z
+     */
+    public void delete(int z, int x) {
+        if (x >= 0 && x < width && z >= 0 && z < height) {
+            board[z][x] = 0;
+        }
+    }
+
+    private void drawBorder() {
+        int border = (int) TILE_BORDER;
+        for (int i = -border; i < height + border; ++i) //z
+        {
+            this.drawCube(-border, 0, i * TILE_WIDTH,
+                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+            this.drawCube(-border + 1, 0, i * TILE_WIDTH,
+                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+            this.drawCube(width + border - 1, 0, i * TILE_WIDTH,
+                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+            this.drawCube(width + border - 2, 0, i * TILE_WIDTH,
+                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+        }
+
+        for (int i = -border; i < width + border; i++) {
+            this.drawCube(i * TILE_WIDTH, 0, -border,
+                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+            this.drawCube(i * TILE_WIDTH, 0, -border + 1,
+                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+            this.drawCube(i * TILE_WIDTH, 0, height + border - 1,
+                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+            this.drawCube(i * TILE_WIDTH, 0, height + border - 2,
+                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
         }
     }
 
@@ -161,13 +223,9 @@ public class TankMap {
         gl.glPopMatrix();
     }
 
-    private void DrawCube(float x, float y, float z,
+    public void drawCube(float x, float y, float z,
             float sx, float sy, float sz) {
         GL gl = Global.drawable.getGL();
-
-        //float x2 = sx / 2;
-        //float y2 = sy / 2;
-        //float z2 = sz / 2;
 
         gl.glPushMatrix();
         gl.glTranslatef(x, y, z);
@@ -194,16 +252,7 @@ public class TankMap {
         ttGachTuong.bind();
         gl.glBegin(GL.GL_QUADS);        // Draw The Cube Using quads
         {
-//            gl.glNormal3f(0, 1, 0);
-//            //glColor3f(0.0f,1.0f,0.0f);    // Color Blue
-//            gl.glTexCoord2f(sx, sz);
-//            gl.glVertex3f(sx, sy, 0);    // Top Right Of The Quad (Top)
-//            gl.glTexCoord2f(0.0f, sz);
-//            gl.glVertex3f(0, sy, 0);    // Top Left Of The Quad (Top)
-//            gl.glTexCoord2f(0.0f, 0.0f);
-//            gl.glVertex3f(0, sy, sz);    // Bottom Left Of The Quad (Top)
-//            gl.glTexCoord2f(sx, 0.0f);
-//            gl.glVertex3f(sx, sy, sz);    // Bottom Right Of The Quad (Top)
+            //top is in upper
 
             gl.glNormal3f(0, -1, 0);
             //glColor3f(1.0f,0.5f,0.0f);    // Color Orange
@@ -263,7 +312,7 @@ public class TankMap {
         gl.glEnd();            // End Drawing The Cube
 
         ttGachTuong.disable();
-        
+
         gl.glPopMatrix();
 
         //reset color

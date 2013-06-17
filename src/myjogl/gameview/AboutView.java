@@ -19,11 +19,7 @@ import myjogl.utils.ResourceManager;
  */
 public class AboutView implements GameView {
 
-    //Point pExceptionTeam = new Point(852, 675);
-    //Point pGameUIT = new Point(1057, 587);
-    //Point p2013 = new Point(1218, 500);
-    Point p = new Point(845, 522);
-    
+    Point p = new Point(10, 350);
     
     private MenuItem itBack;
     private Texture ttBgAbout;
@@ -64,7 +60,7 @@ public class AboutView implements GameView {
         ttBgAbout = ResourceManager.getInst().getTexture("data/menu/bg_menu.png");
         ttText = ResourceManager.getInst().getTexture("data/about/bg_about.png");
         
-        itBack.SetPosition(0, 0);
+        itBack.SetPosition(20, 20);
     }
 
     public void unload() {

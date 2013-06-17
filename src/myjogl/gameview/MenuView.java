@@ -24,9 +24,9 @@ import myjogl.utils.Writer;
  */
 public class MenuView implements GameView {
 
-    Point pExit = new Point(1033, 20);
-    Point pAbout = new Point(1033, 120);
-    Point pPlay = new Point(1033, 220);
+    Point pExit = new Point(20, 20);
+    Point pAbout = new Point(20, 120);
+    Point pPlay = new Point(20, 220);
     //int yb = 
     private MenuItem itPlay;
     private MenuItem itAbout;
