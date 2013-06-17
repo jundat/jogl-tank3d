@@ -6,6 +6,7 @@ import java.awt.event.*;
 import java.util.Enumeration;
 import java.util.Vector;
 import javax.media.opengl.GLAutoDrawable;
+import myjogl.gameview.IntroView;
 import myjogl.tank3d.Tank3D;
 import myjogl.utils.ResourceManager;
 

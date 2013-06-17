@@ -7,7 +7,7 @@
  * Author : tieunun - Nguyen Ngoc Thanh Huy Written for OpenGL Game Programming
 ****************************************************************************
  */
-package GamePartical;
+package myjogl.particles;
 
 import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureData;

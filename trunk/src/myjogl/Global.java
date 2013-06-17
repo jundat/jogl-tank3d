@@ -16,9 +16,9 @@ import java.util.Map;
 public class Global {
 
     public static boolean isFullScreen = false;
-    public static int FPS = 60;
-    public static int wndWidth = 1366;
-    public static int wndHeight = 768;
+    public static int FPS = 1000;
+    public static int wndWidth = 1024;
+    public static int wndHeight = 640;
     public static GLAutoDrawable drawable = null;
 
     public static void Print(HashMap hm) {

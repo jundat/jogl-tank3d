@@ -31,6 +31,7 @@ public class Tank3D implements GLEventListener {
 
     public Tank3D() {
         frame = new Frame(this.name);
+        frame.setResizable(false);
 
         //---------------------
         //Th? t? c?a các setting fullscreen ? ?ây r?t quan tr?ng, n?u thay ??i s? khác

@@ -33,8 +33,6 @@ public class Vector3			// expanded 3D vector struct
         z = v.z;
     }
     
-    
-    
     // overload + operator so that we easier can add vectors
     public Vector3 Add(Vector3 vVector) {
         return new Vector3(vVector.x+x, vVector.y+y, vVector.z+z);

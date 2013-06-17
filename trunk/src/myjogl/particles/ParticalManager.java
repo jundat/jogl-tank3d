@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package GamePartical;
+package myjogl.particles;
 
 import java.awt.Color;
 import java.util.Vector;

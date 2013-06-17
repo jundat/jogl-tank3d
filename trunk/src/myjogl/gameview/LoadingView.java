@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import javax.media.opengl.GLAutoDrawable;
 import myjogl.GameEngine;
 import myjogl.GameEngine;
+import myjogl.Global;
 import myjogl.utils.Renderer;
 import myjogl.utils.ResourceManager;
 import myjogl.utils.Writer;
@@ -76,8 +77,8 @@ public class LoadingView implements GameView {
 
     public void display() {
         Renderer.Render(ttLoadingCircle, 
-                683 - ttLoadingCircle.getWidth() /2, 
-                384 - ttLoadingCircle.getHeight() /2, 
+                Global.wndWidth / 2 - ttLoadingCircle.getWidth() /2, 
+                Global.wndHeight / 2 - ttLoadingCircle.getHeight() /2, 
                 ttLoadingCircle.getWidth(), 
                 ttLoadingCircle.getHeight(), 
                 rotate);
@@ -85,6 +86,6 @@ public class LoadingView implements GameView {
         currentLoad = ResourceManager.getInst().GetNumberPreload();
         float percent = (float) (beforeLoad - currentLoad) / (float)beforeLoad;
         Writer.Render("Loading... " + (int) (100 * percent) + " %",
-                "Nyala", 20, 1050, 40, Color.RED);
+                "Nyala", 16, 10, 10, Color.RED);
     }
 }

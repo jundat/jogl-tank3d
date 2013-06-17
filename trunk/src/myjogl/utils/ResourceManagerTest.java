@@ -4,7 +4,7 @@
  */
 package myjogl.utils;
 
-import GamePartical.RoundSparks;
+import myjogl.particles.RoundSparks;
 import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureData;
 import com.sun.opengl.util.texture.TextureIO;
