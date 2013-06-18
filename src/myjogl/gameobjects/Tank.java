@@ -4,7 +4,7 @@
  */
 package myjogl.gameobjects;
 
-import java.util.ArrayList;
+import com.sun.opengl.util.texture.Texture;
 import javax.media.opengl.GL;
 import myjogl.Global;
 import myjogl.utils.Md2;
@@ -13,29 +13,30 @@ import myjogl.utils.Vector3;
 import myjogl.utils.ResourceManager;
 
 public class Tank {
-    //
 
-    final static float TANK_VELOCITY = 0.5f; //do not change it
-    final static float TANK_WIDTH = 3;
-    final static float TANK_HEIGHT = 3;
-    final static Vector3 TANK_START_LEFT = new Vector3(12, 0, 35);
-    final static Vector3 TANK_START_RIGHT = new Vector3(23, 0, 35);
-    final static int TANK_BULLETS = 10;
+    public final static float TANK_VELOCITY = 0.1f; //do not change it
+    public final static float TANK_WIDTH = 3;
+    public final static float TANK_HEIGHT = 3;
+    public final static int TANK_BULLETS = 10;
     //
     public boolean isAlive;
     private Vector3 position;
+    private Vector3 lastPosition;
     private int direction;
-    //private TankBullet bullet;
-    private TankBullet bullets[];
-    private Md2 model;
-    //
+    protected TankBullet bullets[];
+    protected Md2 model;
+    protected Texture texture;
 
+    //
+    //init
+    //
     /**
      * Init tank at default position and direction
      */
     public Tank() {
         isAlive = true;
-        position = (System.currentTimeMillis() / 2 == 0) ? TANK_START_LEFT : TANK_START_RIGHT;
+        position = new Vector3();
+        lastPosition = position.Clone();
         direction = CDirections.UP;
     }
 
@@ -47,32 +48,36 @@ public class Tank {
      */
     public Tank(Vector3 pos, int dir) {
         isAlive = true;
-        position = pos;
+        position = new Vector3(pos);
+        lastPosition = position.Clone();
         direction = dir;
     }
 
     public void load() {
-        //bullet = new TankBullet();
-        //bullet.setAlive(false); //start by false
-
         bullets = new TankBullet[TANK_BULLETS];
         for (int i = 0; i < TANK_BULLETS; i++) {
             bullets[i] = new TankBullet();
             bullets[i].setAlive(false); //start by false
         }
 
+        //
+        texture = ResourceManager.getInst().getTexture("data/game/tank.png");
+        //
         model = new Md2();
         model.LoadModel("data/model/triax_wheels.md2");
         model.LoadSkin(ResourceManager.getInst().getTexture("data/model/triax_wheels.png", false, GL.GL_REPEAT));
     }
 
+    //
+    //public method
+    //
     /**
      * Change direction If have same direction, let's move tank
      */
-    public void move(int dir) {
-        Vector3 lastPos = new Vector3(position.x, position.y, position.z);
+    public boolean move(int dir) {
+        Vector3 tempLastPos = new Vector3(position);
 
-        if (direction != dir) {
+        if (getDirection() != dir) {
             direction = dir;
         }
         //else 
@@ -82,6 +87,7 @@ public class Tank {
                     position.z -= TANK_VELOCITY;
                     if (position.z <= 0) {
                         position.z = 0;
+                        return false;
                     }
                     break;
 
@@ -89,6 +95,7 @@ public class Tank {
                     position.z += TANK_VELOCITY;
                     if (position.z > TankMap.getInst().height - TANK_HEIGHT) {
                         position.z = TankMap.getInst().height - TANK_HEIGHT;
+                        return false;
                     }
                     break;
 
@@ -96,6 +103,7 @@ public class Tank {
                     position.x -= TANK_VELOCITY;
                     if (position.x <= 0) {
                         position.x = 0;
+                        return false;
                     }
                     break;
 
@@ -103,6 +111,7 @@ public class Tank {
                     position.x += TANK_VELOCITY;
                     if (position.x > TankMap.getInst().width - TANK_WIDTH) {
                         position.x = TankMap.getInst().width - TANK_WIDTH;
+                        return false;
                     }
                     break;
             }
@@ -110,8 +119,13 @@ public class Tank {
 
         //collide in map
         if (TankMap.getInst().isIntersect(this.getBound())) {
-            position = lastPos;
+            position = tempLastPos;
+            return false;
+        } else {
+            lastPosition.Copy(tempLastPos);
         }
+
+        return true;
     }
 
     /**
@@ -125,40 +139,32 @@ public class Tank {
 
         for (int i = 0; i < TANK_BULLETS; i++) {
             if (bullets[i].isAlive() == false) {
-                bullets[i].reset(bpos, direction);
+                bullets[i].reset(bpos, getDirection());
                 break;
             }
         }
     }
 
     /**
-     * Return bound rect to check collision
-     *
-     * @return
-     */
-    public CRectangle getBound() {
-        CRectangle rect = new CRectangle();
-        rect.x = position.x;
-        rect.y = position.z;
-        rect.w = TANK_WIDTH;
-        rect.h = TANK_HEIGHT;
-
-        return rect;
-    }
-
-    /**
      * If tank is dead, it will be reset at start position
      */
-    public void reset() {
+    public void reset(Vector3 pos, int dir) {
         isAlive = true;
-        position = (System.currentTimeMillis() / 2 == 0) ? TANK_START_LEFT : TANK_START_RIGHT;
-        direction = CDirections.UP;
+        position.Copy(pos);
+        lastPosition.Copy(pos);
+        direction = dir;
         for (int i = 0; i < TANK_BULLETS; i++) {
             bullets[i].setAlive(false);
         }
     }
 
+    public void rollBack() {
+        this.position.Copy(lastPosition);
+    }
+    
+    //
     //update and draw
+    //
     /**
      * Use singleton TankMap to update tank and bullet
      */
@@ -184,7 +190,7 @@ public class Tank {
         GL gl = Global.drawable.getGL();
         gl.glPushMatrix();
         {
-            gl.glTranslatef(position.x, position.y, position.z);
+            gl.glTranslatef(getPosition().x, getPosition().y, getPosition().z);
 //            
 //            switch(direction)
 //            {
@@ -201,9 +207,54 @@ public class Tank {
 //                    gl.glRotatef(-90, 0, 1, 0);
 //                    break;
 //            }
-
-            TankMap.getInst().drawCube(0, 0, 0, 3, 2, 3);
+            Global.drawCube(texture, 0, 0, 0, 3, 2, 3);
         }
         gl.glPopMatrix();
+    }
+
+    //
+    //get and set
+    //
+    /**
+     * Return bound rect to check collision
+     *
+     * @return
+     */
+    public CRectangle getBound() {
+        CRectangle rect = new CRectangle();
+        rect.x = position.x;
+        rect.y = position.z;
+        rect.w = TANK_WIDTH;
+        rect.h = TANK_HEIGHT;
+
+        return rect;
+    }
+
+    /**
+     * @return the position
+     */
+    public Vector3 getPosition() {
+        return position.Clone();
+    }
+
+    /**
+     * @param position the position to set
+     */
+    public void setPosition(Vector3 pos) {
+        this.position.Copy(pos);
+    }
+
+    /**
+     * @return the direction
+     */
+    public int getDirection() {
+        return direction;
+    }
+
+    /**
+     * @param direction the direction to set
+     */
+    public void setDirection(int direction) {
+        this.direction = direction;
     }
 }

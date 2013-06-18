@@ -6,6 +6,7 @@ package myjogl.gameobjects;
 
 /**
  * My rectangle
+ *
  * @author Jundat
  */
 public class CRectangle {
@@ -24,13 +25,34 @@ public class CRectangle {
     }
 
     public boolean isIntersect(CRectangle rect) {
-        float area = (Math.max(this.x, rect.x) - Math.min(this.x, rect.x))
-                * (Math.max(this.y, rect.y) - Math.min(this.y, rect.y));
+        return (this.x <= rect.x + rect.w
+                && rect.x <= this.x + rect.w
+                && this.y <= rect.y + rect.h
+                && rect.y <= this.y + rect.h);
+    }
 
-        if (area == 0) {
-            return false;
-        } else {
-            return true;
+    public int getCollisionDirection(CRectangle _rect2) {
+        if (this.isIntersect(_rect2)) {
+            float top = Math.abs(this.y - _rect2.y - _rect2.h);
+            float botom = Math.abs(this.y + this.h - _rect2.y);
+            float left = Math.abs(this.x - _rect2.x - _rect2.w);
+            float right = Math.abs(this.x + this.w - _rect2.x);
+            float rs = Math.min(Math.min(right, left), Math.min(top, botom));
+
+            if (rs == top) {
+                return CDirections.UP;
+            }
+            if (rs == botom) {
+                return CDirections.DOWN;
+            }
+            if (rs == left) {
+                return CDirections.LEFT;
+            }
+            if (rs == right) {
+                return CDirections.RIGHT;
+            }
         }
+
+        return CDirections.NONE;
     }
 }
