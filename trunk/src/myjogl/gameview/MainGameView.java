@@ -19,11 +19,15 @@ import myjogl.gameobjects.*;
  * @author Jundat
  */
 public class MainGameView implements GameView {
-    //
 
+    public static int MAX_CURRENT_AI = 1; //maximum current TankAI in 1 screen, at a moment
+    //
     private SkyBox m_skybox;
     private Camera camera;
     private Tank tank;
+    private TankAI tankAis[];
+    private int lastTanks; //so tang con lai, chwa dwa ra
+    private int currentTank; //number of tank in screen at a moment
     //
     final float[] redLightColorAmbient = {0.0f, 0.0f, 0.0f, 0.0f}; //red
     final float[] redLightColorDisfuse = {2.0f, 2.0f, 2.0f, 1.0f}; //red
@@ -37,7 +41,7 @@ public class MainGameView implements GameView {
     }
 
     public void keyPressed(KeyEvent e) {
-        if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             tank.fire();
         }
     }
@@ -47,7 +51,7 @@ public class MainGameView implements GameView {
 
             GameEngine.getInst().attach(new MenuView());
             GameEngine.getInst().detach(this);
-        }        
+        }
     }
 
     public void pointerPressed(MouseEvent e) {
@@ -83,6 +87,9 @@ public class MainGameView implements GameView {
     public void load() {
         this.setLight();
 
+        //init map
+        TankMap.getInst().LoadMap("data/map/MAP0.png");
+
         //init variable
         camera = new Camera();
         camera.Position_Camera(19.482517f, 28.869976f, 38.69388f, 19.481977f, 27.494007f, 38.006523f, 0.0f, 1.0f, 0.0f);
@@ -97,11 +104,19 @@ public class MainGameView implements GameView {
                 "data/skybox/left.jpg", "data/skybox/right.jpg");
 
         //tank
-        tank = new Tank();
+        Vector3 v;
+        v = new Vector3((Vector3) TankMap.getInst().listTankPosition.get(0));
+        tank = new Tank(v, CDirections.UP);
         tank.load();
 
-        //init map
-        TankMap.getInst().LoadMap("data/map/MAP0.png");
+        lastTanks = 10;
+        currentTank = 0;
+        tankAis = new TankAI[MAX_CURRENT_AI];
+        for (int i = 0; i < MAX_CURRENT_AI; i++) {
+            tankAis[i] = new TankAI();
+            tankAis[i].load();
+            tankAis[i].isAlive = false;
+        }
     }
 
     public void unload() {
@@ -120,9 +135,9 @@ public class MainGameView implements GameView {
         ResourceManager.getInst().deleteTexture("data/skybox/back.jpg");
     }
 
-    public void handleInput() {
+    private void handleInput() {
         KeyboardState state = KeyboardState.getState();
-        
+
         //up
         if (state.isDown(KeyEvent.VK_UP)) {
             tank.move(CDirections.UP);
@@ -144,12 +159,92 @@ public class MainGameView implements GameView {
         }
     }
 
-    public void update(long elapsedTime) {
+    private void createNewAi() {
+
+        //tankAI
+        if (currentTank < MAX_CURRENT_AI && lastTanks > 0) { //create new
+            for (int i = 0; i < MAX_CURRENT_AI; i++) {
+                if (tankAis[i].isAlive == false) {
+                    boolean isok = false; //check if have a position for it
+
+                    //get position
+                    for (Object v : TankMap.getInst().listTankAiPosition) {
+                        Vector3 pos = new Vector3((Vector3) v);
+                        tankAis[i].setPosition(pos);
+
+                        //check collision
+                        //player tank
+                        if (tankAis[i].getBound().isIntersect(tank.getBound())) {
+                            continue;
+                        } else { //list current tank AI
+                            boolean isok2 = true;
+                            for (int j = 0; j < MAX_CURRENT_AI; j++) {
+                                if (tankAis[j].isAlive == true) {
+                                    if (tankAis[i].getBound().isIntersect(tankAis[j].getBound())) {
+                                        isok2 = false;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (isok2) {
+                                isok = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (isok) {
+                        tankAis[i].isAlive = true;
+                        lastTanks--;
+                        break;
+                    }
+                }
+            }
+
+        }
+    }
+
+    private void checkCollision() {
+        //tank vs tank
+        //tank vs TankAi
+        CRectangle rect1 = tank.getBound();
+        for (int i = 0; i < MAX_CURRENT_AI; i++) {
+            CRectangle rect2 = tankAis[i].getBound();
+            if (rect1.isIntersect(rect2)) {
+                tank.rollBack();
+                tankAis[i].rollBack();
+                
+                
+                
+            }
+        }
+
+        //bullet vs tank
+
+
+        //bullet vs bullet
+
+
+    }
+
+    public void update(long dt) {
         handleInput();
         ParticalManager.getInstance().Update();
-        
+
         //tank
-        tank.update(elapsedTime);
+        tank.update(dt);
+
+        //tankAI
+        createNewAi();
+        for (int i = 0; i < MAX_CURRENT_AI; i++) {
+            if (tankAis[i].isAlive) {
+                tankAis[i].update(dt);
+            }
+        }
+
+        //check collision
+        this.checkCollision();
     }
 
     public void display() {
@@ -178,7 +273,12 @@ public class MainGameView implements GameView {
 
         //tank
         tank.draw();
-        
+        for (int i = 0; i < MAX_CURRENT_AI; i++) {
+            if (tankAis[i].isAlive) {
+                tankAis[i].draw();
+            }
+        }
+
         //map
         TankMap.getInst().Render();
 

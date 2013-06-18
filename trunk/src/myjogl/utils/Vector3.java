@@ -33,6 +33,16 @@ public class Vector3			// expanded 3D vector struct
         z = v.z;
     }
     
+    public Vector3 Clone() {
+        return new Vector3(this);
+    }
+    
+    public void Copy(Vector3 v) {
+        x = v.x;
+        y = v.y;
+        z = v.z;
+    }
+    
     // overload + operator so that we easier can add vectors
     public Vector3 Add(Vector3 vVector) {
         return new Vector3(vVector.x+x, vVector.y+y, vVector.z+z);

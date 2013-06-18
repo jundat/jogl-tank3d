@@ -8,6 +8,7 @@ import com.sun.opengl.util.texture.Texture;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -16,24 +17,44 @@ import javax.media.opengl.GLAutoDrawable;
 import myjogl.Global;
 import myjogl.gameobjects.CRectangle;
 
-/**
- *
- * @author Jundat
- */
+class ID {
+
+    public static final byte BOSS = 1;
+    public static final byte BOSS_AI = 2;
+    public static final byte TANK = 3;
+    public static final byte TANK_AI = 4;
+    //
+    public static final byte BRICK = 11;
+    public static final byte ROCK = 12;
+    public static final byte TREE = 13;
+    public static final byte WATER = 14;
+    //
+}
+
 public class TankMap {
 
     public static final float TILE_WIDTH = 1;
     public static final float TILE_HEIGHT = 2;
     public static final float TILE_BORDER = 2;
+    //
     public byte[][] board;
     public int width;
     public int height;
+    //
+    public ArrayList listTankAiPosition;
+    public ArrayList listTankPosition;
+    public Vector3 bossPosition;
+    public Vector3 bossAiPosition;
+    //
     private static Texture ttGachTuong = null;
     private static Texture ttGachTuong2 = null;
     private static Texture ttGachMen = null;
+    //
     final float[] redLightColor = {1.0f, 1.0f, 1.0f, 1.0f}; //red
     final float[] redLightPos = {0.0f, 0.0f, 0.0f, 1.0f};
+    //
     private static TankMap instance = null;
+    //
 
     public static TankMap getInst() {
         if (instance == null) {
@@ -47,6 +68,9 @@ public class TankMap {
         ttGachTuong = ResourceManager.getInst().getTexture("data/game/gach_tuong.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
         ttGachTuong2 = ResourceManager.getInst().getTexture("data/game/gach_tuong2.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
         ttGachMen = ResourceManager.getInst().getTexture("data/game/gach_men.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
+        //
+        listTankPosition = new ArrayList();
+        listTankAiPosition = new ArrayList();
     }
 
     //only use png file
@@ -67,11 +91,11 @@ public class TankMap {
             int color;
             byte red, green, blue, alpha;
 
-            for (int i = 0; i < height; ++i) //y
+            for (int i = 0; i < height; ++i) //z
             {
                 for (int j = 0; j < width; ++j) //x
                 {
-                    color = image.getRGB(j, i); //x,y
+                    color = image.getRGB(j, i); //x,z
 
                     alpha = (byte) ((color & 0xff000000) >> 24);
                     red = (byte) ((color & 0x00ff0000) >> 16);
@@ -79,6 +103,16 @@ public class TankMap {
                     blue = (byte) ((color & 0x000000ff));
 
                     board[i][j] = blue;
+                    //
+                    if (blue == ID.TANK) {
+                        listTankPosition.add(new Vector3(j, 0, i));
+                    } else if (blue == ID.TANK_AI) {
+                        listTankAiPosition.add(new Vector3(j, 0, i));
+                    } else if (blue == ID.BOSS) {
+                        bossPosition = new Vector3(j, 0, i);
+                    } else if (blue == ID.BOSS_AI) {
+                        bossAiPosition = new Vector3(j, 0, i);
+                    }
                 }
             }
 
@@ -107,7 +141,8 @@ public class TankMap {
             for (int j = 0; j < width; ++j) //x
             {
                 blue = board[i][j];
-                if (blue != 0) {
+                //
+                if (blue == ID.BRICK) {
                     this.drawCube(j * TILE_WIDTH, 0, i * TILE_WIDTH,
                             TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
                 }
@@ -118,13 +153,13 @@ public class TankMap {
     public boolean isIntersect(CRectangle rect) {
         int x = (int) rect.x;
         int y = (int) rect.y;
-        int r = Math.round(rect.x + rect.w);
-        int b = Math.round(rect.y + rect.h);
-        
+        int r = Global.getUpper(rect.x + rect.w);
+        int b = Global.getUpper(rect.y + rect.h);
+
         for (int i = y; i < b; i++) {
             for (int j = x; j < r; j++) {
                 if (j >= 0 && j < width && i >= 0 && i < height) {
-                    if (board[i][j] != 0) {
+                    if (board[i][j] == ID.BRICK) {
                         return true;
                     }
                 }
@@ -318,4 +353,6 @@ public class TankMap {
         //reset color
         gl.glColor4f(1, 1, 1, 1);
     }
+    
+    //
 }
