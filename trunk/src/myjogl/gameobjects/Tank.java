@@ -14,16 +14,17 @@ import myjogl.utils.ResourceManager;
 
 public class Tank {
 
-    public final static float TANK_VELOCITY = 0.1f; //do not change it
-    public final static float TANK_WIDTH = 3;
-    public final static float TANK_HEIGHT = 3;
-    public final static int TANK_BULLETS = 10;
+    public final static float TANK_VELOCITY = 0.25f; //do not change it
+    public final static float TANK_WIDTH = 2;
+    public final static float TANK_HEIGHT = 2;
+    public final static int TANK_NUMBER_BULLETS = 10;
     //
     public boolean isAlive;
     private Vector3 position;
-    private Vector3 lastPosition;
     private int direction;
-    protected TankBullet bullets[];
+    private Vector3 lastPosition;
+    //
+    public TankBullet bullets[];
     protected Md2 model;
     protected Texture texture;
 
@@ -36,8 +37,9 @@ public class Tank {
     public Tank() {
         isAlive = true;
         position = new Vector3();
-        lastPosition = position.Clone();
         direction = CDirections.UP;
+        //
+        lastPosition = position.Clone();
     }
 
     /**
@@ -49,15 +51,17 @@ public class Tank {
     public Tank(Vector3 pos, int dir) {
         isAlive = true;
         position = new Vector3(pos);
-        lastPosition = position.Clone();
         direction = dir;
+        //
+        lastPosition = position.Clone();
     }
 
     public void load() {
-        bullets = new TankBullet[TANK_BULLETS];
-        for (int i = 0; i < TANK_BULLETS; i++) {
+        bullets = new TankBullet[TANK_NUMBER_BULLETS];
+        for (int i = 0; i < TANK_NUMBER_BULLETS; i++) {
             bullets[i] = new TankBullet();
-            bullets[i].setAlive(false); //start by false
+            bullets[i].load();
+            bullets[i].isAlive = false; //start by false
         }
 
         //
@@ -71,10 +75,17 @@ public class Tank {
     //
     //public method
     //
+    public void rollBack() {
+        this.position = this.lastPosition.Clone();
+    }
+
     /**
      * Change direction If have same direction, let's move tank
      */
     public boolean move(int dir) {
+
+        this.lastPosition = this.position.Clone();
+        //
         Vector3 tempLastPos = new Vector3(position);
 
         if (getDirection() != dir) {
@@ -121,8 +132,6 @@ public class Tank {
         if (TankMap.getInst().isIntersect(this.getBound())) {
             position = tempLastPos;
             return false;
-        } else {
-            lastPosition.Copy(tempLastPos);
         }
 
         return true;
@@ -137,8 +146,8 @@ public class Tank {
         bpos.y = 2;
         bpos.z += TANK_HEIGHT / 2 - TankBullet.BULLET_HEIGHT / 2;
 
-        for (int i = 0; i < TANK_BULLETS; i++) {
-            if (bullets[i].isAlive() == false) {
+        for (int i = 0; i < TANK_NUMBER_BULLETS; i++) {
+            if (bullets[i].isAlive == false) {
                 bullets[i].reset(bpos, getDirection());
                 break;
             }
@@ -151,17 +160,12 @@ public class Tank {
     public void reset(Vector3 pos, int dir) {
         isAlive = true;
         position.Copy(pos);
-        lastPosition.Copy(pos);
         direction = dir;
-        for (int i = 0; i < TANK_BULLETS; i++) {
-            bullets[i].setAlive(false);
+        for (int i = 0; i < TANK_NUMBER_BULLETS; i++) {
+            bullets[i].isAlive = false;
         }
     }
 
-    public void rollBack() {
-        this.position.Copy(lastPosition);
-    }
-    
     //
     //update and draw
     //
@@ -170,11 +174,15 @@ public class Tank {
      */
     public void update(long dt) {
         //bullet
-        for (int i = 0; i < TANK_BULLETS; i++) {
-            bullets[i].update(dt);
+        for (int i = 0; i < TANK_NUMBER_BULLETS; i++) {
+            if (bullets[i].isAlive) {
+                bullets[i].update(dt);
+            }
         }
 
         //tank
+        if (this.isAlive) {
+        }
     }
 
     /**
@@ -182,15 +190,19 @@ public class Tank {
      */
     public void draw() {
         //bullet
-        for (int i = 0; i < TANK_BULLETS; i++) {
-            bullets[i].draw();
+        for (int i = 0; i < TANK_NUMBER_BULLETS; i++) {
+            if (bullets[i].isAlive) {
+                bullets[i].draw();
+            }
         }
 
-        //tank
-        GL gl = Global.drawable.getGL();
-        gl.glPushMatrix();
-        {
-            gl.glTranslatef(getPosition().x, getPosition().y, getPosition().z);
+        //draw tank
+        if (this.isAlive) {
+            //tank
+            GL gl = Global.drawable.getGL();
+            gl.glPushMatrix();
+            {
+                gl.glTranslatef(getPosition().x, getPosition().y, getPosition().z);
 //            
 //            switch(direction)
 //            {
@@ -207,9 +219,10 @@ public class Tank {
 //                    gl.glRotatef(-90, 0, 1, 0);
 //                    break;
 //            }
-            Global.drawCube(texture, 0, 0, 0, 3, 2, 3);
+                Global.drawCube(texture, 0, 0, 0, Tank.TANK_WIDTH, 2, Tank.TANK_HEIGHT);
+            }
+            gl.glPopMatrix();
         }
-        gl.glPopMatrix();
     }
 
     //
