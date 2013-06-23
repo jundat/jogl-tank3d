@@ -16,10 +16,10 @@ import myjogl.utils.Vector3;
  */
 public class TankBullet {
 
-    public static final float BULLET_VELOCITY = 1.0f; //do not change it
+    public static final float BULLET_VELOCITY = 0.5f; //do not change it
     public static final float BULLET_WIDTH = 1.0f;
     public static final float BULLET_HEIGHT = 1.0f;
-    private boolean isAlive;
+    public boolean isAlive;
     private Vector3 position;
     private int direction;
 
@@ -33,6 +33,9 @@ public class TankBullet {
         position = new Vector3(pos.x, pos.y, pos.z);
         direction = dir;
         isAlive = true;
+    }
+
+    public void load() {
     }
 
     /**
@@ -51,9 +54,8 @@ public class TankBullet {
      * Update position use: velocity + direction
      */
     public void update(long dt) {
-        Vector3 lastPos = new Vector3(position);
-        
-        if (isAlive) {
+        if (this.isAlive) {
+            Vector3 lastPos = new Vector3(position);
             switch (direction) {
                 case CDirections.UP:
                     position.z -= BULLET_VELOCITY;
@@ -106,15 +108,16 @@ public class TankBullet {
      * Draw model use: position, direction
      */
     public void draw() {
-        if (isAlive == true) {
+        if (this.isAlive) {
             GL gl = Global.drawable.getGL();
-            gl.glColor3f(1, 1, 1);
+            gl.glColor4f(1, 1, 1, 1);
+
             gl.glBegin(GL.GL_QUADS);
             {
-                gl.glVertex3f(getPosition().x, getPosition().y, getPosition().z);
-                gl.glVertex3f(getPosition().x + BULLET_WIDTH, getPosition().y, getPosition().z);
-                gl.glVertex3f(getPosition().x + BULLET_WIDTH, getPosition().y, getPosition().z + BULLET_HEIGHT);
-                gl.glVertex3f(getPosition().x, getPosition().y, getPosition().z + BULLET_HEIGHT);
+                gl.glVertex3f(position.x, Tank.TANK_WIDTH / 2, position.z);
+                gl.glVertex3f(position.x + BULLET_WIDTH, Tank.TANK_WIDTH / 2, position.z);
+                gl.glVertex3f(position.x + BULLET_WIDTH, Tank.TANK_WIDTH / 2, position.z + BULLET_HEIGHT);
+                gl.glVertex3f(position.x, Tank.TANK_WIDTH / 2, position.z + BULLET_HEIGHT);
             }
             gl.glEnd();
         }
@@ -123,26 +126,12 @@ public class TankBullet {
     //get and set
     public CRectangle getBound() {
         CRectangle rect = new CRectangle();
-        rect.x = getPosition().x;
-        rect.y = getPosition().z;
+        rect.x = position.x;
+        rect.y = position.z;
         rect.w = BULLET_WIDTH;
         rect.h = BULLET_HEIGHT;
 
         return rect;
-    }
-
-    /**
-     * @return the isAlive
-     */
-    public boolean isAlive() {
-        return isAlive;
-    }
-
-    /**
-     * @param isAlive the isAlive to set
-     */
-    public void setAlive(boolean isAlive) {
-        this.isAlive = isAlive;
     }
 
     /**

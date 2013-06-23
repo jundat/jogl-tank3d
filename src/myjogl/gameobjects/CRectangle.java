@@ -24,11 +24,18 @@ public class CRectangle {
         this.h = h;
     }
 
-    public boolean isIntersect(CRectangle rect) {
-        return (this.x <= rect.x + rect.w
-                && rect.x <= this.x + rect.w
-                && this.y <= rect.y + rect.h
-                && rect.y <= this.y + rect.h);
+    private boolean valueInRange(float value, float min, float max) {
+        return (value >= min) && (value <= max);
+    }
+
+    public boolean isIntersect(CRectangle B) {
+        boolean xOverlap = valueInRange(this.x, B.x, B.x + B.w)
+                || valueInRange(B.x, this.x, this.x + this.w);
+
+        boolean yOverlap = valueInRange(this.y, B.y, B.y + B.h)
+                || valueInRange(B.y, this.y, this.y + B.h);
+
+        return xOverlap && yOverlap;
     }
 
     public int getCollisionDirection(CRectangle _rect2) {

@@ -9,6 +9,7 @@ import javax.media.opengl.GLAutoDrawable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 import javax.media.opengl.GL;
 
 /**
@@ -22,6 +23,8 @@ public class Global {
     public static int wndWidth = 1024;
     public static int wndHeight = 640;
     public static GLAutoDrawable drawable = null;
+    
+    public static Random random = new Random(System.currentTimeMillis());
 
     public static void Print(HashMap hm) {
         Iterator it = hm.entrySet().iterator();

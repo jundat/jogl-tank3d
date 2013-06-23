@@ -29,34 +29,37 @@ public class TankAI extends Tank {
         super(pos, dir);
         counterFire = 0;
     }
-    
+
     @Override
     public void load() {
         super.load();
         texture = ResourceManager.getInst().getTexture("data/game/tankAi.png");
     }
 
-    @Override
-    public void update(long dt) {
-        super.update(dt);
-        //
-        //fire
-        counterFire += dt;
-        if (counterFire >= TANK_TIME_TO_FIRE) {
-            counterFire = 0;
-            super.fire();
-        }
-
-        //change direction
-        boolean canMove = super.move(getDirection());
-        if (canMove != true) {
-            this.setDirection(TANK_RANDOM.nextInt(CDirections.NUMBER_DIRECTION));
-        }
+    public void randomNewDirection() {
+        this.setDirection(TANK_RANDOM.nextInt(CDirections.NUMBER_DIRECTION));
     }
 
     @Override
-    public void draw() {
-        super.draw();
-        
+    public void update(long dt) {
+        super.update(dt);
+
+        if (this.isAlive) {
+            //
+            //fire
+            counterFire += dt;
+            if (counterFire >= TANK_TIME_TO_FIRE) {
+                counterFire = 0;
+                super.fire();
+            }
+
+            //change direction
+            boolean canMove = super.move(getDirection());
+            
+            //chon huong moi
+            if (canMove != true) {
+                this.randomNewDirection();
+            }
+        }
     }
 }
