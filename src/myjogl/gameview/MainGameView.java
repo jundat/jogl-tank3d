@@ -55,7 +55,7 @@ public class MainGameView implements GameView {
     Point pScore = new Point(820, 570);
     Point pScoreValue = new Point(838, 530);
     //
-    Texture ttBoss;
+    Boss boss;
 
     public MainGameView() {
         super();
@@ -162,8 +162,12 @@ public class MainGameView implements GameView {
             //init map
             TankMap.getInst().LoadMap("data/map/MAP" + Global.level + ".png");
 
+            //boss
             this.bossPosition = TankMap.getInst().bossPosition.Clone();
-
+            boss = new Boss(TankMap.getInst().bossPosition, CDirections.UP);
+            boss.load();
+            
+            //player
             int size = TankMap.getInst().listTankPosition.size();
             int choose = Global.random.nextInt(size);
             Vector3 v = ((Vector3) TankMap.getInst().listTankPosition.get(choose)).Clone();
@@ -206,8 +210,6 @@ public class MainGameView implements GameView {
 
         //writer
         writer = new Writer("data/font/Motorwerk_80.fnt");
-        //boss
-        ttBoss = ResourceManager.getInst().getTexture("data/game/boss.png");
     }
 
     public void unload() {
@@ -367,6 +369,16 @@ public class MainGameView implements GameView {
             TankBullet bullet = playerTank.bullets[i];
 
             if (bullet.isAlive) {
+
+                //vs Boss
+                if (bullet.getBound().isIntersect(boss.getBound())) {
+                    boss.explode();
+                    boss.isAlive = false;
+                    this.isPause = true;
+                    GameEngine.getInst().attach(new GameOverView(this));
+                }
+
+                //tankAis
                 for (int j = 0; j < MAX_CURRENT_AI; j++) {
 
                     //vs tankAis
@@ -380,7 +392,7 @@ public class MainGameView implements GameView {
 
                             //particle
                             tankAi.explode();
-                            
+
                             //Global.score
                             Global.score += SCORE_DELTA;
 
@@ -399,10 +411,10 @@ public class MainGameView implements GameView {
                                 //set is dead
                                 aiBullet.isAlive = false;
                                 bullet.isAlive = false;
-                                
+
                                 //particle
                                 bullet.explode();
-                                
+
                                 break;
                             }
                         }
@@ -423,15 +435,26 @@ public class MainGameView implements GameView {
             for (int j = 0; j < Tank.TANK_NUMBER_BULLETS; j++) {
 
                 TankBullet aiBullet = tankAi.bullets[j];
+
+
+                //vs Boss
+                if (aiBullet.getBound().isIntersect(boss.getBound())) {
+                    boss.explode();
+                    boss.isAlive = false;
+                    this.isPause = true;
+                    GameEngine.getInst().attach(new GameOverView(this));
+                }
+
+                //playerTank
                 if (aiBullet.isAlive && playerTank.isAlive) {
                     if (aiBullet.getBound().isIntersect(playerTank.getBound())) {
                         //set dead
                         aiBullet.isAlive = false;
                         playerTank.isAlive = false;
-                        
+
                         //particle
                         playerTank.explode();
-                        
+
                         //reset player or game over
                         this.checkGameOver();
                     }
@@ -444,14 +467,16 @@ public class MainGameView implements GameView {
     // end check collision
     //
     public void update(long dt) {
-        if (isPause) {
-            return;
+        //if (isPause) {
+        //    return;
+        //}
+
+        if (isPause == false) {
+            handleInput();
+            //check bullet collisiotn
+            this.checkBulletCollision();
         }
 
-        handleInput();
-
-        //check bullet collisiotn
-        this.checkBulletCollision();
 
         //tank
         playerTank.update(dt);
@@ -469,7 +494,6 @@ public class MainGameView implements GameView {
                     tankAis[i].randomNewDirection();
                 }
             }
-
         }
 
         //particle
@@ -512,10 +536,10 @@ public class MainGameView implements GameView {
         //map
         TankMap.getInst().Render();
 
-        Global.drawCube(ttBoss, bossPosition.x, bossPosition.y, bossPosition.z, Tank.TANK_WIDTH, Tank.TANK_WIDTH, Tank.TANK_HEIGHT);
+        boss.draw();
 
         //particle
-        ParticalManager.getInstance().Draw(gl, 0);
+        ParticalManager.getInstance().Draw(gl, 45);
 
         gl.glDisable(GL.GL_LIGHTING);
 

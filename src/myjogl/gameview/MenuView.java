@@ -35,10 +35,12 @@ public class MenuView implements GameView {
     Point pExit = new Point(20, 20);
     Point pAbout = new Point(20, 120);
     Point pPlay = new Point(20, 220);
-    //int yb = 
+    //
     private MenuItem itPlay;
     private MenuItem itAbout;
     private MenuItem itExit;
+    private int currentMenu;
+    //
     Texture ttBgMenu;
 
     public MenuView() {
@@ -46,6 +48,9 @@ public class MenuView implements GameView {
     }
 
     public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            gotoMainGame();
+        }
     }
 
     public void keyReleased(KeyEvent e) {
@@ -71,22 +76,7 @@ public class MenuView implements GameView {
     public void pointerReleased(MouseEvent e) {
         if (itPlay.contains(e.getX(), e.getY())) {
             itPlay.setIsClick(false);
-
-            //pre-load main game
-            ResourceManager.getInst().PreLoadTexture("data/game/gach_tuong.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR, GL.GL_LINEAR);
-            ResourceManager.getInst().PreLoadTexture("data/game/gach_men.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR, GL.GL_LINEAR);
-            ResourceManager.getInst().PreLoadTexture("data/model/triax_wheels.png", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR, GL.GL_LINEAR);
-
-            //skybox
-            ResourceManager.getInst().PreLoadTexture("data/skybox/top.jpg", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_CLAMP_TO_EDGE, GL.GL_CLAMP_TO_EDGE);
-            ResourceManager.getInst().PreLoadTexture("data/skybox/bottom.jpg", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_CLAMP_TO_EDGE, GL.GL_CLAMP_TO_EDGE);
-            ResourceManager.getInst().PreLoadTexture("data/skybox/left.jpg", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_CLAMP_TO_EDGE, GL.GL_CLAMP_TO_EDGE);
-            ResourceManager.getInst().PreLoadTexture("data/skybox/right.jpg", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_CLAMP_TO_EDGE, GL.GL_CLAMP_TO_EDGE);
-            ResourceManager.getInst().PreLoadTexture("data/skybox/front.jpg", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_CLAMP_TO_EDGE, GL.GL_CLAMP_TO_EDGE);
-            ResourceManager.getInst().PreLoadTexture("data/skybox/back.jpg", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_CLAMP_TO_EDGE, GL.GL_CLAMP_TO_EDGE);
-
-            GameEngine.getInst().attach(new LoadingView(new MainGameView()));
-            GameEngine.getInst().detach(this);
+            gotoMainGame();
         }
 
         if (itAbout.contains(e.getX(), e.getY())) {
@@ -117,10 +107,28 @@ public class MenuView implements GameView {
         itAbout.SetPosition(pAbout);
         itExit.SetPosition(pExit);
 
-        Writer writer = new Writer("data/font/Motorwerk_80.fnt");        
+        Writer writer = new Writer("data/font/Motorwerk_80.fnt");
     }
 
     public void unload() {
+    }
+
+    private void gotoMainGame() {
+        //pre-load main game
+        ResourceManager.getInst().PreLoadTexture("data/game/gach_tuong.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR, GL.GL_LINEAR);
+        ResourceManager.getInst().PreLoadTexture("data/game/gach_men.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR, GL.GL_LINEAR);
+        ResourceManager.getInst().PreLoadTexture("data/model/triax_wheels.png", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR, GL.GL_LINEAR);
+
+        //skybox
+        ResourceManager.getInst().PreLoadTexture("data/skybox/top.jpg", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_CLAMP_TO_EDGE, GL.GL_CLAMP_TO_EDGE);
+        ResourceManager.getInst().PreLoadTexture("data/skybox/bottom.jpg", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_CLAMP_TO_EDGE, GL.GL_CLAMP_TO_EDGE);
+        ResourceManager.getInst().PreLoadTexture("data/skybox/left.jpg", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_CLAMP_TO_EDGE, GL.GL_CLAMP_TO_EDGE);
+        ResourceManager.getInst().PreLoadTexture("data/skybox/right.jpg", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_CLAMP_TO_EDGE, GL.GL_CLAMP_TO_EDGE);
+        ResourceManager.getInst().PreLoadTexture("data/skybox/front.jpg", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_CLAMP_TO_EDGE, GL.GL_CLAMP_TO_EDGE);
+        ResourceManager.getInst().PreLoadTexture("data/skybox/back.jpg", false, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_CLAMP_TO_EDGE, GL.GL_CLAMP_TO_EDGE);
+
+        GameEngine.getInst().attach(new LoadingView(new MainGameView()));
+        GameEngine.getInst().detach(this);
     }
 
     public void update(long elapsedTime) {

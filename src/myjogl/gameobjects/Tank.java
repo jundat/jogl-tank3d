@@ -12,6 +12,7 @@ import myjogl.particles.Explo;
 import myjogl.particles.Explo1;
 import myjogl.particles.ParticalManager;
 import myjogl.particles.RoundSparks;
+import myjogl.utils.GLModel;
 import myjogl.utils.Md2;
 import myjogl.utils.TankMap;
 import myjogl.utils.Vector3;
@@ -30,7 +31,6 @@ public class Tank {
     private Vector3 lastPosition;
     //
     public TankBullet bullets[];
-    protected Md2 model;
     protected Texture texture;
 
     //
@@ -72,11 +72,7 @@ public class Tank {
         //
         texture = ResourceManager.getInst().getTexture("data/game/tank.png");
         //
-        model = new Md2();
-        model.LoadModel("data/model/triax_wheels.md2");
-        model.LoadSkin(ResourceManager.getInst().getTexture("data/model/triax_wheels.png", false, GL.GL_REPEAT));
         
-        //
         Vector3 a = getPosition().Clone();
         float scale = 0.1f;
         Explo shootParticle = new Explo(a, 0.1f, scale);
@@ -244,22 +240,6 @@ public class Tank {
             gl.glPushMatrix();
             {
                 gl.glTranslatef(getPosition().x, getPosition().y, getPosition().z);
-//            
-//            switch(direction)
-//            {
-//                case CDirections.UP:
-//                    //gl.glRotatef(90, 0, 1, 0);
-//                    break;
-//                case CDirections.DOWN:
-//                    gl.glRotatef(180, 0, 1, 0);
-//                    break;
-//                case CDirections.LEFT:
-//                    gl.glRotatef(90, 0, 1, 0);
-//                    break;
-//                case CDirections.RIGHT:
-//                    gl.glRotatef(-90, 0, 1, 0);
-//                    break;
-//            }
                 Global.drawCube(texture, 0, 0, 0, Tank.TANK_WIDTH, 2, Tank.TANK_HEIGHT);
             }
             gl.glPopMatrix();
