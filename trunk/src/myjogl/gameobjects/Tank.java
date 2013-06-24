@@ -7,6 +7,11 @@ package myjogl.gameobjects;
 import com.sun.opengl.util.texture.Texture;
 import javax.media.opengl.GL;
 import myjogl.Global;
+import myjogl.particles.Debris;
+import myjogl.particles.Explo;
+import myjogl.particles.Explo1;
+import myjogl.particles.ParticalManager;
+import myjogl.particles.RoundSparks;
 import myjogl.utils.Md2;
 import myjogl.utils.TankMap;
 import myjogl.utils.Vector3;
@@ -70,6 +75,21 @@ public class Tank {
         model = new Md2();
         model.LoadModel("data/model/triax_wheels.md2");
         model.LoadSkin(ResourceManager.getInst().getTexture("data/model/triax_wheels.png", false, GL.GL_REPEAT));
+        
+        //
+        Vector3 a = getPosition().Clone();
+        float scale = 0.1f;
+        Explo shootParticle = new Explo(a, 0.1f, scale);
+        shootParticle.LoadingTexture();
+
+        Explo1 shootParticle2 = new Explo1(a, 0.1f, scale);
+        shootParticle2.LoadingTexture();
+
+        RoundSparks shootParticle3 = new RoundSparks(a, 0.1f, scale);
+        shootParticle3.LoadingTexture();
+
+        Debris shootParticle4 = new Debris(a, 0.1f, scale);
+        shootParticle4.LoadingTexture();
     }
 
     //
@@ -152,6 +172,27 @@ public class Tank {
                 break;
             }
         }
+    }
+
+    public void explode() {
+        Vector3 a = getPosition().Clone();
+        float scale = 0.1f;
+        float time = 0.4f;
+        Explo shootParticle = new Explo(a, time, scale);
+        shootParticle.LoadingTexture();
+        ParticalManager.getInstance().Add(shootParticle);
+
+        Explo1 shootParticle2 = new Explo1(a, time, scale);
+        shootParticle2.LoadingTexture();
+        ParticalManager.getInstance().Add(shootParticle2);
+
+        RoundSparks shootParticle3 = new RoundSparks(a, time, scale);
+        shootParticle3.LoadingTexture();
+        ParticalManager.getInstance().Add(shootParticle3);
+
+        Debris shootParticle4 = new Debris(a, time, scale);
+        shootParticle4.LoadingTexture();
+        ParticalManager.getInstance().Add(shootParticle4);
     }
 
     /**

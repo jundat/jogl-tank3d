@@ -85,7 +85,7 @@ public class LoadingView implements GameView {
 
         currentLoad = ResourceManager.getInst().GetNumberPreload();
         float percent = (float) (beforeLoad - currentLoad) / (float)beforeLoad;
-        Writer.Render("Loading... " + (int) (100 * percent) + " %",
-                "Nyala", 16, 10, 10, Color.RED);
+        
+        GameEngine.writer.Render("...loading... " + (int) (100 * percent) + " %", 10, 10, 0.5f, 0.5f, 0.8f, 0.1f, 0.1f);
     }
 }

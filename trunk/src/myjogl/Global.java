@@ -18,6 +18,9 @@ import javax.media.opengl.GL;
  */
 public class Global {
 
+    public static String highscorefile = "highscore.data";
+    public static int level = 1; //start at level 1
+    public static int score = 0; //start at score 0
     public static boolean isFullScreen = false;
     public static int FPS = 1000;
     public static int wndWidth = 1024;

@@ -79,8 +79,6 @@ public class IntroView implements GameView {
 
         s = ResourceManager.getInst().getSound("sound/intro.wav", false);
         s.play();
-        
-        Writer w = new Writer("data/font/Nyala_72.fnt");
     }
 
     public void unload() {

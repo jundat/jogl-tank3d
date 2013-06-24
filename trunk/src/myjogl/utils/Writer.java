@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Scanner;
+import javax.media.opengl.GL;
 import myjogl.Global;
 
 /**
@@ -39,12 +40,10 @@ public class Writer {
             this.c = c;
         }
     }
-    
     private HashMap characters;
     private String fntFile;
     private String fileTexture;
     private Texture tt;
-    
 
     public Writer(String fntFile) {
         characters = new HashMap();
@@ -55,14 +54,14 @@ public class Writer {
         s = scn.nextLine(); //[HGEFONT]
         s = scn.nextLine(); //
         s = scn.nextLine(); //Bitmap=Nyala_72.png
-        
+
         //load
         fileTexture = s.substring("Bitmap=".length()); //Nyala_72.png
         int e = fntFile.lastIndexOf("/");
         fileTexture = fntFile.substring(0, e + 1) + fileTexture;
-        tt = ResourceManager.getInst().getTexture(fileTexture);
+        tt = ResourceManager.getInst().getTexture(fileTexture, false, GL.GL_REPEAT);
         //end-load
-        
+
         s = scn.nextLine(); //
 
         while (scn.hasNext()) {
@@ -95,22 +94,39 @@ public class Writer {
             }
         }
     }
-    
-    public void Render(String content, int x, int y, float scale) {
+
+    public void Render(String content, float x, float y, float scalex, float scaley) {
         int len = content.length();
         char c;
-        int curpos = x;
-        
+        float curpos = x;
+
         for (int i = 0; i < len; i++) {
             c = content.charAt(i);
-            
             CharacterInfo ci = (CharacterInfo) characters.get(c);
-            
+
+            if (ci != null) {
+                Renderer.Render(tt,
+                        ci.x, ci.y, ci.w, ci.h,
+                        curpos, y, ci.w * scalex, ci.h * scaley);
+
+                curpos += ci.w * scalex;
+            }
         }
     }
     
+    public void Render(String content, float x, float y, float scalex, float scaley, 
+            float red, float green, float blue) {
+        GL gl = Global.drawable.getGL();
+        
+        gl.glEnable(GL.GL_BLEND);
+        
+        gl.glColor3f(red, green, blue);
+        Render(content, x, y, scalex, scaley);
+        gl.glColor3f(1,1,1);
+    }
+    
     //static 
-    private static Font font = new Font("Times New Roman", Font.BOLD, 40);
+    private static Font font = new Font("Constantia", Font.BOLD, 40);
     private static TextRenderer tr = new TextRenderer(font);
 
     public static void Render(String content, String fontName, int size, int x, int y, Color color) {
