@@ -21,7 +21,7 @@ public class Sound {
     boolean isLoop = false;
     int pausePosition = 0;
     public Clip clip;
-
+    
     public Sound(String fileName, boolean isLoop) {
         this.fileName = fileName;
         this.isPause = false;
@@ -50,6 +50,10 @@ public class Sound {
             }
         }
     }
+    
+    public Sound clone() {
+        return new Sound(this.fileName, this.isLoop);
+    }
 
     /**
      * release data
@@ -61,13 +65,23 @@ public class Sound {
     }
 
     public void play() {
+        this.play(true);
+    }
+
+    public void play(boolean startAgain) {
         if (isLoop) {
             clip.loop(Clip.LOOP_CONTINUOUSLY);
         }
 
-        clip.setMicrosecondPosition(0);
+        if (startAgain) {
+            clip.setMicrosecondPosition(0);
+        }
+
+        if (clip.getMicrosecondPosition() >= clip.getMicrosecondLength()) {
+            clip.setMicrosecondPosition(0);
+        }
+        
         clip.start();
-        System.out.println("Play sound: " + fileName);
     }
 
     public void stop() {
@@ -94,10 +108,8 @@ public class Sound {
         }
     }
 
-    public void setVolume(int gainAmount) {
+    public void setVolume(float gainAmount) {
         FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
         volume.setValue(gainAmount);
     }
-    
-    
 }

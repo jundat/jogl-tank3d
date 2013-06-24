@@ -20,6 +20,7 @@ import javax.media.opengl.GLAutoDrawable;
 import myjogl.gameview.IntroView;
 import myjogl.tank3d.Tank3D;
 import myjogl.utils.ResourceManager;
+import myjogl.utils.Sound;
 import myjogl.utils.Writer;
 
 /**
@@ -38,7 +39,12 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
     boolean hasNewView = false;
     private static GameEngine instance = null;
     public static Writer writer;
-
+    public static Sound sClick;
+    public static Sound sMouseMove;
+    public static Sound sFire;
+    public static Sound sExplode;
+    
+    
     private GameEngine() {
     }
 
@@ -67,6 +73,11 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
         //
         this.loadHighscore();
         //
+        //sound
+        sClick = ResourceManager.getInst().getSound("sound/click.wav", false);
+        sMouseMove = ResourceManager.getInst().getSound("sound/mouse_move.wav", false);
+        sFire = ResourceManager.getInst().getSound("sound/fire.wav", false);
+        sExplode = ResourceManager.getInst().getSound("sound/explode.wav", false);
     }
 
     public void loadHighscore() {

@@ -27,7 +27,7 @@ import myjogl.particles.RoundSparks;
 public class MainGameView implements GameView {
 
     public final static int SCORE_DELTA = 10;
-    public final static int NUMBER_OF_LIEF = 0;
+    public final static int NUMBER_OF_LIEF = 3;
     public final static int MAX_CURRENT_AI = 4; //maximum current TankAI in 1 screen, at a moment
     //
     public boolean isPause;
@@ -35,7 +35,7 @@ public class MainGameView implements GameView {
     //tankAI
     private int lastTanks; //so tang con lai, chwa dwa ra
     private int currentTank; //number of tank in screen at a moment
-    ////
+    //
     private Tank playerTank;
     private TankAI tankAis[];
     private SkyBox m_skybox;
@@ -56,6 +56,9 @@ public class MainGameView implements GameView {
     Point pScoreValue = new Point(838, 530);
     //
     Boss boss;
+    //sound
+    Sound sBackground;
+    //
 
     public MainGameView() {
         super();
@@ -66,9 +69,6 @@ public class MainGameView implements GameView {
     // handle input
     //
     public void keyPressed(KeyEvent e) {
-    }
-
-    public void keyReleased(KeyEvent e) {
         if (isPause) {
             return;
         }
@@ -80,9 +80,15 @@ public class MainGameView implements GameView {
 
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             if (playerTank.isAlive) {
-                playerTank.fire();
+                if (playerTank.fire()) {
+                    GameEngine.sFire.clone().setVolume(6.0f);
+                    GameEngine.sFire.clone().play();
+                }
             }
         }
+    }
+
+    public void keyReleased(KeyEvent e) {
     }
 
     public void pointerPressed(MouseEvent e) {
@@ -166,7 +172,7 @@ public class MainGameView implements GameView {
             this.bossPosition = TankMap.getInst().bossPosition.Clone();
             boss = new Boss(TankMap.getInst().bossPosition, CDirections.UP);
             boss.load();
-            
+
             //player
             int size = TankMap.getInst().listTankPosition.size();
             int choose = Global.random.nextInt(size);
@@ -175,7 +181,7 @@ public class MainGameView implements GameView {
             playerTank.load();
             numberOfLife = NUMBER_OF_LIEF;
 
-            lastTanks = 100; //so tank chua ra
+            lastTanks = 200; //so tank chua ra
             currentTank = 0; //so tank dang online
             tankAis = new TankAI[MAX_CURRENT_AI];
             for (int i = 0; i < MAX_CURRENT_AI; i++) {
@@ -210,6 +216,9 @@ public class MainGameView implements GameView {
 
         //writer
         writer = new Writer("data/font/Motorwerk_80.fnt");
+        //sound
+        sBackground = ResourceManager.getInst().getSound("sound/bg_game.wav", true);
+        sBackground.play();
     }
 
     public void unload() {
@@ -284,7 +293,6 @@ public class MainGameView implements GameView {
     private void checkGameOver() {
         if (numberOfLife <= 0) { //gameover
             GameEngine.getInst().attach(new GameOverView(this));
-
         } else { // reset new life
 
             for (Object o : TankMap.getInst().listTankPosition) {
@@ -313,7 +321,6 @@ public class MainGameView implements GameView {
 
     private void checkLevelComplete() {
         if (lastTanks <= 0 && currentTank <= 0) { //complete
-            this.isPause = true;
             GameEngine.getInst().attach(new NextLevelView(this));
         }
     }
@@ -467,15 +474,13 @@ public class MainGameView implements GameView {
     // end check collision
     //
     public void update(long dt) {
-        //if (isPause) {
-        //    return;
-        //}
-
-        if (isPause == false) {
-            handleInput();
-            //check bullet collisiotn
-            this.checkBulletCollision();
+        if (isPause) {
+            return;
         }
+
+        handleInput();
+        //check bullet collisiotn
+        this.checkBulletCollision();
 
 
         //tank

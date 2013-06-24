@@ -24,8 +24,12 @@ public class GameOverView implements GameView {
     Point pBg = new Point(230, 132);
     Point pGame = new Point(230 + 291, 132 + 252);
     Point pOver = new Point(230 + 300, 132 + 165);
-    Rectangle rectMenu = new Rectangle(230 + 44, 132 + 5, 202, 54);
-    Rectangle rectRetry = new Rectangle(230 + 316, 132 + 5, 202, 54);
+    Rectangle rectMenu = new Rectangle(230 + 30, 130, 202, 54);
+    Rectangle rectRetry = new Rectangle(230 + 305, 130, 202, 54);
+    //
+    MenuItem itMenu;
+    MenuItem itRetry;
+    //
     MainGameView mainGameView;
     Texture ttBg;
 
@@ -41,17 +45,47 @@ public class GameOverView implements GameView {
     }
 
     public void pointerPressed(MouseEvent e) {
+        if (itMenu.contains(e.getX(), e.getY())) {
+            itMenu.setIsClick(true);
+        }
+
+        if (itRetry.contains(e.getX(), e.getY())) {
+            itRetry.setIsClick(true);
+        }
     }
 
     public void pointerMoved(MouseEvent e) {
+        if (itMenu.contains(e.getX(), e.getY())) {
+            if (itMenu.isOver == false) {
+                itMenu.setIsOver(true);
+                GameEngine.sMouseMove.play(false);
+            }
+        } else {
+            itMenu.setIsOver(false);
+        }
+
+        if (itRetry.contains(e.getX(), e.getY())) {
+            if (itRetry.isOver == false) {
+                itRetry.setIsOver(true);
+                GameEngine.sMouseMove.play(false);
+            }
+        } else {
+            itRetry.setIsOver(false);
+        }
     }
 
     public void pointerReleased(MouseEvent e) {
-        if (rectMenu.contains(e.getX(), e.getY())) { //menu
+        if (itMenu.contains(e.getX(), e.getY())) { //menu
+            itMenu.setIsClick(true);
+            GameEngine.sClick.play();
+            //
             GameEngine.getInst().attach(new MenuView());
             GameEngine.getInst().detach(mainGameView);
             GameEngine.getInst().detach(this);
-        } else if(rectRetry.contains(e.getX(), e.getY())) {
+        } else if (rectRetry.contains(e.getX(), e.getY())) {
+            itRetry.setIsClick(true);
+            GameEngine.sClick.play();
+            //
             mainGameView.isPause = false;
             mainGameView.loadLevel(Global.level);
             GameEngine.getInst().detach(this);
@@ -60,6 +94,15 @@ public class GameOverView implements GameView {
 
     public void load() {
         ttBg = ResourceManager.getInst().getTexture("data/common/bg_dialog.png");
+        //
+        itMenu = new MenuItem(ResourceManager.getInst().getTexture("data/menu/btn.png"),
+                ResourceManager.getInst().getTexture("data/menu/btn_press.png"));
+        itRetry = new MenuItem(ResourceManager.getInst().getTexture("data/menu/btn.png"),
+                ResourceManager.getInst().getTexture("data/menu/btn_press.png"));
+
+        itMenu.SetPosition(rectMenu.x, rectMenu.y);
+        itRetry.SetPosition(rectRetry.x, rectRetry.y);
+
         //
         GameEngine.getInst().saveHighscore();
     }
@@ -73,9 +116,14 @@ public class GameOverView implements GameView {
 
     public void display() {
         Renderer.Render(ttBg, pBg.x, pBg.y);
+        //
+
+        itMenu.Render();
+        itRetry.Render();
+        //
         GameEngine.writer.Render("GAME", pGame.x, pGame.y, 0.9f, 0.9f);
         GameEngine.writer.Render("OVER", pOver.x, pOver.y, 0.9f, 0.9f);
-        GameEngine.writer.Render("MENU", rectMenu.x + 18, rectMenu.y + 5, 0.85f, 0.85f);
-        GameEngine.writer.Render("RETRY", rectRetry.x + 6, rectRetry.y + 5, 0.85f, 0.85f);
+        GameEngine.writer.Render("MENU", rectMenu.x + 24, rectMenu.y + 12, 0.85f, 0.85f);
+        GameEngine.writer.Render("RETRY", rectRetry.x + 18, rectRetry.y + 12, 0.85f, 0.85f);
     }
 }
