@@ -4,6 +4,7 @@
  */
 package myjogl.gameview;
 
+import com.sun.opengl.util.texture.Texture;
 import myjogl.particles.ParticalManager;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -14,6 +15,10 @@ import javax.media.opengl.glu.GLU;
 import myjogl.*;
 import myjogl.utils.*;
 import myjogl.gameobjects.*;
+import myjogl.particles.Debris;
+import myjogl.particles.Explo;
+import myjogl.particles.Explo1;
+import myjogl.particles.RoundSparks;
 
 /**
  *
@@ -21,24 +26,36 @@ import myjogl.gameobjects.*;
  */
 public class MainGameView implements GameView {
 
-    public final static int NUMBER_OF_LIEF = 2;
-    public final static int MAX_CURRENT_AI = 6; //maximum current TankAI in 1 screen, at a moment
+    public final static int SCORE_DELTA = 10;
+    public final static int NUMBER_OF_LIEF = 0;
+    public final static int MAX_CURRENT_AI = 4; //maximum current TankAI in 1 screen, at a moment
     //
-    private SkyBox m_skybox;
-    private Camera camera;
-    private Tank playerTank;
-    private TankAI tankAis[];
-    //
+    public boolean isPause;
     private int numberOfLife = NUMBER_OF_LIEF;
     //tankAI
     private int lastTanks; //so tang con lai, chwa dwa ra
     private int currentTank; //number of tank in screen at a moment
+    ////
+    private Tank playerTank;
+    private TankAI tankAis[];
+    private SkyBox m_skybox;
+    private Camera camera;
+    private Writer writer;
+    private Vector3 bossPosition;
     //light
     final float[] redLightColorAmbient = {0.0f, 0.0f, 0.0f, 0.0f}; //red
     final float[] redLightColorDisfuse = {2.0f, 2.0f, 2.0f, 1.0f}; //red
     final float[] redLightColorSpecular = {6.0f, 6.0f, 6.0f, 1.0f}; //red
     final float[] redLightPos = {32.0f, 20.0f, 32.0f, 1.0f};
     //
+    Point pLevel = new Point(5, 570);
+    Point pAI = new Point(5, 530);
+    Point pLife = new Point(5, 490);
+    //
+    Point pScore = new Point(820, 570);
+    Point pScoreValue = new Point(838, 530);
+    //
+    Texture ttBoss;
 
     public MainGameView() {
         super();
@@ -49,6 +66,18 @@ public class MainGameView implements GameView {
     // handle input
     //
     public void keyPressed(KeyEvent e) {
+    }
+
+    public void keyReleased(KeyEvent e) {
+        if (isPause) {
+            return;
+        }
+
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            this.isPause = true;
+            GameEngine.getInst().attach(new PauseView(this));
+        }
+
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             if (playerTank.isAlive) {
                 playerTank.fire();
@@ -56,33 +85,20 @@ public class MainGameView implements GameView {
         }
     }
 
-    public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-
-            GameEngine.getInst().attach(new MenuView());
-            GameEngine.getInst().detach(this);
-        }
-    }
-
     public void pointerPressed(MouseEvent e) {
     }
 
     public void pointerMoved(MouseEvent e) {
-//        int x = e.getXOnScreen();
-//        int y = e.getYOnScreen();
-//
-//        if (camera != null) {
-//            camera.Mouse_Move(x, y, Global.wndWidth, Global.wndHeight);
-//        }
-//        System.out.println(camera.mPos.x + "f, " + camera.mPos.y + "f, " + camera.mPos.z + "f, "
-//                + camera.mView.x + "f, " + camera.mView.y + "f, " + camera.mView.z + "f, "
-//                + camera.mUp.x + "f, " + camera.mUp.y + "f, " + camera.mUp.z);
     }
 
     public void pointerReleased(MouseEvent e) {
     }
 
     private void handleInput() {
+        if (isPause) {
+            return;
+        }
+
         KeyboardState state = KeyboardState.getState();
 
         //up
@@ -118,6 +134,7 @@ public class MainGameView implements GameView {
                 }
             }
         }
+
     }
 
     //
@@ -139,9 +156,13 @@ public class MainGameView implements GameView {
     }
 
     public void loadLevel(int level) {
+        Global.level = level;
+
         try {
             //init map
-            TankMap.getInst().LoadMap("data/map/MAP" + level + ".png");
+            TankMap.getInst().LoadMap("data/map/MAP" + Global.level + ".png");
+
+            this.bossPosition = TankMap.getInst().bossPosition.Clone();
 
             int size = TankMap.getInst().listTankPosition.size();
             int choose = Global.random.nextInt(size);
@@ -150,8 +171,8 @@ public class MainGameView implements GameView {
             playerTank.load();
             numberOfLife = NUMBER_OF_LIEF;
 
-            lastTanks = 20; //depend on level
-            currentTank = 0;
+            lastTanks = 100; //so tank chua ra
+            currentTank = 0; //so tank dang online
             tankAis = new TankAI[MAX_CURRENT_AI];
             for (int i = 0; i < MAX_CURRENT_AI; i++) {
                 tankAis[i] = new TankAI();
@@ -159,7 +180,7 @@ public class MainGameView implements GameView {
                 tankAis[i].isAlive = false;
             }
         } catch (Exception e) {
-            System.out.println("Can not file map: MAP" + level);
+            System.out.println("Can not file map: MAP" + Global.level);
         }
     }
 
@@ -167,7 +188,9 @@ public class MainGameView implements GameView {
         this.setLight();
 
         //init map
-        this.loadLevel(1); //start at level 0
+        this.loadLevel(Global.level); //start at Global.level 0
+
+        isPause = false;
 
         //init variable
         camera = new Camera();
@@ -180,21 +203,26 @@ public class MainGameView implements GameView {
                 "data/skybox/top.jpg", "data/skybox/bottom.jpg",
                 "data/skybox/front.jpg", "data/skybox/back.jpg",
                 "data/skybox/left.jpg", "data/skybox/right.jpg");
+
+        //writer
+        writer = new Writer("data/font/Motorwerk_80.fnt");
+        //boss
+        ttBoss = ResourceManager.getInst().getTexture("data/game/boss.png");
     }
 
     public void unload() {
         GameEngine.getInst().tank3d.frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
         //pre-load main game
-        ResourceManager.getInst().deleteTexture("data/model/triax_wheels.png");
+        //ResourceManager.getInst().deleteTexture("data/model/triax_wheels.png");
 
         //skybox
-        ResourceManager.getInst().deleteTexture("data/skybox/top.jpg");
-        ResourceManager.getInst().deleteTexture("data/skybox/bottom.jpg");
-        ResourceManager.getInst().deleteTexture("data/skybox/left.jpg");
-        ResourceManager.getInst().deleteTexture("data/skybox/right.jpg");
-        ResourceManager.getInst().deleteTexture("data/skybox/front.jpg");
-        ResourceManager.getInst().deleteTexture("data/skybox/back.jpg");
+        //ResourceManager.getInst().deleteTexture("data/skybox/top.jpg");
+        //ResourceManager.getInst().deleteTexture("data/skybox/bottom.jpg");
+        //ResourceManager.getInst().deleteTexture("data/skybox/left.jpg");
+        //ResourceManager.getInst().deleteTexture("data/skybox/right.jpg");
+        //ResourceManager.getInst().deleteTexture("data/skybox/front.jpg");
+        //ResourceManager.getInst().deleteTexture("data/skybox/back.jpg");
     }
 
     private void createNewAi() {
@@ -236,6 +264,7 @@ public class MainGameView implements GameView {
                         tankAis[i].isAlive = true;
                         tankAis[i].setDirection(Global.random.nextInt(CDirections.NUMBER_DIRECTION));
                         lastTanks--;
+                        currentTank++;
                         break;
                     }
                 }
@@ -243,11 +272,16 @@ public class MainGameView implements GameView {
 
         }
     }
+    //
+    // end initialize
+    //
+    //
+    // check game change
+    //
 
     private void checkGameOver() {
         if (numberOfLife <= 0) { //gameover
-            GameEngine.getInst().attach(new MenuView());
-            GameEngine.getInst().detach(this);
+            GameEngine.getInst().attach(new GameOverView(this));
 
         } else { // reset new life
 
@@ -275,8 +309,15 @@ public class MainGameView implements GameView {
         }
     }
 
+    private void checkLevelComplete() {
+        if (lastTanks <= 0 && currentTank <= 0) { //complete
+            this.isPause = true;
+            GameEngine.getInst().attach(new NextLevelView(this));
+        }
+    }
+
     //
-    // end initialize
+    // end check game change
     //
     //
     // check collision
@@ -335,6 +376,17 @@ public class MainGameView implements GameView {
                             //set isdead
                             tankAi.isAlive = false;
                             bullet.isAlive = false;
+                            currentTank--;
+
+                            //particle
+                            tankAi.explode();
+                            
+                            //Global.score
+                            Global.score += SCORE_DELTA;
+
+                            //check Global.level complete
+                            this.checkLevelComplete();
+
                             break;
                         }
                     }
@@ -347,6 +399,10 @@ public class MainGameView implements GameView {
                                 //set is dead
                                 aiBullet.isAlive = false;
                                 bullet.isAlive = false;
+                                
+                                //particle
+                                bullet.explode();
+                                
                                 break;
                             }
                         }
@@ -372,7 +428,10 @@ public class MainGameView implements GameView {
                         //set dead
                         aiBullet.isAlive = false;
                         playerTank.isAlive = false;
-
+                        
+                        //particle
+                        playerTank.explode();
+                        
                         //reset player or game over
                         this.checkGameOver();
                     }
@@ -385,6 +444,10 @@ public class MainGameView implements GameView {
     // end check collision
     //
     public void update(long dt) {
+        if (isPause) {
+            return;
+        }
+
         handleInput();
 
         //check bullet collisiotn
@@ -414,6 +477,7 @@ public class MainGameView implements GameView {
     }
 
     public void display() {
+        //
         GL gl = Global.drawable.getGL();
         GLU glu = new GLU();
         gl.glLoadIdentity();
@@ -448,34 +512,19 @@ public class MainGameView implements GameView {
         //map
         TankMap.getInst().Render();
 
+        Global.drawCube(ttBoss, bossPosition.x, bossPosition.y, bossPosition.z, Tank.TANK_WIDTH, Tank.TANK_WIDTH, Tank.TANK_HEIGHT);
+
         //particle
         ParticalManager.getInstance().Draw(gl, 0);
 
-        //camera
-        gl.glPushMatrix();
-        {
-            // Always keep the character in the view
-            gl.glTranslatef(camera.mView.x, 0.0f, camera.mView.z);
-            float dx = camera.mView.x - camera.mPos.x;
-            float dz = camera.mView.z - camera.mPos.z;
-            float angle = (float) Math.atan(dz / dx);
-            angle = 180 * angle / 3.141592654f;
-            int angle2 = (int) angle;
-            angle2 %= 360;
-            if (dx < 0) {
-                angle2 = (int) (angle - 180);
-            }
-            gl.glRotatef(-angle2, 0, 1, 0);
-
-            //draw tank
-            gl.glRotatef(-90, 0, 0, 1);
-            gl.glRotatef(-90, 0, 1, 0);
-            //md2Tank.SetScale(0.005f);
-            //md2Tank.DrawModel(gl, 0);
-        }
-
-        gl.glPopMatrix();
-
         gl.glDisable(GL.GL_LIGHTING);
+
+        //draw info
+        float scale = 0.7f;
+        writer.Render("LEVEL  " + Global.level, pLevel.x, pLevel.y, scale, scale, 1, 1, 1);
+        writer.Render("AI    " + lastTanks, pAI.x, pAI.y, scale, scale, 1, 1, 1);
+        writer.Render("LIFE " + numberOfLife, pLife.x, pLife.y, scale, scale, 1, 1, 1);
+        writer.Render("SCORE  ", pScore.x, pScore.y, scale, scale, 1, 1, 1);
+        writer.Render("" + Global.score, pScoreValue.x, pScoreValue.y, scale, scale, 1, 1, 1);
     }
 }

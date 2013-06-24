@@ -7,6 +7,10 @@ package myjogl.gameobjects;
 import myjogl.particles.ParticalManager;
 import javax.media.opengl.GL;
 import myjogl.Global;
+import myjogl.particles.Debris;
+import myjogl.particles.Explo;
+import myjogl.particles.Explo1;
+import myjogl.particles.RoundSparks;
 import myjogl.utils.TankMap;
 import myjogl.utils.Vector3;
 
@@ -36,6 +40,20 @@ public class TankBullet {
     }
 
     public void load() {
+        //
+        Vector3 a = getPosition().Clone();
+        float scale = 0.1f;
+        Explo shootParticle = new Explo(a, 0.1f, scale);
+        shootParticle.LoadingTexture();
+
+        Explo1 shootParticle2 = new Explo1(a, 0.1f, scale);
+        shootParticle2.LoadingTexture();
+
+        RoundSparks shootParticle3 = new RoundSparks(a, 0.1f, scale);
+        shootParticle3.LoadingTexture();
+
+        Debris shootParticle4 = new Debris(a, 0.1f, scale);
+        shootParticle4.LoadingTexture();
     }
 
     /**
@@ -50,6 +68,27 @@ public class TankBullet {
         isAlive = true;
     }
 
+    public void explode() {
+        Vector3 a = getPosition().Clone();
+        float scale = 0.03f;
+        float time = 0.3f;
+        Explo shootParticle = new Explo(a,time, scale);
+        shootParticle.LoadingTexture();
+        ParticalManager.getInstance().Add(shootParticle);
+
+        Explo1 shootParticle2 = new Explo1(a, time, scale);
+        shootParticle2.LoadingTexture();
+        ParticalManager.getInstance().Add(shootParticle2);
+
+        RoundSparks shootParticle3 = new RoundSparks(a, time, scale);
+        shootParticle3.LoadingTexture();
+        ParticalManager.getInstance().Add(shootParticle3);
+
+        Debris shootParticle4 = new Debris(a, time, scale);
+        shootParticle4.LoadingTexture();
+        ParticalManager.getInstance().Add(shootParticle4);
+    }
+
     /**
      * Update position use: velocity + direction
      */
@@ -62,6 +101,7 @@ public class TankBullet {
                     if (position.z <= 0) {
                         position.z = 0;
                         isAlive = false;
+                        this.explode();
                     }
                     break;
 
@@ -70,6 +110,7 @@ public class TankBullet {
                     if (position.z > TankMap.getInst().height - BULLET_HEIGHT) {
                         position.z = TankMap.getInst().height - BULLET_HEIGHT;
                         isAlive = false;
+                        this.explode();
                     }
                     break;
 
@@ -78,6 +119,7 @@ public class TankBullet {
                     if (position.x <= 0) {
                         position.x = 0;
                         isAlive = false;
+                        this.explode();
                     }
                     break;
 
@@ -86,6 +128,7 @@ public class TankBullet {
                     if (position.x > TankMap.getInst().width - BULLET_WIDTH) {
                         position.x = TankMap.getInst().width - BULLET_WIDTH;
                         isAlive = false;
+                        this.explode();
                     }
                     break;
             }
@@ -100,6 +143,7 @@ public class TankBullet {
                 }
 
                 isAlive = false;
+                this.explode();
             }
         }
     }

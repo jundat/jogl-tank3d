@@ -103,7 +103,7 @@ public class Tank3D implements GLEventListener {
         this.loadResource(drawable);
         
         GameEngine engine = GameEngine.getInst();
-        engine.init(this);
+        engine.loadResource(drawable);
     }
 
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {

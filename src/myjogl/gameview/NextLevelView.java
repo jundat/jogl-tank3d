@@ -19,18 +19,19 @@ import myjogl.utils.Writer;
  *
  * @author Jundat
  */
-public class GameOverView implements GameView {
+public class NextLevelView implements GameView {
 
     Point pBg = new Point(230, 132);
-    Point pGame = new Point(230 + 291, 132 + 252);
-    Point pOver = new Point(230 + 300, 132 + 165);
+    Point pLevel = new Point(230 + 291, 132 + 252);
+    Point pComplete = new Point(230 + 225, 132 + 165);
     Rectangle rectMenu = new Rectangle(230 + 44, 132 + 5, 202, 54);
-    Rectangle rectRetry = new Rectangle(230 + 316, 132 + 5, 202, 54);
+    Rectangle rectNext = new Rectangle(230 + 316, 132 + 5, 202, 54);
     MainGameView mainGameView;
     Texture ttBg;
 
-    public GameOverView(MainGameView mainGameView) {
+    public NextLevelView(MainGameView mainGameView) {
         this.mainGameView = mainGameView;
+        this.mainGameView.isPause = true;
     }
 
     public void keyPressed(KeyEvent e) {
@@ -50,8 +51,9 @@ public class GameOverView implements GameView {
             GameEngine.getInst().attach(new MenuView());
             GameEngine.getInst().detach(mainGameView);
             GameEngine.getInst().detach(this);
-        } else if(rectRetry.contains(e.getX(), e.getY())) {
-            mainGameView.loadLevel(Global.level);
+        } else if (rectNext.contains(e.getX(), e.getY())) {
+            mainGameView.isPause = false;
+            mainGameView.loadLevel(Global.level + 1);
             GameEngine.getInst().detach(this);
         }
     }
@@ -71,9 +73,9 @@ public class GameOverView implements GameView {
 
     public void display() {
         Renderer.Render(ttBg, pBg.x, pBg.y);
-        GameEngine.writer.Render("GAME", pGame.x, pGame.y, 0.9f, 0.9f);
-        GameEngine.writer.Render("OVER", pOver.x, pOver.y, 0.9f, 0.9f);
+        GameEngine.writer.Render("LEVEL", pLevel.x, pLevel.y, 0.9f, 0.9f);
+        GameEngine.writer.Render("COMPLETE", pComplete.x, pComplete.y, 0.9f, 0.9f);
         GameEngine.writer.Render("MENU", rectMenu.x + 18, rectMenu.y + 5, 0.85f, 0.85f);
-        GameEngine.writer.Render("RETRY", rectRetry.x + 6, rectRetry.y + 5, 0.85f, 0.85f);
+        GameEngine.writer.Render("NEXT", rectNext.x + 24, rectNext.y + 5, 0.85f, 0.85f);
     }
 }

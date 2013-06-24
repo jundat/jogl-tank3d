@@ -10,10 +10,18 @@ import java.awt.Font;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import myjogl.GameEngine;
 import myjogl.GameEngine;
+import myjogl.Global;
 import myjogl.utils.Renderer;
 import myjogl.utils.ResourceManager;
 import myjogl.utils.Writer;
@@ -108,6 +116,8 @@ public class MenuView implements GameView {
         itPlay.SetPosition(pPlay);
         itAbout.SetPosition(pAbout);
         itExit.SetPosition(pExit);
+
+        Writer writer = new Writer("data/font/Motorwerk_80.fnt");        
     }
 
     public void unload() {
