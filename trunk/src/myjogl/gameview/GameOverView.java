@@ -31,6 +31,7 @@ public class GameOverView implements GameView {
 
     public GameOverView(MainGameView mainGameView) {
         this.mainGameView = mainGameView;
+        mainGameView.isPause = true;
     }
 
     public void keyPressed(KeyEvent e) {
@@ -51,6 +52,7 @@ public class GameOverView implements GameView {
             GameEngine.getInst().detach(mainGameView);
             GameEngine.getInst().detach(this);
         } else if(rectRetry.contains(e.getX(), e.getY())) {
+            mainGameView.isPause = false;
             mainGameView.loadLevel(Global.level);
             GameEngine.getInst().detach(this);
         }

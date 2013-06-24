@@ -11,6 +11,8 @@ import myjogl.particles.Debris;
 import myjogl.particles.Explo;
 import myjogl.particles.Explo1;
 import myjogl.particles.RoundSparks;
+import myjogl.utils.GLModel;
+import myjogl.utils.ModelLoaderOBJ;
 import myjogl.utils.TankMap;
 import myjogl.utils.Vector3;
 
@@ -94,14 +96,14 @@ public class TankBullet {
      */
     public void update(long dt) {
         if (this.isAlive) {
-            Vector3 lastPos = new Vector3(position);
+            Vector3 lastPos = position.Clone();
             switch (direction) {
                 case CDirections.UP:
                     position.z -= BULLET_VELOCITY;
                     if (position.z <= 0) {
                         position.z = 0;
-                        isAlive = false;
                         this.explode();
+                        isAlive = false;
                     }
                     break;
 
@@ -109,8 +111,8 @@ public class TankBullet {
                     position.z += BULLET_VELOCITY;
                     if (position.z > TankMap.getInst().height - BULLET_HEIGHT) {
                         position.z = TankMap.getInst().height - BULLET_HEIGHT;
-                        isAlive = false;
                         this.explode();
+                        isAlive = false;
                     }
                     break;
 
@@ -118,8 +120,8 @@ public class TankBullet {
                     position.x -= BULLET_VELOCITY;
                     if (position.x <= 0) {
                         position.x = 0;
-                        isAlive = false;
                         this.explode();
+                        isAlive = false;
                     }
                     break;
 
@@ -127,8 +129,8 @@ public class TankBullet {
                     position.x += BULLET_VELOCITY;
                     if (position.x > TankMap.getInst().width - BULLET_WIDTH) {
                         position.x = TankMap.getInst().width - BULLET_WIDTH;
-                        isAlive = false;
                         this.explode();
+                        isAlive = false;
                     }
                     break;
             }
@@ -142,8 +144,8 @@ public class TankBullet {
                     }
                 }
 
-                isAlive = false;
                 this.explode();
+                isAlive = false;
             }
         }
     }
@@ -167,7 +169,9 @@ public class TankBullet {
         }
     }
 
+    //
     //get and set
+    //
     public CRectangle getBound() {
         CRectangle rect = new CRectangle();
         rect.x = position.x;
