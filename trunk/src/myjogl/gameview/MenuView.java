@@ -24,6 +24,7 @@ import myjogl.GameEngine;
 import myjogl.Global;
 import myjogl.utils.Renderer;
 import myjogl.utils.ResourceManager;
+import myjogl.utils.Sound;
 import myjogl.utils.Writer;
 
 /**
@@ -32,16 +33,20 @@ import myjogl.utils.Writer;
  */
 public class MenuView implements GameView {
 
-    Point pExit = new Point(20, 20);
-    Point pAbout = new Point(20, 120);
-    Point pPlay = new Point(20, 220);
+    Point pExit = new Point(712, 640 - 590);
+    Point pAbout = new Point(81, 640 - 590);
+    Point pPlay = new Point(382, 640 - 611);
+    Point pTop = new Point(0, 640 - 223);
+    Point pBottom = new Point(0, 0);
     //
     private MenuItem itPlay;
     private MenuItem itAbout;
     private MenuItem itExit;
-    private int currentMenu;
     //
     Texture ttBgMenu;
+    Texture ttTop;
+    Texture ttBottom;
+    //
 
     public MenuView() {
         System.out.println("Go to menu view-------------------------------------");
@@ -71,37 +76,72 @@ public class MenuView implements GameView {
     }
 
     public void pointerMoved(MouseEvent e) {
+        if (itPlay.contains(e.getX(), e.getY())) {
+            if (itPlay.isOver == false) {
+                GameEngine.sMouseMove.play(false);
+                itPlay.setIsOver(true);
+            }
+        } else {
+            itPlay.setIsOver(false);
+        }
+
+        if (itAbout.contains(e.getX(), e.getY())) {
+            if (itAbout.isOver == false) {
+                GameEngine.sMouseMove.play(false);
+                itAbout.setIsOver(true);
+            }
+        } else {
+            itAbout.setIsOver(false);
+        }
+
+        if (itExit.contains(e.getX(), e.getY())) {
+            if (itExit.isOver == false) {
+                GameEngine.sMouseMove.play(false);
+                itExit.setIsOver(true);
+            }
+        } else {
+            itExit.setIsOver(false);
+        }
     }
 
     public void pointerReleased(MouseEvent e) {
         if (itPlay.contains(e.getX(), e.getY())) {
             itPlay.setIsClick(false);
             gotoMainGame();
+
+            //sound
+            GameEngine.sClick.play();
         }
 
         if (itAbout.contains(e.getX(), e.getY())) {
             itAbout.setIsClick(false);
-
             GameEngine.getInst().attach(new AboutView());
             GameEngine.getInst().detach(this);
+
+            //sound
+            GameEngine.sClick.play();
         }
 
         if (itExit.contains(e.getX(), e.getY())) {
             itExit.setIsClick(false);
-
             GameEngine.getInst().exit();
+
+            //sound
+            GameEngine.sClick.play();
         }
     }
 
     public void load() {
         ttBgMenu = ResourceManager.getInst().getTexture("data/menu/bg_menu.png");
+        ttTop = ResourceManager.getInst().getTexture("data/menu/top.png");
+        ttBottom = ResourceManager.getInst().getTexture("data/menu/bottom.png");
 
-        itPlay = new MenuItem(ResourceManager.getInst().getTexture("data/menu/btn_play.png"),
+        itPlay = new MenuItem(null,
                 ResourceManager.getInst().getTexture("data/menu/btn_play_press.png"));
-        itAbout = new MenuItem(ResourceManager.getInst().getTexture("data/menu/btn_about.png"),
-                ResourceManager.getInst().getTexture("data/menu/btn_about_press.png"));
-        itExit = new MenuItem(ResourceManager.getInst().getTexture("data/menu/btn_exit.png"),
-                ResourceManager.getInst().getTexture("data/menu/btn_exit_press.png"));
+        itAbout = new MenuItem(ResourceManager.getInst().getTexture("data/menu/btn.png"),
+                ResourceManager.getInst().getTexture("data/menu/btn_press.png"));
+        itExit = new MenuItem(ResourceManager.getInst().getTexture("data/menu/btn.png"),
+                ResourceManager.getInst().getTexture("data/menu/btn_press.png"));
 
         itPlay.SetPosition(pPlay);
         itAbout.SetPosition(pAbout);
@@ -137,8 +177,17 @@ public class MenuView implements GameView {
     public void display() {
         Renderer.Render(ttBgMenu, 0, 0);
 
+        //background
+        Renderer.Render(ttTop, pTop.x, pTop.y);
+        Renderer.Render(ttBottom, pBottom.x, pBottom.y);
+
         itPlay.Render();
         itAbout.Render();
         itExit.Render();
+
+        //text
+        GameEngine.writer.Render("ABOUT", pAbout.x + 18, pAbout.y + 12, 0.85f, 0.85f, 1.0f, 1.0f, 1.0f);
+        GameEngine.writer.Render("PLAY", pPlay.x + 24, pPlay.y + 42, 1.2f, 1.2f, 1.0f, 1.0f, 1.0f);
+        GameEngine.writer.Render("EXIT", pExit.x + 46, pExit.y + 12, 0.85f, 0.85f, 1.0f, 1.0f, 1.0f);
     }
 }

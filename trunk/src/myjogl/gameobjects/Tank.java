@@ -6,6 +6,7 @@ package myjogl.gameobjects;
 
 import com.sun.opengl.util.texture.Texture;
 import javax.media.opengl.GL;
+import myjogl.GameEngine;
 import myjogl.Global;
 import myjogl.particles.Debris;
 import myjogl.particles.Explo;
@@ -20,6 +21,7 @@ import myjogl.utils.ResourceManager;
 
 public class Tank {
 
+    public final static float TANK_FIRE_TIME = 400; //millisecond between 2 fire time
     public final static float TANK_VELOCITY = 0.25f; //do not change it
     public final static float TANK_WIDTH = 2;
     public final static float TANK_HEIGHT = 2;
@@ -32,6 +34,7 @@ public class Tank {
     //
     public TankBullet bullets[];
     protected Texture texture;
+    protected long fireTime = 0;
 
     //
     //init
@@ -72,7 +75,7 @@ public class Tank {
         //
         texture = ResourceManager.getInst().getTexture("data/game/tank.png");
         //
-        
+
         Vector3 a = getPosition().Clone();
         float scale = 0.1f;
         Explo shootParticle = new Explo(a, 0.1f, scale);
@@ -156,21 +159,31 @@ public class Tank {
     /**
      * Fire when a key is press Reset bullet position and isAlive
      */
-    public void fire() {
-        Vector3 bpos = new Vector3(position);
-        bpos.x += TANK_WIDTH / 2 - TankBullet.BULLET_WIDTH / 2;
-        bpos.y = 2;
-        bpos.z += TANK_HEIGHT / 2 - TankBullet.BULLET_HEIGHT / 2;
+    public boolean fire() {
+        if (System.currentTimeMillis() - fireTime >= TANK_FIRE_TIME) {
+            fireTime = System.currentTimeMillis();
 
-        for (int i = 0; i < TANK_NUMBER_BULLETS; i++) {
-            if (bullets[i].isAlive == false) {
-                bullets[i].reset(bpos, getDirection());
-                break;
+            Vector3 bpos = new Vector3(position);
+            bpos.x += TANK_WIDTH / 2 - TankBullet.BULLET_WIDTH / 2;
+            bpos.y = 2;
+            bpos.z += TANK_HEIGHT / 2 - TankBullet.BULLET_HEIGHT / 2;
+
+            for (int i = 0; i < TANK_NUMBER_BULLETS; i++) {
+                if (bullets[i].isAlive == false) {
+                    bullets[i].reset(bpos, getDirection());
+                    break;
+                }
             }
+            
+            return true;
         }
+        
+        return false;
     }
 
     public void explode() {
+        GameEngine.sExplode.play(false);
+
         Vector3 a = getPosition().Clone();
         float scale = 0.1f;
         float time = 0.4f;

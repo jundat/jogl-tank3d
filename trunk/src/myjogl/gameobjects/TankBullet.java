@@ -4,6 +4,7 @@
  */
 package myjogl.gameobjects;
 
+import com.sun.opengl.util.texture.Texture;
 import myjogl.particles.ParticalManager;
 import javax.media.opengl.GL;
 import myjogl.Global;
@@ -15,6 +16,7 @@ import myjogl.utils.GLModel;
 import myjogl.utils.ModelLoaderOBJ;
 import myjogl.utils.TankMap;
 import myjogl.utils.Vector3;
+import myjogl.utils.ResourceManager;
 
 /**
  *
@@ -28,6 +30,7 @@ public class TankBullet {
     public boolean isAlive;
     private Vector3 position;
     private int direction;
+    private Texture tt;
 
     public TankBullet() {
         position = new Vector3(0, 0, 0);
@@ -42,6 +45,8 @@ public class TankBullet {
     }
 
     public void load() {
+        tt = ResourceManager.getInst().getTexture("data/game/bullet.png");
+
         //
         Vector3 a = getPosition().Clone();
         float scale = 0.1f;
@@ -74,7 +79,7 @@ public class TankBullet {
         Vector3 a = getPosition().Clone();
         float scale = 0.03f;
         float time = 0.3f;
-        Explo shootParticle = new Explo(a,time, scale);
+        Explo shootParticle = new Explo(a, time, scale);
         shootParticle.LoadingTexture();
         ParticalManager.getInstance().Add(shootParticle);
 
@@ -158,14 +163,30 @@ public class TankBullet {
             GL gl = Global.drawable.getGL();
             gl.glColor4f(1, 1, 1, 1);
 
+            tt.enable();
+            tt.bind();
+
+            gl.glEnable(GL.GL_BLEND);
+            gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+
             gl.glBegin(GL.GL_QUADS);
             {
+                gl.glTexCoord2f(0, 0);
                 gl.glVertex3f(position.x, Tank.TANK_WIDTH / 2, position.z);
+
+                gl.glTexCoord2f(1, 0);
                 gl.glVertex3f(position.x + BULLET_WIDTH, Tank.TANK_WIDTH / 2, position.z);
+
+                gl.glTexCoord2f(1, 1);
                 gl.glVertex3f(position.x + BULLET_WIDTH, Tank.TANK_WIDTH / 2, position.z + BULLET_HEIGHT);
+
+                gl.glTexCoord2f(0, 1);
                 gl.glVertex3f(position.x, Tank.TANK_WIDTH / 2, position.z + BULLET_HEIGHT);
             }
             gl.glEnd();
+            tt.disable();
+            
+            gl.glDisable(GL.GL_BLEND);
         }
     }
 

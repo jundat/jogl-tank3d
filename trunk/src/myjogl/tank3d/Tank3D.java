@@ -23,6 +23,9 @@ import myjogl.utils.ResourceManager;
  */
 public class Tank3D implements GLEventListener {
 
+    public static int EXTRA_WND_WIDTH = 6;
+    public static int EXTRA_WND_HEIGHT = 36;
+    
     public String name = "Tank 3D";
     public Frame frame;
     public GLCanvas canvas;
@@ -39,7 +42,7 @@ public class Tank3D implements GLEventListener {
             fullscreen = new FullscreenSetting();
             Global.wndWidth = fullscreen.getWidth();
             Global.wndHeight = fullscreen.getHeight();
-            frame.setSize(Global.wndWidth, Global.wndHeight);
+            frame.setSize(Global.wndWidth + EXTRA_WND_WIDTH, Global.wndHeight + EXTRA_WND_HEIGHT);
             fullscreen.init(frame);
             frame.setFocusable(true);
             frame.setLayout(new BorderLayout());
@@ -47,7 +50,7 @@ public class Tank3D implements GLEventListener {
         //---------------------
 
         if (!Global.isFullScreen) {
-            frame.setSize(Global.wndWidth, Global.wndHeight);
+            frame.setSize(Global.wndWidth + EXTRA_WND_WIDTH, Global.wndHeight + EXTRA_WND_HEIGHT);
         }
 
         canvas = new GLCanvas();

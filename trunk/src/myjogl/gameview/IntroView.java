@@ -25,7 +25,7 @@ public class IntroView implements GameView {
 
     float scaleWind = Global.wndWidth / 800.0f;
     float scaleLogo = 0.9951f;
-    Sound s;
+    Sound sound;
     float x = 0, y = 0;
     float w, h;
     float xl, yl, wl, hl;
@@ -42,13 +42,13 @@ public class IntroView implements GameView {
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
             //System.out.println("CounterLight: " + counterLight);
-            System.out.println("Sound Frame: " + s.clip.getFramePosition());
-            System.out.println("Sound Microsecond: " + s.clip.getMicrosecondPosition());
+            System.out.println("Sound Frame: " + sound.clip.getFramePosition());
+            System.out.println("Sound Microsecond: " + sound.clip.getMicrosecondPosition());
         }
     }
 
     public void keyReleased(KeyEvent e) {
-        if (s.clip.getMicrosecondPosition() >= endLight1) {
+        if (sound.clip.getMicrosecondPosition() >= endLight1) {
             GameEngine.getInst().attach(new MenuView());
             GameEngine.getInst().detach(this);
         }
@@ -77,24 +77,24 @@ public class IntroView implements GameView {
         x = (Global.wndWidth - w) / 2;
         y = (Global.wndHeight - h) / 2;
 
-        s = ResourceManager.getInst().getSound("sound/intro.wav", false);
-        s.play();
+        sound = ResourceManager.getInst().getSound("sound/intro.wav", false);
+        sound.play();
     }
 
     public void unload() {
         ResourceManager.getInst().deleteTexture("data/intro/light.png");
         ResourceManager.getInst().deleteTexture("data/intro/logo.png");
-        ResourceManager.getInst().deleteSound(s);
+        ResourceManager.getInst().deleteSound(sound);
     }
 
     public void update(long elapsedTime) {
         //light
-        if (s.clip.getMicrosecondPosition() >= startLight && s.clip.getMicrosecondPosition() <= endLight1) {
+        if (sound.clip.getMicrosecondPosition() >= startLight && sound.clip.getMicrosecondPosition() <= endLight1) {
             wl += 30.0f * scaleWind;
             hl += 2.0f * scaleWind;
             xl = (Global.wndWidth - wl) / 2;
             yl = (Global.wndHeight - hl) / 2;
-        } else if (s.clip.getMicrosecondPosition() > endLight1 && s.clip.getMicrosecondPosition() <= endLight2) {
+        } else if (sound.clip.getMicrosecondPosition() > endLight1 && sound.clip.getMicrosecondPosition() <= endLight2) {
             wl -= 330.0f * scaleWind;
             hl -= 20.0f * scaleWind;
             xl = (Global.wndWidth - wl) / 2;
@@ -115,13 +115,13 @@ public class IntroView implements GameView {
 
     public void display() {
         //&& s.clip.getMicrosecondPosition() <= endLight
-        if (s.clip.getMicrosecondPosition() >= startLight && s.clip.getMicrosecondPosition() <= endLight2) {
+        if (sound.clip.getMicrosecondPosition() >= startLight && sound.clip.getMicrosecondPosition() <= endLight2) {
             Renderer.Render(ttLight, xl, yl, wl, hl);
         }
 
         Renderer.Render(ttLogo, x, y, w, h);
 
-        if (s.clip.getMicrosecondPosition() >= endLight1) {
+        if (sound.clip.getMicrosecondPosition() >= endLight1) {
             Writer.Render("...press anykey to continue...",
                     "Nyala", 24, 1010, 32, Color.GRAY);
         }
