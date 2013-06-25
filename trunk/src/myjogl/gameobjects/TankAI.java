@@ -5,6 +5,7 @@
 package myjogl.gameobjects;
 
 import java.util.Random;
+import myjogl.Global;
 import myjogl.utils.*;
 
 /**
@@ -44,6 +45,8 @@ public class TankAI extends Tank {
     public void load() {
         super.load();
         texture = ResourceManager.getInst().getTexture("data/game/tankAi.png");
+        model = ModelLoaderOBJ.LoadModel("data/model/HK-Tank.obj",
+                "data/model/HK-Tank.mtl", "data/model/t0026_0_AI.png", Global.drawable);
     }
 
     public void randomNewDirection() {
