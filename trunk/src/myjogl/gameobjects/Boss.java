@@ -29,7 +29,19 @@ public class Boss {
     //
     private Texture tt;
 
+    public Boss() {
+        position = new Vector3();
+        direction = CDirections.UP;
+        isAlive = true;
+    }
+
     public Boss(Vector3 pos, int dir) {
+        position = pos.Clone();
+        direction = dir;
+        isAlive = true;
+    }
+
+    public void reset(Vector3 pos, int dir) {
         position = pos.Clone();
         direction = dir;
         isAlive = true;

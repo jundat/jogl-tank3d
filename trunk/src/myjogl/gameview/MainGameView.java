@@ -50,7 +50,7 @@ public class MainGameView implements GameView {
     //
     Point pLevel = new Point(5, 610);
     Point pAI = new Point(5, 570);
-    Point pLife = new Point(5,530);
+    Point pLife = new Point(5, 530);
     //
     Point pScore = new Point(820, 610);
     Point pScoreValue = new Point(838, 570);
@@ -60,7 +60,6 @@ public class MainGameView implements GameView {
     public Sound sBackground;
     //
     private boolean isGameOver;
-    
 
     public MainGameView() {
         super();
@@ -87,15 +86,15 @@ public class MainGameView implements GameView {
                     GameEngine.sFire.clone().play();
                 }
             }
+        } else if (e.getKeyCode() == KeyEvent.VK_A) {
+            TestParticle();
+        } else if (e.getKeyCode() == KeyEvent.VK_T) {
+            bTest = !bTest;
+        } else if (e.getKeyCode() == KeyEvent.VK_Z) {
+            cameraFo.r += 2;
+        } else if (e.getKeyCode() == KeyEvent.VK_X) {
+            cameraFo.r -= 2;
         }
-        else if (e.getKeyCode() == KeyEvent.VK_A)
-                TestParticle();
-        else if (e.getKeyCode() == KeyEvent.VK_T)
-                bTest = !bTest;
-        else if (e.getKeyCode() == KeyEvent.VK_Z)
-                cameraFo.r += 2;
-        else if (e.getKeyCode() == KeyEvent.VK_X)
-                cameraFo.r -= 2;
     }
 
     public void keyReleased(KeyEvent e) {
@@ -202,23 +201,20 @@ public class MainGameView implements GameView {
 
             //boss
             this.bossPosition = TankMap.getInst().bossPosition.Clone();
-            boss = new Boss(TankMap.getInst().bossPosition, CDirections.UP);
-            boss.load();
+            this.boss.reset(bossPosition, CDirections.UP);
 
             //player
             int size = TankMap.getInst().listTankPosition.size();
             int choose = Global.random.nextInt(size);
             Vector3 v = ((Vector3) TankMap.getInst().listTankPosition.get(choose)).Clone();
-            playerTank = new Tank(v, CDirections.UP);
-            playerTank.load();
+            playerTank.reset(v, CDirections.UP);
+
             numberOfLife = NUMBER_OF_LIEF;
 
             lastTanks = 20; //so tank chua ra
             currentTank = 0; //so tank dang online
-            tankAis = new TankAI[MAX_CURRENT_AI];
+
             for (int i = 0; i < MAX_CURRENT_AI; i++) {
-                tankAis[i] = new TankAI();
-                tankAis[i].load();
                 tankAis[i].isAlive = false;
             }
             
@@ -255,7 +251,25 @@ public class MainGameView implements GameView {
         sBackground.stop();
         sBackground.play();
         cameraFo = new CameraFo(20, 0, 20, Math.toRadians(90), Math.toRadians(0), 10, 0, 1, 0);
-        
+
+        //----------------
+
+        //
+        boss = new Boss();
+        boss.load();
+
+        //
+        playerTank = new Tank();
+        playerTank.load();
+
+        //
+        this.tankAis = new TankAI[MAX_CURRENT_AI];
+        for (int i = 0; i < MAX_CURRENT_AI; i++) {
+            tankAis[i] = new TankAI();
+            tankAis[i].load();
+            tankAis[i].isAlive = false;
+        }
+
         //init map
         this.loadLevel(Global.level); //start at Global.level 0
     }
@@ -264,7 +278,7 @@ public class MainGameView implements GameView {
         GameEngine.getInst().tank3d.frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
         //pre-load main game
-        
+
         //skybox
         //ResourceManager.getInst().deleteTexture("data/skybox/top.jpg");
         //ResourceManager.getInst().deleteTexture("data/skybox/bottom.jpg");
@@ -512,16 +526,14 @@ public class MainGameView implements GameView {
     //
     // end check collision
     //
-    
-    private void TestParticle()
-    {
+    private void TestParticle() {
         Vector3 a = new Vector3(40, 0, 20);
         float scale = 0.3f;
         float time = 0.3f;
         Explo shootParticle = new Explo(a, time, scale);
         shootParticle.LoadingTexture();
         ParticalManager.getInstance().Add(shootParticle);
-        
+
         Vector3 a1 = new Vector3(0, 0, 20);
         float scale1 = 0.3f;
         float time1 = 0.3f;
@@ -529,12 +541,12 @@ public class MainGameView implements GameView {
         shootParticle1.LoadingTexture();
         ParticalManager.getInstance().Add(shootParticle1);
     }
-    
+
     public void update(long dt) {
         if (isPause) {
             return;
         }
-        
+
         cameraFo.Update();
 
         handleInput();
@@ -579,14 +591,15 @@ public class MainGameView implements GameView {
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
 
         gl.glEnable(GL.GL_MULTISAMPLE);
-        
-        if (bTest)
+
+        if (bTest) {
             glu.gluLookAt(cameraFo.x, cameraFo.y, cameraFo.z, cameraFo.lookAtX, cameraFo.lookAtY, cameraFo.lookAtZ, cameraFo.upX, cameraFo.upY, cameraFo.upZ);
-        else
+        } else {
             glu.gluLookAt(
-                camera.mPos.x, camera.mPos.y, camera.mPos.z,
-                camera.mView.x, camera.mView.y, camera.mView.z,
-                camera.mUp.x, camera.mUp.y, camera.mUp.z);
+                    camera.mPos.x, camera.mPos.y, camera.mPos.z,
+                    camera.mView.x, camera.mView.y, camera.mView.z,
+                    camera.mUp.x, camera.mUp.y, camera.mUp.z);
+        }
 
         // skybox origin should be same as camera position
         m_skybox.Render(camera.mPos.x, camera.mPos.y, camera.mPos.z);
