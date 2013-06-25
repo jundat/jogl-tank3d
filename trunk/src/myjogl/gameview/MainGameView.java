@@ -4,21 +4,15 @@
  */
 package myjogl.gameview;
 
-import com.sun.opengl.util.texture.Texture;
 import myjogl.particles.ParticalManager;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
 import myjogl.*;
 import myjogl.utils.*;
 import myjogl.gameobjects.*;
-import myjogl.particles.Debris;
-import myjogl.particles.Explo;
-import myjogl.particles.Explo1;
-import myjogl.particles.RoundSparks;
 
 /**
  *
@@ -27,7 +21,7 @@ import myjogl.particles.RoundSparks;
 public class MainGameView implements GameView {
 
     public final static int SCORE_DELTA = 10;
-    public final static int NUMBER_OF_LIEF = 3;
+    public final static int NUMBER_OF_LIEF = 0;
     public final static int MAX_CURRENT_AI = 4; //maximum current TankAI in 1 screen, at a moment
     //
     public boolean isPause;
@@ -48,12 +42,12 @@ public class MainGameView implements GameView {
     final float[] redLightColorSpecular = {6.0f, 6.0f, 6.0f, 1.0f}; //red
     final float[] redLightPos = {32.0f, 20.0f, 32.0f, 1.0f};
     //
-    Point pLevel = new Point(5, 570);
-    Point pAI = new Point(5, 530);
-    Point pLife = new Point(5, 490);
+    Point pLevel = new Point(5, 610);
+    Point pAI = new Point(5, 570);
+    Point pLife = new Point(5,530);
     //
-    Point pScore = new Point(820, 570);
-    Point pScoreValue = new Point(838, 530);
+    Point pScore = new Point(820, 610);
+    Point pScoreValue = new Point(838, 570);
     //
     Boss boss;
     //sound
@@ -482,7 +476,6 @@ public class MainGameView implements GameView {
         //check bullet collisiotn
         this.checkBulletCollision();
 
-
         //tank
         playerTank.update(dt);
 
@@ -530,6 +523,9 @@ public class MainGameView implements GameView {
         // skybox origin should be same as camera position
         m_skybox.Render(camera.mPos.x, camera.mPos.y, camera.mPos.z);
 
+        //map
+        TankMap.getInst().Render();
+
         //tank
         playerTank.draw();
 
@@ -537,9 +533,6 @@ public class MainGameView implements GameView {
         for (int i = 0; i < MAX_CURRENT_AI; i++) {
             tankAis[i].draw();
         }
-
-        //map
-        TankMap.getInst().Render();
 
         boss.draw();
 
@@ -551,9 +544,9 @@ public class MainGameView implements GameView {
         //draw info
         float scale = 0.7f;
         writer.Render("LEVEL  " + Global.level, pLevel.x, pLevel.y, scale, scale, 1, 1, 1);
-        writer.Render("AI    " + lastTanks, pAI.x, pAI.y, scale, scale, 1, 1, 1);
+        writer.Render("AI  " + lastTanks, pAI.x, pAI.y, scale, scale, 1, 1, 1);
         writer.Render("LIFE " + numberOfLife, pLife.x, pLife.y, scale, scale, 1, 1, 1);
-        writer.Render("SCORE  ", pScore.x, pScore.y, scale, scale, 1, 1, 1);
+        writer.Render("SCORE", pScore.x, pScore.y, scale, scale, 1, 1, 1);
         writer.Render("" + Global.score, pScoreValue.x, pScoreValue.y, scale, scale, 1, 1, 1);
     }
 }

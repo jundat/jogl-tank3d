@@ -23,8 +23,8 @@ public class Tank {
 
     public final static float TANK_FIRE_TIME = 400; //millisecond between 2 fire time
     public final static float TANK_VELOCITY = 0.25f; //do not change it
-    public final static float TANK_WIDTH = 2;
-    public final static float TANK_HEIGHT = 2;
+    public final static float TANK_WIDTH = 2.75f;
+    public final static float TANK_HEIGHT = 2.75f;
     public final static int TANK_NUMBER_BULLETS = 10;
     //
     public boolean isAlive;

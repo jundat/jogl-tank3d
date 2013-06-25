@@ -38,6 +38,7 @@ public class MenuView implements GameView {
     Point pPlay = new Point(382, 640 - 611);
     Point pTop = new Point(0, 640 - 223);
     Point pBottom = new Point(0, 0);
+    Point pAboutBg = new Point(42, 640-514);
     //
     private MenuItem itPlay;
     private MenuItem itAbout;
@@ -46,8 +47,10 @@ public class MenuView implements GameView {
     Texture ttBgMenu;
     Texture ttTop;
     Texture ttBottom;
-    //
+    Texture ttAbout;
+    private boolean isAboutState = false;
 
+    //
     public MenuView() {
         System.out.println("Go to menu view-------------------------------------");
     }
@@ -115,9 +118,8 @@ public class MenuView implements GameView {
 
         if (itAbout.contains(e.getX(), e.getY())) {
             itAbout.setIsClick(false);
-            GameEngine.getInst().attach(new AboutView());
-            GameEngine.getInst().detach(this);
-
+            isAboutState = !isAboutState;
+            
             //sound
             GameEngine.sClick.play();
         }
@@ -135,6 +137,7 @@ public class MenuView implements GameView {
         ttBgMenu = ResourceManager.getInst().getTexture("data/menu/bg_menu.png");
         ttTop = ResourceManager.getInst().getTexture("data/menu/top.png");
         ttBottom = ResourceManager.getInst().getTexture("data/menu/bottom.png");
+        ttAbout = ResourceManager.getInst().getTexture("data/menu/bg_about.png");
 
         itPlay = new MenuItem(null,
                 ResourceManager.getInst().getTexture("data/menu/btn_play_press.png"));
@@ -177,6 +180,10 @@ public class MenuView implements GameView {
     public void display() {
         Renderer.Render(ttBgMenu, 0, 0);
 
+        if(isAboutState == true) {
+            Renderer.Render(ttAbout, pAboutBg.x, pAboutBg.y);
+        }
+        
         //background
         Renderer.Render(ttTop, pTop.x, pTop.y);
         Renderer.Render(ttBottom, pBottom.x, pBottom.y);
@@ -186,7 +193,12 @@ public class MenuView implements GameView {
         itExit.Render();
 
         //text
-        GameEngine.writer.Render("ABOUT", pAbout.x + 18, pAbout.y + 12, 0.85f, 0.85f, 1.0f, 1.0f, 1.0f);
+        if (isAboutState == false) {
+            GameEngine.writer.Render("ABOUT", pAbout.x + 16, pAbout.y + 12, 0.85f, 0.85f, 1.0f, 1.0f, 1.0f);
+        } else {
+            GameEngine.writer.Render("MENU", pAbout.x + 25, pAbout.y + 12, 0.85f, 0.85f, 1.0f, 1.0f, 1.0f);
+        }
+
         GameEngine.writer.Render("PLAY", pPlay.x + 24, pPlay.y + 42, 1.2f, 1.2f, 1.0f, 1.0f, 1.0f);
         GameEngine.writer.Render("EXIT", pExit.x + 46, pExit.y + 12, 0.85f, 0.85f, 1.0f, 1.0f, 1.0f);
     }
