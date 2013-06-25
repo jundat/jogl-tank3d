@@ -49,14 +49,16 @@ public class TankMap {
     private static Texture ttGachTuong = null;
     private static Texture ttGachTuong2 = null;
     private static Texture ttGachMen = null;
+    private static Texture ttRockTop = null;
+    private static Texture ttRockEdge = null;
     //
     final float[] redLightColor = {1.0f, 1.0f, 1.0f, 1.0f}; //red
     final float[] redLightPos = {0.0f, 0.0f, 0.0f, 1.0f};
     //
     private static TankMap instance = null;
-    
-    private int top;
-    private int listBox2;
+    private int listTop;
+    private int listBox;
+    private int listRock;
     //
 
     public static TankMap getInst() {
@@ -71,15 +73,17 @@ public class TankMap {
         ttGachTuong = ResourceManager.getInst().getTexture("data/game/gach_tuong.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
         ttGachTuong2 = ResourceManager.getInst().getTexture("data/game/gach_tuong2.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
         ttGachMen = ResourceManager.getInst().getTexture("data/game/gach_men.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
+        ttRockTop = ResourceManager.getInst().getTexture("data/game/rock_top.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
+        ttRockEdge = ResourceManager.getInst().getTexture("data/game/rock_edge.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
         //
         listTankPosition = new ArrayList();
         listTankAiPosition = new ArrayList();
-        
+
         // Init list
         GL gl = Global.drawable.getGL();
-        
-        top = gl.glGenLists(1);
-        gl.glNewList(top, GL.GL_COMPILE);
+
+        listTop = gl.glGenLists(1);
+        gl.glNewList(listTop, GL.GL_COMPILE);
         //TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH
         gl.glBegin(GL.GL_QUADS);        // Draw The Cube Using quads
         {
@@ -97,12 +101,88 @@ public class TankMap {
         gl.glEnd();
         gl.glEndList();
         ///
-        listBox2 = gl.glGenLists(1);
-        gl.glNewList(listBox2, GL.GL_COMPILE);
-        
+        listBox = gl.glGenLists(1);
+        gl.glNewList(listBox, GL.GL_COMPILE);
+
         gl.glBegin(GL.GL_QUADS);        // Draw The Cube Using quads
         {
             //top is in upper
+
+            gl.glNormal3f(0, -1, 0);
+            //glColor3f(1.0f,0.5f,0.0f);    // Color Orange
+            gl.glTexCoord2f(1, 1);
+            gl.glVertex3f(TILE_WIDTH, 0, TILE_WIDTH);    // Top Right Of The Quad (Bottom)
+            gl.glTexCoord2f(0.0f, 1);
+            gl.glVertex3f(0, 0, TILE_WIDTH);    // Top Left Of The Quad (Bottom)
+            gl.glTexCoord2f(0.0f, 0.0f);
+            gl.glVertex3f(0, 0, 0);    // Bottom Left Of The Quad (Bottom)
+            gl.glTexCoord2f(1, 0.0f);
+            gl.glVertex3f(TILE_WIDTH, 0, 0);    // Bottom Right Of The Quad (Bottom)
+
+            gl.glNormal3f(0, 0, 1);
+            //glColor3f(1.0f,0.0f,0.0f);    // Color Red    
+            gl.glTexCoord2f(1, 1);
+            gl.glVertex3f(TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);    // Top Right Of The Quad (Front)
+            gl.glTexCoord2f(0.0f, 1);
+            gl.glVertex3f(0, TILE_HEIGHT, TILE_WIDTH);    // Top Left Of The Quad (Front)
+            gl.glTexCoord2f(0.0f, 0.0f);
+            gl.glVertex3f(0, 0, TILE_WIDTH);    // Bottom Left Of The Quad (Front)
+            gl.glTexCoord2f(1, 0.0f);
+            gl.glVertex3f(TILE_WIDTH, 0, TILE_WIDTH);    // Bottom Right Of The Quad (Front)
+
+            gl.glNormal3f(0, 0, -1);
+            //glColor3f(1.0f,1.0f,0.0f);    // Color Yellow
+            gl.glTexCoord2f(1, 1);
+            gl.glVertex3f(TILE_WIDTH, 0, 0);    // Top Right Of The Quad (Back)
+            gl.glTexCoord2f(0.0f, 1);
+            gl.glVertex3f(0, 0, 0);    // Top Left Of The Quad (Back)
+            gl.glTexCoord2f(0.0f, 0.0f);
+            gl.glVertex3f(0, TILE_HEIGHT, 0);    // Bottom Left Of The Quad (Back)
+            gl.glTexCoord2f(1, 0.0f);
+            gl.glVertex3f(TILE_WIDTH, TILE_HEIGHT, 0);    // Bottom Right Of The Quad (Back)
+
+            gl.glNormal3f(-1, 0, 0);
+            //glColor3f(0.0f,0.0f,1.0f);    // Color Blue
+            gl.glTexCoord2f(1, 1);
+            gl.glVertex3f(0, TILE_HEIGHT, TILE_WIDTH);    // Top Right Of The Quad (Left)
+            gl.glTexCoord2f(0.0f, 1);
+            gl.glVertex3f(0, TILE_HEIGHT, 0);    // Top Left Of The Quad (Left)
+            gl.glTexCoord2f(0.0f, 0.0f);
+            gl.glVertex3f(0, 0, 0);    // Bottom Left Of The Quad (Left)
+            gl.glTexCoord2f(1, 0.0f);
+            gl.glVertex3f(0, 0, TILE_WIDTH);    // Bottom Right Of The Quad (Left)
+
+            gl.glNormal3f(1, 0, 0);
+            //glColor3f(1.0f,0.0f,1.0f);    // Color Violet
+            gl.glTexCoord2f(1, 1);
+            gl.glVertex3f(TILE_WIDTH, TILE_HEIGHT, 0);    // Top Right Of The Quad (Right)
+            gl.glTexCoord2f(0.0f, 1);
+            gl.glVertex3f(TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);    // Top Left Of The Quad (Right)
+            gl.glTexCoord2f(0.0f, 0.0f);
+            gl.glVertex3f(TILE_WIDTH, 0, TILE_WIDTH);    // Bottom Left Of The Quad (Right)
+            gl.glTexCoord2f(1, 0.0f);
+            gl.glVertex3f(TILE_WIDTH, 0, 0);    // Bottom Right Of The Quad (Right)
+        }
+        gl.glEnd();            // End Drawing The Cube
+        gl.glEndList();
+
+        // List Rock
+        listRock = gl.glGenLists(1);
+        gl.glNewList(listRock, GL.GL_COMPILE);
+
+        gl.glBegin(GL.GL_QUADS);        // Draw The Cube Using quads
+        {
+            //top is in upper
+            gl.glNormal3f(0, 1, 0);
+            //glColor3f(0.0f,1.0f,0.0f);    // Color Blue
+            gl.glTexCoord2f(1, 1);
+            gl.glVertex3f(TILE_WIDTH, TILE_HEIGHT, 0);    // Top Right Of The Quad (Top)
+            gl.glTexCoord2f(0.0f, 1);
+            gl.glVertex3f(0, TILE_HEIGHT, 0);    // Top Left Of The Quad (Top)
+            gl.glTexCoord2f(0.0f, 0.0f);
+            gl.glVertex3f(0, TILE_HEIGHT, TILE_WIDTH);    // Bottom Left Of The Quad (Top)
+            gl.glTexCoord2f(1, 0.0f);
+            gl.glVertex3f(TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);    // Bottom Right Of The Quad (Top)
 
             gl.glNormal3f(0, -1, 0);
             //glColor3f(1.0f,0.5f,0.0f);    // Color Orange
@@ -235,6 +315,9 @@ public class TankMap {
                 if (blue == ID.BRICK) {
                     this.drawCube(j * TILE_WIDTH, 0, i * TILE_WIDTH,
                             TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+                } else if (blue == ID.ROCK) {
+                    this.drawRock(j * TILE_WIDTH, 0, i * TILE_WIDTH,
+                            TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
                 }
             }
         }
@@ -249,7 +332,7 @@ public class TankMap {
         for (int i = y; i < b; i++) {
             for (int j = x; j < r; j++) {
                 if (j >= 0 && j < width && i >= 0 && i < height) {
-                    if (board[i][j] == ID.BRICK) {
+                    if (board[i][j] == ID.BRICK || board[i][j] == ID.ROCK) {
                         return true;
                     }
                 }
@@ -266,7 +349,9 @@ public class TankMap {
      */
     public void delete(int z, int x) {
         if (x >= 0 && x < width && z >= 0 && z < height) {
-            board[z][x] = 0;
+            if (board[z][x] == ID.BRICK) {
+                board[z][x] = 0;
+            }
         }
     }
 
@@ -357,94 +442,40 @@ public class TankMap {
 
         ttGachTuong2.enable();
         ttGachTuong2.bind();
-//        gl.glBegin(GL.GL_QUADS);        // Draw The Cube Using quads
-//        {
-//            gl.glNormal3f(0, 1, 0);
-//            //glColor3f(0.0f,1.0f,0.0f);    // Color Blue
-//            gl.glTexCoord2f(sx, sz);
-//            gl.glVertex3f(sx, sy, 0);    // Top Right Of The Quad (Top)
-//            gl.glTexCoord2f(0.0f, sz);
-//            gl.glVertex3f(0, sy, 0);    // Top Left Of The Quad (Top)
-//            gl.glTexCoord2f(0.0f, 0.0f);
-//            gl.glVertex3f(0, sy, sz);    // Bottom Left Of The Quad (Top)
-//            gl.glTexCoord2f(sx, 0.0f);
-//            gl.glVertex3f(sx, sy, sz);    // Bottom Right Of The Quad (Top)
-//        }
-//        gl.glEnd();
-        gl.glCallList(top);
-        //ttGachTuong2.disable();
+        gl.glCallList(listTop);
+        ttGachTuong2.disable();
 
         ttGachTuong.enable();
         ttGachTuong.bind();
-        gl.glCallList(listBox2);
-//        gl.glBegin(GL.GL_QUADS);        // Draw The Cube Using quads
-//        {
-//            //top is in upper
-//
-//            gl.glNormal3f(0, -1, 0);
-//            //glColor3f(1.0f,0.5f,0.0f);    // Color Orange
-//            gl.glTexCoord2f(sx, sz);
-//            gl.glVertex3f(sx, 0, sz);    // Top Right Of The Quad (Bottom)
-//            gl.glTexCoord2f(0.0f, sz);
-//            gl.glVertex3f(0, 0, sz);    // Top Left Of The Quad (Bottom)
-//            gl.glTexCoord2f(0.0f, 0.0f);
-//            gl.glVertex3f(0, 0, 0);    // Bottom Left Of The Quad (Bottom)
-//            gl.glTexCoord2f(sx, 0.0f);
-//            gl.glVertex3f(sx, 0, 0);    // Bottom Right Of The Quad (Bottom)
-//
-//            gl.glNormal3f(0, 0, 1);
-//            //glColor3f(1.0f,0.0f,0.0f);    // Color Red    
-//            gl.glTexCoord2f(sx, sy);
-//            gl.glVertex3f(sx, sy, sz);    // Top Right Of The Quad (Front)
-//            gl.glTexCoord2f(0.0f, sy);
-//            gl.glVertex3f(0, sy, sz);    // Top Left Of The Quad (Front)
-//            gl.glTexCoord2f(0.0f, 0.0f);
-//            gl.glVertex3f(0, 0, sz);    // Bottom Left Of The Quad (Front)
-//            gl.glTexCoord2f(sx, 0.0f);
-//            gl.glVertex3f(sx, 0, sz);    // Bottom Right Of The Quad (Front)
-//
-//            gl.glNormal3f(0, 0, -1);
-//            //glColor3f(1.0f,1.0f,0.0f);    // Color Yellow
-//            gl.glTexCoord2f(sx, sy);
-//            gl.glVertex3f(sx, 0, 0);    // Top Right Of The Quad (Back)
-//            gl.glTexCoord2f(0.0f, sy);
-//            gl.glVertex3f(0, 0, 0);    // Top Left Of The Quad (Back)
-//            gl.glTexCoord2f(0.0f, 0.0f);
-//            gl.glVertex3f(0, sy, 0);    // Bottom Left Of The Quad (Back)
-//            gl.glTexCoord2f(sx, 0.0f);
-//            gl.glVertex3f(sx, sy, 0);    // Bottom Right Of The Quad (Back)
-//
-//            gl.glNormal3f(-1, 0, 0);
-//            //glColor3f(0.0f,0.0f,1.0f);    // Color Blue
-//            gl.glTexCoord2f(sz, sy);
-//            gl.glVertex3f(0, sy, sz);    // Top Right Of The Quad (Left)
-//            gl.glTexCoord2f(0.0f, sy);
-//            gl.glVertex3f(0, sy, 0);    // Top Left Of The Quad (Left)
-//            gl.glTexCoord2f(0.0f, 0.0f);
-//            gl.glVertex3f(0, 0, 0);    // Bottom Left Of The Quad (Left)
-//            gl.glTexCoord2f(sz, 0.0f);
-//            gl.glVertex3f(0, 0, sz);    // Bottom Right Of The Quad (Left)
-//
-//            gl.glNormal3f(1, 0, 0);
-//            //glColor3f(1.0f,0.0f,1.0f);    // Color Violet
-//            gl.glTexCoord2f(sz, sy);
-//            gl.glVertex3f(sx, sy, 0);    // Top Right Of The Quad (Right)
-//            gl.glTexCoord2f(0.0f, sy);
-//            gl.glVertex3f(sx, sy, sz);    // Top Left Of The Quad (Right)
-//            gl.glTexCoord2f(0.0f, 0.0f);
-//            gl.glVertex3f(sx, 0, sz);    // Bottom Left Of The Quad (Right)
-//            gl.glTexCoord2f(sz, 0.0f);
-//            gl.glVertex3f(sx, 0, 0);    // Bottom Right Of The Quad (Right)
-//        }
-//        gl.glEnd();            // End Drawing The Cube
-
-        //ttGachTuong2.disable();
+        gl.glCallList(listBox);
+        ttGachTuong.disable();
 
         gl.glPopMatrix();
 
         //reset color
         gl.glColor4f(1, 1, 1, 1);
     }
-    
-    //
+
+    public void drawRock(float x, float y, float z,
+            float sx, float sy, float sz) {
+        GL gl = Global.drawable.getGL();
+
+        gl.glPushMatrix();
+        gl.glTranslatef(x, y, z);
+
+        ttRockTop.enable();
+        ttRockTop.bind();
+        gl.glCallList(listTop);
+        ttRockTop.disable();
+
+        ttRockEdge.enable();
+        ttRockEdge.bind();
+        gl.glCallList(listBox);
+        ttRockEdge.disable();
+
+        gl.glPopMatrix();
+
+        //reset color
+        gl.glColor4f(1, 1, 1, 1);
+    }
 }
