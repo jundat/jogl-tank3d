@@ -12,8 +12,6 @@ import myjogl.particles.Debris;
 import myjogl.particles.Explo;
 import myjogl.particles.Explo1;
 import myjogl.particles.RoundSparks;
-import myjogl.utils.GLModel;
-import myjogl.utils.ModelLoaderOBJ;
 import myjogl.utils.TankMap;
 import myjogl.utils.Vector3;
 import myjogl.utils.ResourceManager;
@@ -25,8 +23,8 @@ import myjogl.utils.ResourceManager;
 public class TankBullet {
 
     public static final float BULLET_VELOCITY = 0.5f; //do not change it
-    public static final float BULLET_WIDTH = 1.0f;
-    public static final float BULLET_HEIGHT = 1.0f;
+    public static final float BULLET_WIDTH = 0.9f;
+    public static final float BULLET_HEIGHT = 0.9f;
     public boolean isAlive;
     private Vector3 position;
     private int direction;
@@ -168,16 +166,16 @@ public class TankBullet {
             gl.glBegin(GL.GL_QUADS);
             {
                 gl.glTexCoord2f(0, 0);
-                gl.glVertex3f(position.x, Tank.TANK_WIDTH / 2, position.z);
+                gl.glVertex3f(position.x + BULLET_WIDTH / 4, Tank.TANK_WIDTH / 2, position.z);
 
                 gl.glTexCoord2f(1, 0);
-                gl.glVertex3f(position.x + BULLET_WIDTH, Tank.TANK_WIDTH / 2, position.z);
+                gl.glVertex3f(position.x + BULLET_WIDTH/2 + BULLET_WIDTH / 4, Tank.TANK_WIDTH / 2, position.z);
 
                 gl.glTexCoord2f(1, 1);
-                gl.glVertex3f(position.x + BULLET_WIDTH, Tank.TANK_WIDTH / 2, position.z + BULLET_HEIGHT);
+                gl.glVertex3f(position.x + BULLET_WIDTH /2 + BULLET_WIDTH / 4, Tank.TANK_WIDTH / 2, position.z + BULLET_HEIGHT / 2);
 
                 gl.glTexCoord2f(0, 1);
-                gl.glVertex3f(position.x, Tank.TANK_WIDTH / 2, position.z + BULLET_HEIGHT);
+                gl.glVertex3f(position.x + BULLET_WIDTH / 4, Tank.TANK_WIDTH / 2, position.z + BULLET_HEIGHT / 2);
             }
             gl.glEnd();
             tt.disable();

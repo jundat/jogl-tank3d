@@ -268,8 +268,8 @@ public class Tank {
                 gl.glTranslatef(getPosition().x, getPosition().y, getPosition().z);
                 //Global.drawCube(texture, 0, 0, 0, Tank.TANK_WIDTH, 2, Tank.TANK_HEIGHT);
 
-                float scale = 0.003f;
-                gl.glTranslatef(TANK_WIDTH / 2, 0, TANK_WIDTH / 2);
+                float scale = 0.002f;
+                gl.glTranslatef(Tank.TANK_WIDTH / 2, TANK_HEIGHT/2 - 0.2f, Tank.TANK_WIDTH / 2);
                 gl.glScalef(scale, scale, scale);
                 float angle = 0;
                 if (direction == CDirections.UP) {
