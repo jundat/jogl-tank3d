@@ -4,12 +4,7 @@
  */
 package myjogl.utils;
 
-import com.sun.opengl.util.j2d.TextRenderer;
 import com.sun.opengl.util.texture.Texture;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Rectangle;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -99,7 +94,7 @@ public class Writer {
         int len = content.length();
         char c;
         float curpos = x;
-
+        
         for (int i = 0; i < len; i++) {
             c = content.charAt(i);
             CharacterInfo ci = (CharacterInfo) characters.get(c);
@@ -113,31 +108,14 @@ public class Writer {
             }
         }
     }
-    
-    public void Render(String content, float x, float y, float scalex, float scaley, 
+
+    public void Render(String content, float x, float y, float scalex, float scaley,
             float red, float green, float blue) {
         GL gl = Global.drawable.getGL();
-        
+
         gl.glEnable(GL.GL_BLEND);
-        
         gl.glColor3f(red, green, blue);
         Render(content, x, y, scalex, scaley);
-        gl.glColor3f(1,1,1);
-    }
-    
-    //static 
-    private static Font font = new Font("Constantia", Font.BOLD, 40);
-    private static TextRenderer tr = new TextRenderer(font);
-
-    public static void Render(String content, String fontName, int size, int x, int y, Color color) {
-        //render
-        tr.setColor(color);
-        tr.setSmoothing(false);
-
-        tr.beginRendering(Global.wndWidth, Global.wndHeight);
-        tr.draw(content, x, y);
-        tr.endRendering();
-
-        tr.setColor(Color.WHITE);
+        gl.glColor3f(1, 1, 1);
     }
 }

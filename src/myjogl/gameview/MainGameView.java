@@ -127,8 +127,6 @@ public class MainGameView implements GameView {
         float angle_y = (float) ((mid_y - y)) / 1000;
         cameraFo.alpha += angle_y * 0.5f;
         cameraFo.beta -= angle_x * 0.5f;
-//        myTank.TankCamera.beta += angle_x;
-//        myTank.TankCamera.alpha += angle_y;
     }
 
     public void pointerReleased(MouseEvent e) {
@@ -257,6 +255,7 @@ public class MainGameView implements GameView {
         sBackground.stop();
         sBackground.play();
         cameraFo = new CameraFo(20, 0, 20, Math.toRadians(90), Math.toRadians(0), 10, 0, 1, 0);
+        
         //init map
         this.loadLevel(Global.level); //start at Global.level 0
     }
@@ -265,8 +264,7 @@ public class MainGameView implements GameView {
         GameEngine.getInst().tank3d.frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
         //pre-load main game
-        //ResourceManager.getInst().deleteTexture("data/model/triax_wheels.png");
-
+        
         //skybox
         //ResourceManager.getInst().deleteTexture("data/skybox/top.jpg");
         //ResourceManager.getInst().deleteTexture("data/skybox/bottom.jpg");
@@ -536,6 +534,7 @@ public class MainGameView implements GameView {
         if (isPause) {
             return;
         }
+        
         cameraFo.Update();
 
         handleInput();

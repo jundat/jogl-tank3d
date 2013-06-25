@@ -248,21 +248,6 @@ public class Md2 {
         m_texture.enable();
         m_texture.bind();
         gl.glBegin(GL.GL_TRIANGLES);
-        /*for (int i = 0; i < m_header.num_tris; i++) {
-            for (int j = 0; j < 3 ; j++) {
-                float x = (m_vertices[m_triangles[i].index_xyz[j] + m_header.num_xyz * keyframe].v[0]) * scale;
-                float y = (m_vertices[m_triangles[i].index_xyz[j] + m_header.num_xyz * keyframe].v[1]) * scale;
-                float z = (m_vertices[m_triangles[i].index_xyz[j] + m_header.num_xyz * keyframe].v[2]) * scale;
-                //gl.glColor3f(0.0f, 0.0f, 1.0f);
-                //gl.glColor3f(0.5f, 0.5f, 1.0f);
-                
-                float s = (float)(m_texCoord[m_triangles[i].index_st[j]].s) / m_header.skinwidth;
-                float t = (float)(m_texCoord[m_triangles[i].index_st[j]].t) / m_header.skinheight;
-                
-                gl.glTexCoord2f(s, t);
-                gl.glVertex3f(x, y, z);
-            }
-        }*/
         for (int i = 0; i < m_header.num_tris; i++) {
             float x0 = (m_vertices[m_triangles[i].index_xyz[0] + m_header.num_xyz * keyframe].v[0]) * scale;
             float y0 = (m_vertices[m_triangles[i].index_xyz[0] + m_header.num_xyz * keyframe].v[1]) * scale;

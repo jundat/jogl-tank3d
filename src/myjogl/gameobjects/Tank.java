@@ -80,7 +80,7 @@ public class Tank {
         //
         
         model = ModelLoaderOBJ.LoadModel("data/model/HK-Tank.obj",
-                "data/model/HK-Tank.mtl", "data/model/t0026_0.bmp", Global.drawable);
+                "data/model/HK-Tank.mtl", "data/model/t0026_0.png", Global.drawable);
 
         Vector3 a = getPosition().Clone();
         float scale = 0.1f;
