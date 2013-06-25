@@ -4,15 +4,19 @@
  */
 package myjogl.gameview;
 
+import Testtool.CameraFo;
 import myjogl.particles.ParticalManager;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
 import myjogl.*;
 import myjogl.utils.*;
 import myjogl.gameobjects.*;
+import myjogl.particles.Explo;
 
 /**
  *
@@ -34,6 +38,8 @@ public class MainGameView implements GameView {
     private TankAI tankAis[];
     private SkyBox m_skybox;
     private Camera camera;
+    private CameraFo cameraFo;
+    boolean bTest = false;
     private Writer writer;
     private Vector3 bossPosition;
     //light
@@ -82,6 +88,14 @@ public class MainGameView implements GameView {
                 }
             }
         }
+        else if (e.getKeyCode() == KeyEvent.VK_A)
+                TestParticle();
+        else if (e.getKeyCode() == KeyEvent.VK_T)
+                bTest = !bTest;
+        else if (e.getKeyCode() == KeyEvent.VK_Z)
+                cameraFo.r += 2;
+        else if (e.getKeyCode() == KeyEvent.VK_X)
+                cameraFo.r -= 2;
     }
 
     public void keyReleased(KeyEvent e) {
@@ -91,6 +105,30 @@ public class MainGameView implements GameView {
     }
 
     public void pointerMoved(MouseEvent e) {
+        int x = e.getXOnScreen();
+        int y = e.getYOnScreen();
+        //System.err.print("\n" + x + " " + y);
+        int mid_x = Global.wndWidth / 2;
+        int mid_y = Global.wndHeight / 2;
+        if ((x == mid_x) && (y == mid_y)) {
+            return;
+        }
+
+        Robot r;
+        try {
+            r = new Robot();
+            r.mouseMove(mid_x, mid_y);
+        } catch (AWTException ex) {
+            Logger.getLogger(Camera.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        // Get the direction from the mouse cursor, set a resonable maneuvering speed
+        float angle_x = (float) ((mid_x - x)) / 1000;
+        float angle_y = (float) ((mid_y - y)) / 1000;
+        cameraFo.alpha += angle_y * 0.5f;
+        cameraFo.beta -= angle_x * 0.5f;
+//        myTank.TankCamera.beta += angle_x;
+//        myTank.TankCamera.alpha += angle_y;
     }
 
     public void pointerReleased(MouseEvent e) {
@@ -218,7 +256,7 @@ public class MainGameView implements GameView {
         sBackground = ResourceManager.getInst().getSound("sound/bg_game.wav", true);
         sBackground.stop();
         sBackground.play();
-        
+        cameraFo = new CameraFo(20, 0, 20, Math.toRadians(90), Math.toRadians(0), 10, 0, 1, 0);
         //init map
         this.loadLevel(Global.level); //start at Global.level 0
     }
@@ -476,10 +514,29 @@ public class MainGameView implements GameView {
     //
     // end check collision
     //
+    
+    private void TestParticle()
+    {
+        Vector3 a = new Vector3(40, 0, 20);
+        float scale = 0.3f;
+        float time = 0.3f;
+        Explo shootParticle = new Explo(a, time, scale);
+        shootParticle.LoadingTexture();
+        ParticalManager.getInstance().Add(shootParticle);
+        
+        Vector3 a1 = new Vector3(0, 0, 20);
+        float scale1 = 0.3f;
+        float time1 = 0.3f;
+        Explo shootParticle1 = new Explo(a1, time1, scale1);
+        shootParticle1.LoadingTexture();
+        ParticalManager.getInstance().Add(shootParticle1);
+    }
+    
     public void update(long dt) {
         if (isPause) {
             return;
         }
+        cameraFo.Update();
 
         handleInput();
         //check bullet collisiotn
@@ -523,8 +580,11 @@ public class MainGameView implements GameView {
         gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
 
         gl.glEnable(GL.GL_MULTISAMPLE);
-
-        glu.gluLookAt(
+        
+        if (bTest)
+            glu.gluLookAt(cameraFo.x, cameraFo.y, cameraFo.z, cameraFo.lookAtX, cameraFo.lookAtY, cameraFo.lookAtZ, cameraFo.upX, cameraFo.upY, cameraFo.upZ);
+        else
+            glu.gluLookAt(
                 camera.mPos.x, camera.mPos.y, camera.mPos.z,
                 camera.mView.x, camera.mView.y, camera.mView.z,
                 camera.mUp.x, camera.mUp.y, camera.mUp.z);
@@ -546,7 +606,7 @@ public class MainGameView implements GameView {
         boss.draw();
 
         //particle
-        ParticalManager.getInstance().Draw(gl, 45);
+        ParticalManager.getInstance().Draw(gl, camera);
 
         gl.glDisable(GL.GL_LIGHTING);
 

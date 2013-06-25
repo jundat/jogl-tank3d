@@ -86,11 +86,11 @@ public class TankBullet {
         Explo1 shootParticle2 = new Explo1(a, time, scale);
         shootParticle2.LoadingTexture();
         ParticalManager.getInstance().Add(shootParticle2);
-
-        RoundSparks shootParticle3 = new RoundSparks(a, time, scale);
-        shootParticle3.LoadingTexture();
-        ParticalManager.getInstance().Add(shootParticle3);
-
+//
+//        RoundSparks shootParticle3 = new RoundSparks(a, time, 0.1f);
+//        shootParticle3.LoadingTexture();
+//        ParticalManager.getInstance().Add(shootParticle3);
+//
         Debris shootParticle4 = new Debris(a, time, scale);
         shootParticle4.LoadingTexture();
         ParticalManager.getInstance().Add(shootParticle4);

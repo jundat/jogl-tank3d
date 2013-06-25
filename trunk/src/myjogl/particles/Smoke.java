@@ -173,7 +173,7 @@ public class Smoke extends ParticleEngine {
     }
 
     //Draw list particle
-    @Override
+//    @Override
     public void Draw(GL gl, float Y) {
         gl.glEnable(GL.GL_TEXTURE);
         gl.glDepthMask(false);

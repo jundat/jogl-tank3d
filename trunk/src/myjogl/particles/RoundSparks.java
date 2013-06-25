@@ -17,6 +17,7 @@ import java.io.InputStream;
 import java.util.Random;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
+import myjogl.utils.Camera;
 import myjogl.utils.ResourceManager;
 import myjogl.utils.Vector3;
 
@@ -185,7 +186,7 @@ public class RoundSparks extends ParticleEngine {
 
     //Draw list particle
     @Override
-    public void Draw(GL gl, float Y) {
+    public void Draw(GL gl, Camera camera) {
         gl.glEnable(GL.GL_TEXTURE);
         gl.glDepthMask(false);
         gl.glEnable(GL.GL_BLEND);
@@ -196,14 +197,24 @@ public class RoundSparks extends ParticleEngine {
         m_texture.bind();
         for (int i = 0; i < m_numParticles; ++i) {
             gl.glPushMatrix();
+            
+            Particle pa = m_ParticleList[i];
+            
+            float Y = camera.GetAngleY(pa.m_Position);
+            float X = camera.GetAngleX(pa.m_Position);
+            float Z = camera.GetAngleZ(pa.m_Position);
 
             gl.glTranslatef(m_ParticleList[i].m_Position.x, m_ParticleList[i].m_Position.y, m_ParticleList[i].m_Position.z);
+            
+            gl.glRotatef(Z, 0, 0, 1);
+            gl.glRotatef(X, 1, 0, 0);
             gl.glRotatef(Y, 0, 1, 0);
+            
             gl.glScalef(m_scale, m_scale, m_scale);
             gl.glBegin(GL.GL_QUADS);
 
-            float size = m_ParticleList[i].m_size / 2;
-            m_ParticleList[i].m_Color.set(gl);
+            float size = pa.m_size / 2;
+            pa.m_Color.set(gl);
 
             gl.glTexCoord2f(0.0f, 0.0f);
             gl.glVertex3f(-size, -size, 0);
