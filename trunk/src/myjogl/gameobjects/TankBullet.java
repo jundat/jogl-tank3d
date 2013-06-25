@@ -105,7 +105,7 @@ public class TankBullet {
                     position.z -= BULLET_VELOCITY;
                     if (position.z <= 0) {
                         position.z = 0;
-                        this.explode();
+                        //this.explode();
                         isAlive = false;
                     }
                     break;
@@ -114,7 +114,7 @@ public class TankBullet {
                     position.z += BULLET_VELOCITY;
                     if (position.z > TankMap.getInst().height - BULLET_HEIGHT) {
                         position.z = TankMap.getInst().height - BULLET_HEIGHT;
-                        this.explode();
+                        //this.explode();
                         isAlive = false;
                     }
                     break;
@@ -123,7 +123,7 @@ public class TankBullet {
                     position.x -= BULLET_VELOCITY;
                     if (position.x <= 0) {
                         position.x = 0;
-                        this.explode();
+                        //this.explode();
                         isAlive = false;
                     }
                     break;
@@ -132,7 +132,7 @@ public class TankBullet {
                     position.x += BULLET_VELOCITY;
                     if (position.x > TankMap.getInst().width - BULLET_WIDTH) {
                         position.x = TankMap.getInst().width - BULLET_WIDTH;
-                        this.explode();
+                        //this.explode();
                         isAlive = false;
                     }
                     break;

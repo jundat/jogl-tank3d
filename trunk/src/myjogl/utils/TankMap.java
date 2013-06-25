@@ -37,12 +37,10 @@ public class TankMap {
     //
     private static Texture ttGachTuong = null;
     private static Texture ttGachTuong2 = null;
-    
     private static Texture ttGachMen = null;
     private static Texture ttGachMen1 = null;
     private static Texture ttGachMen2 = null;
     private static Texture ttGachMen3 = null;
-        
     private static Texture ttRockTop = null;
     private static Texture ttRockEdge = null;
     private static Texture ttWater = null;
@@ -52,8 +50,9 @@ public class TankMap {
     //
     private static TankMap instance = null;
     private int listTop;
-    private int listBox;
-    private int listWater;
+    private int listNonTopNonBottom;
+    private int listBottom;
+    private int listCube;
     //
 
     public static TankMap getInst() {
@@ -67,11 +66,11 @@ public class TankMap {
     private TankMap() {
         ttGachTuong = ResourceManager.getInst().getTexture("data/game/gach_tuong.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
         ttGachTuong2 = ResourceManager.getInst().getTexture("data/game/gach_tuong2.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
-        
+
         ttGachMen1 = ResourceManager.getInst().getTexture("data/game/gach_men1.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
         ttGachMen2 = ResourceManager.getInst().getTexture("data/game/gach_men2.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
         ttGachMen3 = ResourceManager.getInst().getTexture("data/game/gach_men3.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
-        
+
         ttRockTop = ResourceManager.getInst().getTexture("data/game/rock_top.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
         ttRockEdge = ResourceManager.getInst().getTexture("data/game/rock_edge.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
         ttWater = ResourceManager.getInst().getTexture("data/game/water.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
@@ -102,8 +101,8 @@ public class TankMap {
         gl.glEnd();
         gl.glEndList();
         ///
-        listBox = gl.glGenLists(1);
-        gl.glNewList(listBox, GL.GL_COMPILE);
+        listNonTopNonBottom = gl.glGenLists(1);
+        gl.glNewList(listNonTopNonBottom, GL.GL_COMPILE);
 
         gl.glBegin(GL.GL_QUADS);        // Draw The Cube Using quads
         {
@@ -155,8 +154,8 @@ public class TankMap {
         gl.glEndList();
 
         // List Rock
-        listWater = gl.glGenLists(1);
-        gl.glNewList(listWater, GL.GL_COMPILE);
+        listBottom = gl.glGenLists(1);
+        gl.glNewList(listBottom, GL.GL_COMPILE);
 
         gl.glBegin(GL.GL_QUADS);        // Draw The Cube Using quads
         {
@@ -173,24 +172,101 @@ public class TankMap {
         }
         gl.glEnd();            // End Drawing The Cube
         gl.glEndList();
+
+        //----------------------------
+        listCube = gl.glGenLists(1);
+        gl.glNewList(listCube, GL.GL_COMPILE);
+
+        gl.glBegin(GL.GL_QUADS);        // Draw The Cube Using quads
+        {
+            gl.glNormal3f(0, 1, 0);
+            //glColor3f(0.0f,1.0f,0.0f);    // Color Blue
+            gl.glTexCoord2f(1, 1);
+            gl.glVertex3f(TILE_WIDTH, TILE_HEIGHT, 0);    // Top Right Of The Quad (Top)
+            gl.glTexCoord2f(0.0f, 1);
+            gl.glVertex3f(0, TILE_HEIGHT, 0);    // Top Left Of The Quad (Top)
+            gl.glTexCoord2f(0.0f, 0.0f);
+            gl.glVertex3f(0, TILE_HEIGHT, TILE_WIDTH);    // Bottom Left Of The Quad (Top)
+            gl.glTexCoord2f(1, 0.0f);
+            gl.glVertex3f(TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);    // Bottom Right Of The Quad (Top)
+            
+            gl.glNormal3f(0, -1, 0);
+            //glColor3f(1.0f,0.5f,0.0f);    // Color Orange
+            gl.glTexCoord2f(1, 1);
+            gl.glVertex3f(TILE_WIDTH, WATER_HEIGHT, TILE_WIDTH);    // Top Right Of The Quad (Bottom)
+            gl.glTexCoord2f(0.0f, 1);
+            gl.glVertex3f(0, WATER_HEIGHT, TILE_WIDTH);    // Top Left Of The Quad (Bottom)
+            gl.glTexCoord2f(0.0f, 0.0f);
+            gl.glVertex3f(0, WATER_HEIGHT, 0);    // Bottom Left Of The Quad (Bottom)
+            gl.glTexCoord2f(1, 0.0f);
+            gl.glVertex3f(TILE_WIDTH, WATER_HEIGHT, 0);    // Bottom Right Of The Quad (Bottom)
+
+            gl.glNormal3f(0, 0, 1);
+            //glColor3f(1.0f,0.0f,0.0f);    // Color Red    
+            gl.glTexCoord2f(1, 1);
+            gl.glVertex3f(TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);    // Top Right Of The Quad (Front)
+            gl.glTexCoord2f(0.0f, 1);
+            gl.glVertex3f(0, TILE_HEIGHT, TILE_WIDTH);    // Top Left Of The Quad (Front)
+            gl.glTexCoord2f(0.0f, 0.0f);
+            gl.glVertex3f(0, 0, TILE_WIDTH);    // Bottom Left Of The Quad (Front)
+            gl.glTexCoord2f(1, 0.0f);
+            gl.glVertex3f(TILE_WIDTH, 0, TILE_WIDTH);    // Bottom Right Of The Quad (Front)
+
+            gl.glNormal3f(0, 0, -1);
+            //glColor3f(1.0f,1.0f,0.0f);    // Color Yellow
+            gl.glTexCoord2f(1, 1);
+            gl.glVertex3f(TILE_WIDTH, 0, 0);    // Top Right Of The Quad (Back)
+            gl.glTexCoord2f(0.0f, 1);
+            gl.glVertex3f(0, 0, 0);    // Top Left Of The Quad (Back)
+            gl.glTexCoord2f(0.0f, 0.0f);
+            gl.glVertex3f(0, TILE_HEIGHT, 0);    // Bottom Left Of The Quad (Back)
+            gl.glTexCoord2f(1, 0.0f);
+            gl.glVertex3f(TILE_WIDTH, TILE_HEIGHT, 0);    // Bottom Right Of The Quad (Back)
+
+            gl.glNormal3f(-1, 0, 0);
+            //glColor3f(0.0f,0.0f,1.0f);    // Color Blue
+            gl.glTexCoord2f(1, 1);
+            gl.glVertex3f(0, TILE_HEIGHT, TILE_WIDTH);    // Top Right Of The Quad (Left)
+            gl.glTexCoord2f(0.0f, 1);
+            gl.glVertex3f(0, TILE_HEIGHT, 0);    // Top Left Of The Quad (Left)
+            gl.glTexCoord2f(0.0f, 0.0f);
+            gl.glVertex3f(0, 0, 0);    // Bottom Left Of The Quad (Left)
+            gl.glTexCoord2f(1, 0.0f);
+            gl.glVertex3f(0, 0, TILE_WIDTH);    // Bottom Right Of The Quad (Left)
+
+            gl.glNormal3f(1, 0, 0);
+            //glColor3f(1.0f,0.0f,1.0f);    // Color Violet
+            gl.glTexCoord2f(1, 1);
+            gl.glVertex3f(TILE_WIDTH, TILE_HEIGHT, 0);    // Top Right Of The Quad (Right)
+            gl.glTexCoord2f(0.0f, 1);
+            gl.glVertex3f(TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);    // Top Left Of The Quad (Right)
+            gl.glTexCoord2f(0.0f, 0.0f);
+            gl.glVertex3f(TILE_WIDTH, 0, TILE_WIDTH);    // Bottom Left Of The Quad (Right)
+            gl.glTexCoord2f(1, 0.0f);
+            gl.glVertex3f(TILE_WIDTH, 0, 0);    // Bottom Right Of The Quad (Right)
+        }
+        gl.glEnd();            // End Drawing The Cube
+        gl.glEndList();
+
+        //----------------------------
     }
 
     //only use png file
-    public void LoadMap(int mapNumber) {        
-        switch(mapNumber % 3) {
+    public void LoadMap(int mapNumber) {
+        switch (mapNumber % 3) {
             case 0:
                 ttGachMen = ttGachMen1;
                 break;
-                
+
             case 1:
                 ttGachMen = ttGachMen2;
                 break;
-                
+
             case 2:
                 ttGachMen = ttGachMen3;
                 break;
         }
-        
+
         String fileName = "data/map/MAP" + mapNumber + ".png";
 
         try {
@@ -246,7 +322,7 @@ public class TankMap {
 
         //this.drawPlane(-(int) TILE_BORDER, -(int) TILE_BORDER, width + (int) TILE_BORDER, height + (int) TILE_BORDER);
         this.drawPlane(0, 0, width, height);
-        this.drawBorder();
+        //this.drawBorder();
 
         int blue = 0;
         for (int i = 0; i < height; ++i) //z
@@ -325,29 +401,29 @@ public class TankMap {
     }
 
     private void drawBorder() {
-//        int border = (int) TILE_BORDER;
-//        for (int i = -border; i < height + border; ++i) //z
-//        {
-//            this.drawRock(-border, 0, i * TILE_WIDTH,
-//                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-//            this.drawRock(-border + 1, 0, i * TILE_WIDTH,
-//                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-//            this.drawRock(width + border - 1, 0, i * TILE_WIDTH,
-//                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-//            this.drawRock(width + border - 2, 0, i * TILE_WIDTH,
-//                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-//        }
-//
-//        for (int i = -border; i < width + border; i++) {
-//            this.drawRock(i * TILE_WIDTH, 0, -border,
-//                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-//            this.drawRock(i * TILE_WIDTH, 0, -border + 1,
-//                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-//            this.drawRock(i * TILE_WIDTH, 0, height + border - 1,
-//                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-//            this.drawRock(i * TILE_WIDTH, 0, height + border - 2,
-//                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-//        }
+        int border = (int) TILE_BORDER;
+        for (int i = -border; i < height + border; ++i) //z
+        {
+            this.drawRock(-border, 0, i * TILE_WIDTH,
+                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+            this.drawRock(-border + 1, 0, i * TILE_WIDTH,
+                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+            this.drawRock(width + border - 1, 0, i * TILE_WIDTH,
+                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+            this.drawRock(width + border - 2, 0, i * TILE_WIDTH,
+                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+        }
+
+        for (int i = -border; i < width + border; i++) {
+            this.drawRock(i * TILE_WIDTH, 0, -border,
+                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+            this.drawRock(i * TILE_WIDTH, 0, -border + 1,
+                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+            this.drawRock(i * TILE_WIDTH, 0, height + border - 1,
+                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+            this.drawRock(i * TILE_WIDTH, 0, height + border - 2,
+                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+        }
     }
 
     private void drawPlane(float x, float z, float w, float h) {
@@ -359,22 +435,22 @@ public class TankMap {
         gl.glBegin(GL.GL_QUADS);
         {
             gl.glNormal3f(0.0f, 1.0f, 0.0f);
-            
+
             gl.glTexCoord2f(0, 0);
             gl.glVertex3f(x, PLANE_HEIGHT, z);
-            
-            gl.glTexCoord2f(w/3, 0);
+
+            gl.glTexCoord2f(w / 3, 0);
             gl.glVertex3f(x + w, PLANE_HEIGHT, z);
-            
-            gl.glTexCoord2f(w/3, h/3);
+
+            gl.glTexCoord2f(w / 3, h / 3);
             gl.glVertex3f(x + w, PLANE_HEIGHT, z + h);
 
-            gl.glTexCoord2f(0, h/3);
+            gl.glTexCoord2f(0, h / 3);
             gl.glVertex3f(x, PLANE_HEIGHT, z + h);
         }
         gl.glEnd();
         ttGachMen.disable();
-        
+
         //reset color
         gl.glColor4f(1, 1, 1, 1);
     }
@@ -393,7 +469,7 @@ public class TankMap {
 
         ttGachTuong.enable();
         ttGachTuong.bind();
-        gl.glCallList(listBox);
+        gl.glCallList(listNonTopNonBottom);
         ttGachTuong.disable();
 
         gl.glPopMatrix();
@@ -416,7 +492,7 @@ public class TankMap {
 
         ttRockEdge.enable();
         ttRockEdge.bind();
-        gl.glCallList(listBox);
+        gl.glCallList(listNonTopNonBottom);
         ttRockEdge.disable();
 
         gl.glPopMatrix();
@@ -433,7 +509,7 @@ public class TankMap {
 
         ttWater.enable();
         ttWater.bind();
-        gl.glCallList(listWater);
+        gl.glCallList(listBottom);
         ttWater.disable();
 
         gl.glPopMatrix();

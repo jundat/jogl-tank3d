@@ -94,25 +94,27 @@ public class Boss {
         if (this.isAlive) {
             GL gl = Global.drawable.getGL();
             gl.glColor4f(1, 1, 1, 1);
+            
+            Global.drawCube(tt, position.x, position.y, position.z, BOSS_WIDTH, 2, BOSS_HEIGHT);
 
-            tt.enable();
-            tt.bind();
-            gl.glBegin(GL.GL_QUADS);
-            {
-                gl.glTexCoord2f(0, 0);
-                gl.glVertex3f(position.x, 2, position.z);
-
-                gl.glTexCoord2f(1, 0);
-                gl.glVertex3f(position.x + BOSS_WIDTH, 2, position.z);
-
-                gl.glTexCoord2f(1, 1);
-                gl.glVertex3f(position.x + BOSS_WIDTH, 2, position.z + BOSS_HEIGHT);
-
-                gl.glTexCoord2f(0, 1);
-                gl.glVertex3f(position.x, 2, position.z + BOSS_HEIGHT);
-            }
-            gl.glEnd();
-            tt.disable();
+//            tt.enable();
+//            tt.bind();
+//            gl.glBegin(GL.GL_QUADS);
+//            {
+//                gl.glTexCoord2f(0, 0);
+//                gl.glVertex3f(position.x, 2, position.z);
+//
+//                gl.glTexCoord2f(1, 0);
+//                gl.glVertex3f(position.x + BOSS_WIDTH, 2, position.z);
+//
+//                gl.glTexCoord2f(1, 1);
+//                gl.glVertex3f(position.x + BOSS_WIDTH, 2, position.z + BOSS_HEIGHT);
+//
+//                gl.glTexCoord2f(0, 1);
+//                gl.glVertex3f(position.x, 2, position.z + BOSS_HEIGHT);
+//            }
+//            gl.glEnd();
+//            tt.disable();
         }
     }
 
