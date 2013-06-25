@@ -13,6 +13,7 @@ import myjogl.GameEngine;
 import myjogl.Global;
 import myjogl.utils.Renderer;
 import myjogl.utils.ResourceManager;
+import myjogl.utils.Sound;
 import myjogl.utils.Writer;
 
 /**
@@ -110,14 +111,21 @@ public class GameOverView implements GameView {
 
         //
         GameEngine.getInst().saveHighscore();
+
+        //sound
+        GameEngine.sGameOver.play();
     }
 
     public void unload() {
         ResourceManager.getInst().deleteTexture("data/common/bg_dialog.png");
     }
-
+    
     public void update(long elapsedTime) {
         time += elapsedTime;
+        
+        while (mainGameView.sBackground.getVolume() >= Sound.MIN_VOLUME + 1.0f) {
+            mainGameView.sBackground.setVolume(mainGameView.sBackground.getVolume() - 1.0f);
+        }
     }
 
     public void display() {
@@ -128,8 +136,8 @@ public class GameOverView implements GameView {
 
         Renderer.Render(ttBg, pBg.x, pBg.y * delta);
         //
-        itMenu.SetPosition(rectMenu.x, (int)(rectMenu.y * delta));
-        itRetry.SetPosition(rectRetry.x, (int)(rectRetry.y * delta));
+        itMenu.SetPosition(rectMenu.x, (int) (rectMenu.y * delta));
+        itRetry.SetPosition(rectRetry.x, (int) (rectRetry.y * delta));
         itMenu.Render();
         itRetry.Render();
         //

@@ -6,6 +6,7 @@ package myjogl.gameview;
 
 import com.sun.opengl.util.texture.Texture;
 import java.awt.Color;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import javax.media.opengl.GL;
@@ -24,16 +25,18 @@ import myjogl.utils.Writer;
 public class IntroView implements GameView {
 
     float scaleWind = Global.wndWidth / 800.0f;
-    float scaleLogo = 0.9951f;
+    float scaleLogo = 0.99911f;
     Sound sound;
     float x = 0, y = 0;
     float w, h;
     float xl, yl, wl, hl;
     long startLight = 3810000;
     long endLight1 = 7059000;
-    long endLight2 = 7800000;
+    long endLight2 = 7600000;
     Texture ttLogo;
     Texture ttLight;
+    //
+    Rectangle rectContinue = new Rectangle(700, 0, 324, 30);
 
     public IntroView() {
         System.out.println("Go to intro view------------------------------------");
@@ -41,7 +44,6 @@ public class IntroView implements GameView {
 
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-            //System.out.println("CounterLight: " + counterLight);
             System.out.println("Sound Frame: " + sound.clip.getFramePosition());
             System.out.println("Sound Microsecond: " + sound.clip.getMicrosecondPosition());
         }
@@ -61,6 +63,10 @@ public class IntroView implements GameView {
     }
 
     public void pointerReleased(MouseEvent e) {
+        if (rectContinue.contains(e.getX(), e.getY())) {
+            GameEngine.getInst().attach(new MenuView());
+            GameEngine.getInst().detach(this);
+        }
     }
 
     public void load() {
@@ -84,7 +90,7 @@ public class IntroView implements GameView {
     public void unload() {
         ResourceManager.getInst().deleteTexture("data/intro/light.png");
         ResourceManager.getInst().deleteTexture("data/intro/logo.png");
-        ResourceManager.getInst().deleteSound(sound);
+        //ResourceManager.getInst().deleteSound(sound); //gây l?i
     }
 
     public void update(long elapsedTime) {
@@ -122,8 +128,7 @@ public class IntroView implements GameView {
         Renderer.Render(ttLogo, x, y, w, h);
 
         if (sound.clip.getMicrosecondPosition() >= endLight1) {
-            Writer.Render("...press anykey to continue...",
-                    "Nyala", 24, 1010, 32, Color.GRAY);
+            GameEngine.writer.Render("click here to continue...", 700, 10, 0.35f, 0.35f, 0.6f, 0.5f, 0.5f);
         }
     }
 }

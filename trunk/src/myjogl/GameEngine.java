@@ -43,6 +43,7 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
     public static Sound sMouseMove;
     public static Sound sFire;
     public static Sound sExplode;
+    public static Sound sGameOver;
     
     
     private GameEngine() {
@@ -78,6 +79,7 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
         sMouseMove = ResourceManager.getInst().getSound("sound/mouse_move.wav", false);
         sFire = ResourceManager.getInst().getSound("sound/fire.wav", false);
         sExplode = ResourceManager.getInst().getSound("sound/explode.wav", false);
+        sGameOver = ResourceManager.getInst().getSound("sound/game_over.wav", false);
     }
 
     public void loadHighscore() {

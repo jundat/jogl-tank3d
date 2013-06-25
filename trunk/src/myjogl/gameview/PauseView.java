@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import myjogl.GameEngine;
 import myjogl.utils.Renderer;
 import myjogl.utils.ResourceManager;
+import myjogl.utils.Sound;
 
 /**
  *
@@ -87,6 +88,7 @@ public class PauseView implements GameView {
             itRetry.setIsClick(true);
             GameEngine.sClick.play();
             //
+            mainGameView.sBackground.setVolume(Sound.MAX_VOLUME);
             mainGameView.isPause = false;
             GameEngine.getInst().detach(this);
         }
@@ -113,6 +115,10 @@ public class PauseView implements GameView {
 
     public void update(long elapsedTime) {
         time += elapsedTime;
+        
+        while (mainGameView.sBackground.getVolume() >= Sound.MIN_VOLUME + 1.0f) {
+            mainGameView.sBackground.setVolume(mainGameView.sBackground.getVolume() - 1.0f);
+        }
     }
 
     public void display() {

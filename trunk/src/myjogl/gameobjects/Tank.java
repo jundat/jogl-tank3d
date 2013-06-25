@@ -107,11 +107,9 @@ public class Tank {
         //
         Vector3 tempLastPos = new Vector3(position);
 
-        if (getDirection() != dir) {
+        if (direction != dir) {
             direction = dir;
-        }
-        //else 
-        {
+        } else {
             switch (direction) {
                 case CDirections.UP:
                     position.z -= TANK_VELOCITY;
@@ -145,12 +143,12 @@ public class Tank {
                     }
                     break;
             }
-        }
 
-        //collide in map
-        if (TankMap.getInst().isIntersect(this.getBound())) {
-            position = tempLastPos;
-            return false;
+            //collide in map
+            if (TankMap.getInst().isIntersect(this.getBound())) {
+                position = tempLastPos;
+                return false;
+            }
         }
 
         return true;
@@ -174,10 +172,10 @@ public class Tank {
                     break;
                 }
             }
-            
+
             return true;
         }
-        
+
         return false;
     }
 
