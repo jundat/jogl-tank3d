@@ -15,6 +15,7 @@ import myjogl.particles.ParticalManager;
 import myjogl.particles.RoundSparks;
 import myjogl.utils.GLModel;
 import myjogl.utils.Md2;
+import myjogl.utils.ModelLoaderOBJ;
 import myjogl.utils.TankMap;
 import myjogl.utils.Vector3;
 import myjogl.utils.ResourceManager;
@@ -35,6 +36,8 @@ public class Tank {
     public TankBullet bullets[];
     protected Texture texture;
     protected long fireTime = 0;
+    
+    GLModel model = null;
 
     //
     //init
@@ -75,6 +78,9 @@ public class Tank {
         //
         texture = ResourceManager.getInst().getTexture("data/game/tank.png");
         //
+        
+        model = ModelLoaderOBJ.LoadModel("data/model/HK-Tank.obj",
+                "data/model/HK-Tank.mtl", "data/model/t0026_0.bmp", Global.drawable);
 
         Vector3 a = getPosition().Clone();
         float scale = 0.1f;
@@ -251,7 +257,21 @@ public class Tank {
             gl.glPushMatrix();
             {
                 gl.glTranslatef(getPosition().x, getPosition().y, getPosition().z);
-                Global.drawCube(texture, 0, 0, 0, Tank.TANK_WIDTH, 2, Tank.TANK_HEIGHT);
+                //Global.drawCube(texture, 0, 0, 0, Tank.TANK_WIDTH, 2, Tank.TANK_HEIGHT);
+
+                float scale = 0.003f;
+                gl.glTranslatef(TANK_WIDTH/2, 0, TANK_WIDTH/2);
+                gl.glScalef(scale, scale, scale);
+                float angle = 0;
+                if (direction == CDirections.UP)
+                    angle = 180;
+                else if (direction == CDirections.LEFT)
+                    angle = -90;
+                else if (direction == CDirections.RIGHT)
+                    angle = 90;
+                
+                gl.glRotatef(angle, 0, 1, 0);
+                model.opengldraw(Global.drawable);
             }
             gl.glPopMatrix();
         }
