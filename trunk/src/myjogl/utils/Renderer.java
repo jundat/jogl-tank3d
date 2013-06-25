@@ -104,19 +104,15 @@ public class Renderer {
 
                 gl.glBegin(GL.GL_QUADS);
                 {
-                    //gl.glTexCoord2f(tx, ty);
                     gl.glTexCoord2f(tx, ty + th);
                     gl.glVertex3f(dx, dy, 0);
 
-                    //gl.glTexCoord2f(tx + tw, ty);
                     gl.glTexCoord2f(tx + tw, ty + th);
                     gl.glVertex3f(dx + dw, dy, 0);
 
-                    //gl.glTexCoord2f(tx + tw, ty + th);
                     gl.glTexCoord2f(tx + tw, ty);
                     gl.glVertex3f(dx + dw, dy + dh, 0);
 
-                    //gl.glTexCoord2f(tx, ty + th);
                     gl.glTexCoord2f(tx, ty);
                     gl.glVertex3f(dx, dy + dh, 0);
                 }
@@ -141,6 +137,7 @@ public class Renderer {
         GL gl = Global.drawable.getGL();
         GLU glu = new GLU();
         gl.glMatrixMode(GL.GL_PROJECTION);
+        
         gl.glPushMatrix();
         {
             gl.glLoadIdentity();
@@ -151,7 +148,6 @@ public class Renderer {
             {
                 gl.glLoadIdentity();
 
-                //gl.glTranslatef(-x -w/2, -y -h/2, 0);
                 gl.glTranslatef(x + w / 2, y + h / 2, 0);
                 gl.glRotatef(rotate, 0, 0, 1);
 
@@ -160,6 +156,7 @@ public class Renderer {
                 gl.glEnable(GL.GL_TEXTURE_2D);
                 tt.enable();
                 tt.bind();
+                
                 gl.glBegin(GL.GL_QUADS);
                 {
                     gl.glTexCoord2f(0, 0);
@@ -175,8 +172,6 @@ public class Renderer {
                     gl.glVertex3f(-w / 2, h / 2, 0);
                 }
                 gl.glEnd();
-
-                //gl.glTranslatef(x +w/2, y +h/2, 0);
 
                 tt.disable();
                 gl.glDisable(GL.GL_TEXTURE_2D);

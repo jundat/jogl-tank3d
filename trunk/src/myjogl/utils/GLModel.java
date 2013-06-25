@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
+import myjogl.Global;
 
 /**
  *
@@ -399,7 +400,6 @@ public class GLModel {
         gl.glColor3f(1, 1, 1);
         gl.glCallList(objectlist);
         gl.glDisable(GL.GL_COLOR_MATERIAL);
-
         this.skin.disable();
     }
 }

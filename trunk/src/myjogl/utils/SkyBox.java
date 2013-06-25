@@ -61,6 +61,8 @@ public class SkyBox {
 
         gl.glTexEnvf(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_REPLACE);
 
+        Global.getGL().glColor3f(1, 1, 1);
+        
         //Top
         ttTop.enable();
         ttTop.bind();
@@ -146,6 +148,8 @@ public class SkyBox {
             gl.glVertex3f(m_size, -m_size, -m_size);
         gl.glEnd();
         ttRight.disable();
+        
+        Global.getGL().glColor3f(1, 1, 1);
 
         gl.glPopAttrib();
         gl.glEndList();

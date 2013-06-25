@@ -143,8 +143,9 @@ public class TankBullet {
             //collide in map
             if (TankMap.getInst().isIntersect(this.getBound())) {
                 position = lastPos;
-                for (int i = -1; i <= 1; i++) {
-                    for (int j = -1; j <= 1; j++) {
+
+                for (int i = -1; i <= 2; i++) {
+                    for (int j = -1; j <= 2; j++) {
                         TankMap.getInst().delete((int) position.z + i, (int) position.x + j);
                     }
                 }
@@ -161,7 +162,7 @@ public class TankBullet {
     public void draw() {
         if (this.isAlive) {
             GL gl = Global.drawable.getGL();
-            
+
             tt.enable();
             tt.bind();
             gl.glBegin(GL.GL_QUADS);
@@ -180,6 +181,7 @@ public class TankBullet {
             }
             gl.glEnd();
             tt.disable();
+            gl.glColor3f(1, 1, 1);
         }
     }
 

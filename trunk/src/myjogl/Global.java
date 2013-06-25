@@ -29,6 +29,10 @@ public class Global {
     
     public static Random random = new Random(System.currentTimeMillis());
 
+    public static GL getGL() {
+        return drawable.getGL();
+    }
+    
     public static void Print(HashMap hm) {
         Iterator it = hm.entrySet().iterator();
         while (it.hasNext()) {
