@@ -175,16 +175,16 @@ public class Camera {
      * Luôn luôn song song vs màn hình
      * @return 
      */
-    public float GetAngleY() {
-        float dx = mView.x - mPos.x;
-        float dz = mView.z - mPos.z;
+    public float GetAngleY(Vector3 posi) {
+        float dx = posi.x - mPos.x;
+        float dz = posi.z - mPos.z;
         float angle = (float) Math.atan(dz / dx);
         angle = 180 * angle / 3.141592654f;
         int angle2 = (int) angle;
         angle2 %= 360;
-        if (dx < 0) {
-            angle2 = (int) (angle - 180);
-        }
+//        if (dx < 0) {
+//            angle2 = (int) (angle - 180);
+//        }
 
         return 90-angle2;
     }
@@ -193,17 +193,19 @@ public class Camera {
      * Angle rotate in X axis
      * @return 
      */
-    public float GetAngleX() {
-        float dy = mView.y - mPos.y;
-        float dz = mView.z - mPos.z;
+    public float GetAngleX(Vector3 posi) {
+        float dy = posi.y - mPos.y;
+        float dz = posi.z - mPos.z;
         float angle = (float) Math.atan(dy / dz);
         angle = 180 * angle / 3.141592654f;
         int angle2 = (int) angle;
         angle2 %= 360;
-        if (dz < 0) {
-            angle2 = (int) (angle - 180);
-        }
-
+//        if (dz < 0) {
+//            angle2 = (int) (angle - 180);
+//        }
+        
+        //if (posi.x - mPos.x > 0)
+        //    angle2 = -angle2;
         return -angle2;
     }
     
@@ -211,17 +213,17 @@ public class Camera {
      * Angle rotate in Z axis
      * @return 
      */
-    public float GetAngleZ() {
-        float dy = mView.y - mPos.y;
-        float dx = mView.x - mPos.x;
+    public float GetAngleZ(Vector3 posi) {
+        float dy = posi.y - mPos.y;
+        float dx = posi.x - mPos.x;
         float angle = (float) Math.atan(dx / dy);
         angle = 180 * angle / 3.141592654f;
         int angle2 = (int) angle;
         angle2 %= 360;
-        if (dy < 0) {
-            angle2 = (int) (angle - 180);
-        }
+//        if (dy < 0) {
+//            angle2 = (int) (angle - 180);
+//        }
 
-        return -angle2;
+        return angle2;
     }
 };

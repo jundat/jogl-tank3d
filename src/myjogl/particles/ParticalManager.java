@@ -7,6 +7,7 @@ package myjogl.particles;
 import java.awt.Color;
 import java.util.Vector;
 import javax.media.opengl.GL;
+import myjogl.utils.Camera;
 import myjogl.utils.Writer;
 
 /**
@@ -41,11 +42,11 @@ public class ParticalManager {
         }
     }
 
-    public void Draw(GL gl, float angle) {
+    public void Draw(GL gl, Camera camera) {
         for (int i = 0; i < m_listPartical.size(); i++) {
             gl.glPushMatrix();
                 ParticleEngine temp = (ParticleEngine) m_listPartical.elementAt(i);
-                temp.Draw(gl, angle);
+                temp.Draw(gl, camera);
             gl.glPopMatrix();
         }
     }

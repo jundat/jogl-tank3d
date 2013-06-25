@@ -5,6 +5,7 @@
 package myjogl.particles;
 
 import javax.media.opengl.GL;
+import myjogl.utils.Camera;
 import myjogl.utils.Vector3;
 
 /**
@@ -56,7 +57,7 @@ public class ParticleEngine {
     }
     
     //Draw list particle
-    public void Draw(GL gl, float Y) {
+    public void Draw(GL gl, Camera Y) {
 
     }
 }

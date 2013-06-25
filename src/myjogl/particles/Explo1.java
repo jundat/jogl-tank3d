@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.util.Random;
 import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
+import myjogl.utils.Camera;
 import myjogl.utils.ResourceManager;
 import myjogl.utils.Vector3;
 
@@ -175,7 +176,7 @@ public class Explo1 extends ParticleEngine {
     }
     
     @Override
-    public void Draw(GL gl, float Y) {
+    public void Draw(GL gl, Camera camera) {
         gl.glEnable(GL.GL_TEXTURE);
         gl.glDepthMask(false);
         gl.glEnable(GL.GL_BLEND);
@@ -188,8 +189,18 @@ public class Explo1 extends ParticleEngine {
             m_texture[temp].bind();
             gl.glPushMatrix();
             
-            gl.glTranslatef(m_ParticleList[i].m_Position.x, m_ParticleList[i].m_Position.y, m_ParticleList[i].m_Position.z);
+            Particle pa = m_ParticleList[i];
+            
+            float Y = camera.GetAngleY(pa.m_Position);
+            float X = camera.GetAngleX(pa.m_Position);
+            float Z = camera.GetAngleZ(pa.m_Position);
+            
+            gl.glTranslatef(pa.m_Position.x, pa.m_Position.y, pa.m_Position.z);
+            
+            gl.glRotatef(Z, 0, 0, 1);
+            gl.glRotatef(X, 1, 0, 0);
             gl.glRotatef(Y, 0, 1, 0);
+            
             gl.glScalef(m_scale, m_scale, m_scale);
             gl.glBegin(GL.GL_QUADS);
             
