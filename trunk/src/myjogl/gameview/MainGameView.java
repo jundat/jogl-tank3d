@@ -218,7 +218,7 @@ public class MainGameView implements GameView {
             currentTank = 0; //so tank dang online
 
             for (int i = 0; i < MAX_CURRENT_AI; i++) {
-                tankAis[i].isAlive = false;
+                tankAis[i].reset();
             }
             
             //sound
@@ -436,9 +436,11 @@ public class MainGameView implements GameView {
                 //vs Boss
                 if (bullet.getBound().isIntersect(boss.getBound())) {
                     boss.explode();
+                    bullet.isAlive = false;
                     boss.isAlive = false;
                     this.isPause = true;
                     GameEngine.getInst().attach(new GameOverView(this));
+                    return;
                 }
 
                 //tankAis
@@ -505,6 +507,7 @@ public class MainGameView implements GameView {
                     boss.explode();
                     this.isPause = true;
                     GameEngine.getInst().attach(new GameOverView(this));
+                    return;
                 }
 
                 //playerTank
