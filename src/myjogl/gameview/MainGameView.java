@@ -39,7 +39,7 @@ public class MainGameView implements GameView {
     private SkyBox m_skybox;
     private Camera camera;
     private CameraFo cameraFo;
-    boolean bTest = true;
+    boolean bTest = false;
     private Writer writer;
     private Vector3 bossPosition;
     //light
@@ -104,7 +104,7 @@ public class MainGameView implements GameView {
     }
 
     public void pointerMoved(MouseEvent e) {
-        if (bTest) {
+        if (!bTest) {
             return;
         }
 
@@ -221,6 +221,9 @@ public class MainGameView implements GameView {
             for (int i = 0; i < MAX_CURRENT_AI; i++) {
                 tankAis[i].reset();
             }
+            
+            //reset particle
+            ParticalManager.getInstance().Clear();
 
             //sound
             isGameOver = false;

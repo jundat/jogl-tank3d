@@ -30,6 +30,10 @@ public class ParticalManager {
         m_listPartical = new Vector();
     }
 
+    public void Clear() {
+        m_listPartical.clear();
+    }
+    
     public void Update() {
         for (int i = 0; i < m_listPartical.size(); i++) {
             ParticleEngine par = (ParticleEngine) m_listPartical.elementAt(i);
