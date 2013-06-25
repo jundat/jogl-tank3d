@@ -104,6 +104,9 @@ public class MainGameView implements GameView {
     }
 
     public void pointerMoved(MouseEvent e) {
+        if(bTest)
+            return;
+        
         int x = e.getXOnScreen();
         int y = e.getYOnScreen();
         //System.err.print("\n" + x + " " + y);
@@ -493,14 +496,13 @@ public class MainGameView implements GameView {
             TankAI tankAi = tankAis[i];
 
             for (int j = 0; j < Tank.TANK_NUMBER_BULLETS; j++) {
-
                 TankBullet aiBullet = tankAi.bullets[j];
-
-
+                
                 //vs Boss
                 if (aiBullet.getBound().isIntersect(boss.getBound())) {
-                    boss.explode();
+                    aiBullet.isAlive = false;
                     boss.isAlive = false;
+                    boss.explode();
                     this.isPause = true;
                     GameEngine.getInst().attach(new GameOverView(this));
                 }
