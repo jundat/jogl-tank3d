@@ -39,7 +39,7 @@ public class MainGameView implements GameView {
     private SkyBox m_skybox;
     private Camera camera;
     private CameraFo cameraFo;
-    boolean bTest = false;
+    boolean bTest = true;
     private Writer writer;
     private Vector3 bossPosition;
     //light
@@ -104,9 +104,10 @@ public class MainGameView implements GameView {
     }
 
     public void pointerMoved(MouseEvent e) {
-        if(bTest)
+        if (bTest) {
             return;
-        
+        }
+
         int x = e.getXOnScreen();
         int y = e.getYOnScreen();
         //System.err.print("\n" + x + " " + y);
@@ -220,7 +221,7 @@ public class MainGameView implements GameView {
             for (int i = 0; i < MAX_CURRENT_AI; i++) {
                 tankAis[i].reset();
             }
-            
+
             //sound
             isGameOver = false;
             sBackground.setVolume(Sound.MAX_VOLUME);
@@ -434,13 +435,15 @@ public class MainGameView implements GameView {
             if (bullet.isAlive) {
 
                 //vs Boss
-                if (bullet.getBound().isIntersect(boss.getBound())) {
-                    boss.explode();
-                    bullet.isAlive = false;
-                    boss.isAlive = false;
-                    this.isPause = true;
-                    GameEngine.getInst().attach(new GameOverView(this));
-                    return;
+                if (bullet.isAlive && boss.isAlive) {
+                    if (bullet.getBound().isIntersect(boss.getBound())) {
+                        boss.explode();
+                        bullet.isAlive = false;
+                        boss.isAlive = false;
+                        this.isPause = true;
+                        GameEngine.getInst().attach(new GameOverView(this));
+                        return;
+                    }
                 }
 
                 //tankAis
@@ -499,15 +502,17 @@ public class MainGameView implements GameView {
 
             for (int j = 0; j < Tank.TANK_NUMBER_BULLETS; j++) {
                 TankBullet aiBullet = tankAi.bullets[j];
-                
+
                 //vs Boss
-                if (aiBullet.getBound().isIntersect(boss.getBound())) {
-                    aiBullet.isAlive = false;
-                    boss.isAlive = false;
-                    boss.explode();
-                    this.isPause = true;
-                    GameEngine.getInst().attach(new GameOverView(this));
-                    return;
+                if (aiBullet.isAlive && boss.isAlive) {
+                    if (aiBullet.getBound().isIntersect(boss.getBound())) {
+                        aiBullet.isAlive = false;
+                        boss.isAlive = false;
+                        boss.explode();
+                        this.isPause = true;
+                        GameEngine.getInst().attach(new GameOverView(this));
+                        return;
+                    }
                 }
 
                 //playerTank
