@@ -32,10 +32,15 @@ public class GameOverView implements GameView {
     //
     MainGameView mainGameView;
     Texture ttBg;
+    //
+    public static long TIME_ANIMATION = 500;
+    long time = 0;
 
     public GameOverView(MainGameView mainGameView) {
         this.mainGameView = mainGameView;
         mainGameView.isPause = true;
+        //
+        time = 0;
     }
 
     public void keyPressed(KeyEvent e) {
@@ -112,18 +117,25 @@ public class GameOverView implements GameView {
     }
 
     public void update(long elapsedTime) {
+        time += elapsedTime;
     }
 
     public void display() {
-        Renderer.Render(ttBg, pBg.x, pBg.y);
-        //
+        float delta = 1.0f;
+        if (time <= TIME_ANIMATION) {
+            delta = (float) time / (float) TIME_ANIMATION;
+        }
 
+        Renderer.Render(ttBg, pBg.x, pBg.y * delta);
+        //
+        itMenu.SetPosition(rectMenu.x, (int)(rectMenu.y * delta));
+        itRetry.SetPosition(rectRetry.x, (int)(rectRetry.y * delta));
         itMenu.Render();
         itRetry.Render();
         //
-        GameEngine.writer.Render("GAME", pGame.x, pGame.y, 0.9f, 0.9f);
-        GameEngine.writer.Render("OVER", pOver.x, pOver.y, 0.9f, 0.9f);
-        GameEngine.writer.Render("MENU", rectMenu.x + 24, rectMenu.y + 12, 0.85f, 0.85f);
-        GameEngine.writer.Render("RETRY", rectRetry.x + 18, rectRetry.y + 12, 0.85f, 0.85f);
+        GameEngine.writer.Render("GAME", pGame.x, pGame.y * delta, 0.9f, 0.9f);
+        GameEngine.writer.Render("OVER", pOver.x, pOver.y * delta, 0.9f, 0.9f);
+        GameEngine.writer.Render("MENU", rectMenu.x + 24, (rectMenu.y + 12) * delta, 0.85f, 0.85f);
+        GameEngine.writer.Render("RETRY", rectRetry.x + 18, (rectRetry.y + 12) * delta, 0.85f, 0.85f);
     }
 }

@@ -88,16 +88,16 @@ public class Boss {
             gl.glBegin(GL.GL_QUADS);
             {
                 gl.glTexCoord2f(0, 0);
-                gl.glVertex3f(position.x, 0, position.z);
+                gl.glVertex3f(position.x, 2, position.z);
 
                 gl.glTexCoord2f(1, 0);
-                gl.glVertex3f(position.x + BOSS_WIDTH, 0, position.z);
+                gl.glVertex3f(position.x + BOSS_WIDTH, 2, position.z);
 
                 gl.glTexCoord2f(1, 1);
-                gl.glVertex3f(position.x + BOSS_WIDTH, 0, position.z + BOSS_HEIGHT);
+                gl.glVertex3f(position.x + BOSS_WIDTH, 2, position.z + BOSS_HEIGHT);
 
                 gl.glTexCoord2f(0, 1);
-                gl.glVertex3f(position.x, 0, position.z + BOSS_HEIGHT);
+                gl.glVertex3f(position.x, 2, position.z + BOSS_HEIGHT);
             }
             gl.glEnd();
             tt.disable();

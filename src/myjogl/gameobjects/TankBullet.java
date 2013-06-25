@@ -161,14 +161,9 @@ public class TankBullet {
     public void draw() {
         if (this.isAlive) {
             GL gl = Global.drawable.getGL();
-            gl.glColor4f(1, 1, 1, 1);
-
+            
             tt.enable();
             tt.bind();
-
-            gl.glEnable(GL.GL_BLEND);
-            gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-
             gl.glBegin(GL.GL_QUADS);
             {
                 gl.glTexCoord2f(0, 0);
@@ -185,8 +180,6 @@ public class TankBullet {
             }
             gl.glEnd();
             tt.disable();
-            
-            gl.glDisable(GL.GL_BLEND);
         }
     }
 
