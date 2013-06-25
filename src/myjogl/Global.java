@@ -44,89 +44,84 @@ public class Global {
     public static void drawCube(Texture tt, float x, float y, float z,
             float sx, float sy, float sz) {
         GL gl = Global.drawable.getGL();
-
         gl.glPushMatrix();
+        
         gl.glTranslatef(x, y, z);
-
         tt.enable();
         tt.bind();
-
+        
         gl.glBegin(GL.GL_QUADS);        // Draw The Cube Using quads
         {
-            //top is in upper
             gl.glNormal3f(0, 1, 0);
             //glColor3f(0.0f,1.0f,0.0f);    // Color Blue
-            gl.glTexCoord2f(sx, sz);
+            gl.glTexCoord2f(1, 1);
             gl.glVertex3f(sx, sy, 0);    // Top Right Of The Quad (Top)
-            gl.glTexCoord2f(0.0f, sz);
+            gl.glTexCoord2f(0.0f, 1);
             gl.glVertex3f(0, sy, 0);    // Top Left Of The Quad (Top)
             gl.glTexCoord2f(0.0f, 0.0f);
             gl.glVertex3f(0, sy, sz);    // Bottom Left Of The Quad (Top)
-            gl.glTexCoord2f(sx, 0.0f);
+            gl.glTexCoord2f(1, 0.0f);
             gl.glVertex3f(sx, sy, sz);    // Bottom Right Of The Quad (Top)
-
+            
             gl.glNormal3f(0, -1, 0);
             //glColor3f(1.0f,0.5f,0.0f);    // Color Orange
-            gl.glTexCoord2f(sx, sz);
+            gl.glTexCoord2f(1, 1);
             gl.glVertex3f(sx, 0, sz);    // Top Right Of The Quad (Bottom)
-            gl.glTexCoord2f(0.0f, sz);
+            gl.glTexCoord2f(0.0f, 1);
             gl.glVertex3f(0, 0, sz);    // Top Left Of The Quad (Bottom)
             gl.glTexCoord2f(0.0f, 0.0f);
             gl.glVertex3f(0, 0, 0);    // Bottom Left Of The Quad (Bottom)
-            gl.glTexCoord2f(sx, 0.0f);
+            gl.glTexCoord2f(1, 0.0f);
             gl.glVertex3f(sx, 0, 0);    // Bottom Right Of The Quad (Bottom)
 
             gl.glNormal3f(0, 0, 1);
             //glColor3f(1.0f,0.0f,0.0f);    // Color Red    
-            gl.glTexCoord2f(sx, sy);
+            gl.glTexCoord2f(1, 1);
             gl.glVertex3f(sx, sy, sz);    // Top Right Of The Quad (Front)
-            gl.glTexCoord2f(0.0f, sy);
+            gl.glTexCoord2f(0.0f, 1);
             gl.glVertex3f(0, sy, sz);    // Top Left Of The Quad (Front)
             gl.glTexCoord2f(0.0f, 0.0f);
             gl.glVertex3f(0, 0, sz);    // Bottom Left Of The Quad (Front)
-            gl.glTexCoord2f(sx, 0.0f);
+            gl.glTexCoord2f(1, 0.0f);
             gl.glVertex3f(sx, 0, sz);    // Bottom Right Of The Quad (Front)
 
             gl.glNormal3f(0, 0, -1);
             //glColor3f(1.0f,1.0f,0.0f);    // Color Yellow
-            gl.glTexCoord2f(sx, sy);
+            gl.glTexCoord2f(1, 1);
             gl.glVertex3f(sx, 0, 0);    // Top Right Of The Quad (Back)
-            gl.glTexCoord2f(0.0f, sy);
+            gl.glTexCoord2f(0.0f, 1);
             gl.glVertex3f(0, 0, 0);    // Top Left Of The Quad (Back)
             gl.glTexCoord2f(0.0f, 0.0f);
             gl.glVertex3f(0, sy, 0);    // Bottom Left Of The Quad (Back)
-            gl.glTexCoord2f(sx, 0.0f);
+            gl.glTexCoord2f(1, 0.0f);
             gl.glVertex3f(sx, sy, 0);    // Bottom Right Of The Quad (Back)
 
             gl.glNormal3f(-1, 0, 0);
             //glColor3f(0.0f,0.0f,1.0f);    // Color Blue
-            gl.glTexCoord2f(sz, sy);
+            gl.glTexCoord2f(1, 1);
             gl.glVertex3f(0, sy, sz);    // Top Right Of The Quad (Left)
-            gl.glTexCoord2f(0.0f, sy);
+            gl.glTexCoord2f(0.0f, 1);
             gl.glVertex3f(0, sy, 0);    // Top Left Of The Quad (Left)
             gl.glTexCoord2f(0.0f, 0.0f);
             gl.glVertex3f(0, 0, 0);    // Bottom Left Of The Quad (Left)
-            gl.glTexCoord2f(sz, 0.0f);
+            gl.glTexCoord2f(1, 0.0f);
             gl.glVertex3f(0, 0, sz);    // Bottom Right Of The Quad (Left)
 
             gl.glNormal3f(1, 0, 0);
             //glColor3f(1.0f,0.0f,1.0f);    // Color Violet
-            gl.glTexCoord2f(sz, sy);
+            gl.glTexCoord2f(1, 1);
             gl.glVertex3f(sx, sy, 0);    // Top Right Of The Quad (Right)
-            gl.glTexCoord2f(0.0f, sy);
+            gl.glTexCoord2f(0.0f, 1);
             gl.glVertex3f(sx, sy, sz);    // Top Left Of The Quad (Right)
             gl.glTexCoord2f(0.0f, 0.0f);
             gl.glVertex3f(sx, 0, sz);    // Bottom Left Of The Quad (Right)
-            gl.glTexCoord2f(sz, 0.0f);
+            gl.glTexCoord2f(1, 0.0f);
             gl.glVertex3f(sx, 0, 0);    // Bottom Right Of The Quad (Right)
         }
         gl.glEnd();            // End Drawing The Cube
-
         tt.disable();
-
+        
         gl.glPopMatrix();
-
-        //reset color
         gl.glColor4f(1, 1, 1, 1);
     }
 
