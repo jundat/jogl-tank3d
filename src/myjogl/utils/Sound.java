@@ -16,6 +16,9 @@ import javax.sound.sampled.FloatControl;
  */
 public class Sound {
 
+    public static float MIN_VOLUME = -80.0f;
+    public static float MAX_VOLUME = 6.0f;
+    //
     String fileName;
     boolean isPause = false;
     boolean isLoop = false;
@@ -108,6 +111,11 @@ public class Sound {
         }
     }
 
+    public float getVolume() {
+        FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        return volume.getValue();
+    }
+    
     public void setVolume(float gainAmount) {
         FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
         volume.setValue(gainAmount);

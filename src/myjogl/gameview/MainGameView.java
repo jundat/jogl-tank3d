@@ -21,7 +21,7 @@ import myjogl.gameobjects.*;
 public class MainGameView implements GameView {
 
     public final static int SCORE_DELTA = 10;
-    public final static int NUMBER_OF_LIEF = 0;
+    public final static int NUMBER_OF_LIEF = 3;
     public final static int MAX_CURRENT_AI = 4; //maximum current TankAI in 1 screen, at a moment
     //
     public boolean isPause;
@@ -51,8 +51,10 @@ public class MainGameView implements GameView {
     //
     Boss boss;
     //sound
-    Sound sBackground;
+    public Sound sBackground;
     //
+    private boolean isGameOver;
+    
 
     public MainGameView() {
         super();
@@ -175,7 +177,7 @@ public class MainGameView implements GameView {
             playerTank.load();
             numberOfLife = NUMBER_OF_LIEF;
 
-            lastTanks = 200; //so tank chua ra
+            lastTanks = 20; //so tank chua ra
             currentTank = 0; //so tank dang online
             tankAis = new TankAI[MAX_CURRENT_AI];
             for (int i = 0; i < MAX_CURRENT_AI; i++) {
@@ -183,6 +185,11 @@ public class MainGameView implements GameView {
                 tankAis[i].load();
                 tankAis[i].isAlive = false;
             }
+            
+            //sound
+            isGameOver = false;
+            sBackground.setVolume(Sound.MAX_VOLUME);
+            //
         } catch (Exception e) {
             System.out.println("Can not file map: MAP" + Global.level);
         }
@@ -190,9 +197,6 @@ public class MainGameView implements GameView {
 
     public void load() {
         this.setLight();
-
-        //init map
-        this.loadLevel(Global.level); //start at Global.level 0
 
         isPause = false;
 
@@ -212,7 +216,11 @@ public class MainGameView implements GameView {
         writer = new Writer("data/font/Motorwerk_80.fnt");
         //sound
         sBackground = ResourceManager.getInst().getSound("sound/bg_game.wav", true);
+        sBackground.stop();
         sBackground.play();
+        
+        //init map
+        this.loadLevel(Global.level); //start at Global.level 0
     }
 
     public void unload() {
@@ -287,6 +295,7 @@ public class MainGameView implements GameView {
     private void checkGameOver() {
         if (numberOfLife <= 0) { //gameover
             GameEngine.getInst().attach(new GameOverView(this));
+            this.isGameOver = true;
         } else { // reset new life
 
             for (Object o : TankMap.getInst().listTankPosition) {
