@@ -14,6 +14,7 @@ import myjogl.particles.Explo1;
 import myjogl.particles.ParticalManager;
 import myjogl.particles.RoundSparks;
 import myjogl.utils.GLModel;
+import myjogl.utils.ID;
 import myjogl.utils.Md2;
 import myjogl.utils.ModelLoaderOBJ;
 import myjogl.utils.TankMap;
@@ -24,6 +25,7 @@ public class Tank {
 
     public final static float TANK_FIRE_TIME = 400; //millisecond between 2 fire time
     public final static float TANK_VELOCITY = 0.25f; //do not change it
+    public final static float TANK_VELOCITY_SLOW = 0.15f; //do not change it
     public final static float TANK_WIDTH = 2.75f;
     public final static float TANK_HEIGHT = 2.75f;
     public final static int TANK_NUMBER_BULLETS = 10;
@@ -32,11 +34,11 @@ public class Tank {
     private Vector3 position;
     private int direction;
     private Vector3 lastPosition;
+    private float velocity = TANK_VELOCITY;
     //
     public TankBullet bullets[];
     protected Texture texture;
     protected long fireTime = 0;
-    
     GLModel model = null;
 
     //
@@ -78,7 +80,7 @@ public class Tank {
         //
         texture = ResourceManager.getInst().getTexture("data/game/tank.png");
         //
-        
+
         model = ModelLoaderOBJ.LoadModel("data/model/HK-Tank.obj",
                 "data/model/HK-Tank.mtl", "data/model/t0026_0.png", Global.drawable);
 
@@ -118,7 +120,7 @@ public class Tank {
         } else {
             switch (direction) {
                 case CDirections.UP:
-                    position.z -= TANK_VELOCITY;
+                    position.z -= velocity;
                     if (position.z <= 0) {
                         position.z = 0;
                         return false;
@@ -126,7 +128,7 @@ public class Tank {
                     break;
 
                 case CDirections.DOWN:
-                    position.z += TANK_VELOCITY;
+                    position.z += velocity;
                     if (position.z > TankMap.getInst().height - TANK_HEIGHT) {
                         position.z = TankMap.getInst().height - TANK_HEIGHT;
                         return false;
@@ -134,7 +136,7 @@ public class Tank {
                     break;
 
                 case CDirections.LEFT:
-                    position.x -= TANK_VELOCITY;
+                    position.x -= velocity;
                     if (position.x <= 0) {
                         position.x = 0;
                         return false;
@@ -142,7 +144,7 @@ public class Tank {
                     break;
 
                 case CDirections.RIGHT:
-                    position.x += TANK_VELOCITY;
+                    position.x += velocity;
                     if (position.x > TankMap.getInst().width - TANK_WIDTH) {
                         position.x = TankMap.getInst().width - TANK_WIDTH;
                         return false;
@@ -155,6 +157,13 @@ public class Tank {
                 position = tempLastPos;
                 return false;
             }
+
+            if (TankMap.getInst().isIntersectItem(this.getBound(), ID.WATER)) {
+                velocity = TANK_VELOCITY_SLOW;
+            } else {
+                velocity = TANK_VELOCITY;
+            }
+
         }
 
         return true;
@@ -260,16 +269,17 @@ public class Tank {
                 //Global.drawCube(texture, 0, 0, 0, Tank.TANK_WIDTH, 2, Tank.TANK_HEIGHT);
 
                 float scale = 0.003f;
-                gl.glTranslatef(TANK_WIDTH/2, 0, TANK_WIDTH/2);
+                gl.glTranslatef(TANK_WIDTH / 2, 0, TANK_WIDTH / 2);
                 gl.glScalef(scale, scale, scale);
                 float angle = 0;
-                if (direction == CDirections.UP)
+                if (direction == CDirections.UP) {
                     angle = 180;
-                else if (direction == CDirections.LEFT)
+                } else if (direction == CDirections.LEFT) {
                     angle = -90;
-                else if (direction == CDirections.RIGHT)
+                } else if (direction == CDirections.RIGHT) {
                     angle = 90;
-                
+                }
+
                 gl.glRotatef(angle, 0, 1, 0);
                 model.opengldraw(Global.drawable);
             }

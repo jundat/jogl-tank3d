@@ -221,7 +221,7 @@ public class MainGameView implements GameView {
             for (int i = 0; i < MAX_CURRENT_AI; i++) {
                 tankAis[i].reset();
             }
-            
+
             //reset particle
             ParticalManager.getInstance().Clear();
 
@@ -398,6 +398,11 @@ public class MainGameView implements GameView {
             return false;
         }
 
+        if (boss.isAlive && rectTank.isIntersect(boss.getBound())) {
+            return true;
+        }
+
+        //player tank
         if (tank == playerTank) { //check player vs tankAis
             for (int i = 0; i < MAX_CURRENT_AI; i++) {
                 if (tankAis[i].isAlive) { //is alive
@@ -407,7 +412,8 @@ public class MainGameView implements GameView {
                     }
                 }
             }
-        } else { //tankAi
+        } else //tank AI
+        { //tankAi
             //tankAis vs playerTank
             if (playerTank.isAlive) {
                 if (rectTank.isIntersect(playerTank.getBound())) {
