@@ -27,6 +27,9 @@ public class MainGameView implements GameView {
     public final static int SCORE_DELTA = 10;
     public final static int NUMBER_OF_LIEF = 3;
     public final static int MAX_CURRENT_AI = 4; //maximum current TankAI in 1 screen, at a moment
+    public final static int DELAY_TIME = 50;
+    public final static float DELTA_BETA = 0.0513f;
+    public final static float DELTA_R = 0.25f;
     //
     public boolean isPause;
     private int numberOfLife = NUMBER_OF_LIEF;
@@ -40,6 +43,10 @@ public class MainGameView implements GameView {
     private Camera camera;
     private CameraFo cameraFo;
     boolean bTest = false;
+    boolean bSliding = true;
+    float deltaBeta = DELTA_BETA;
+    float deltaR = DELTA_R;
+    int delayTime = 0;
     private Writer writer;
     private Vector3 bossPosition;
     //light
@@ -198,6 +205,12 @@ public class MainGameView implements GameView {
 
     public void loadLevel(int level) {
         Global.level = level;
+        bTest = false;
+        bSliding = true;
+        deltaBeta = DELTA_BETA;
+        deltaR = DELTA_R;
+        delayTime = 0;
+        cameraFo = new CameraFo(20, 0, 20, Math.toRadians(45), Math.toRadians(0), 5, 0, 1, 0);
 
         try {
             //init map
@@ -257,7 +270,7 @@ public class MainGameView implements GameView {
         sBackground = ResourceManager.getInst().getSound("sound/bg_game.wav", true);
         sBackground.stop();
         sBackground.play();
-        cameraFo = new CameraFo(20, 0, 20, Math.toRadians(90), Math.toRadians(0), 10, 0, 1, 0);
+        
 
         //----------------
 
@@ -546,16 +559,16 @@ public class MainGameView implements GameView {
     // end check collision
     //
     private void TestParticle() {
-        Vector3 a = new Vector3(40, 0, 20);
-        float scale = 0.3f;
-        float time = 0.3f;
+        Vector3 a = new Vector3(35, 0, 20);
+        float scale = 0.6f;
+        float time = 0.01f;
         Explo shootParticle = new Explo(a, time, scale);
         shootParticle.LoadingTexture();
         ParticalManager.getInstance().Add(shootParticle);
 
-        Vector3 a1 = new Vector3(0, 0, 20);
-        float scale1 = 0.3f;
-        float time1 = 0.3f;
+        Vector3 a1 = new Vector3(5, 0, 20);
+        float scale1 = 0.6f;
+        float time1 = 0.01f;
         Explo shootParticle1 = new Explo(a1, time1, scale1);
         shootParticle1.LoadingTexture();
         ParticalManager.getInstance().Add(shootParticle1);
@@ -567,29 +580,49 @@ public class MainGameView implements GameView {
         }
 
         cameraFo.Update();
+        
+        if (bSliding)
+        {
+            cameraFo.beta -= deltaBeta;
+            cameraFo.r += deltaR;
+            if (cameraFo.r > 15.0f)
+                deltaBeta -= 0.0005;
+            if (deltaBeta < 0)
+            {
+                deltaBeta = 0;
+                deltaR = 0;
+                delayTime++;
+                if (delayTime > DELAY_TIME)
+                {
+                    bSliding = false;
+                    TestParticle();
+                }
+            }
+            System.out.println(cameraFo.r);
+        } else
+        {
+            handleInput();
+            //check bullet collisiotn
+            this.checkBulletCollision();
 
-        handleInput();
-        //check bullet collisiotn
-        this.checkBulletCollision();
+            //tank
+            playerTank.update(dt);
 
-        //tank
-        playerTank.update(dt);
+            //tankAI
+            createNewAi();
 
-        //tankAI
-        createNewAi();
+            //update ai
+            for (int i = 0; i < MAX_CURRENT_AI; i++) {
+                tankAis[i].update(dt);
 
-        //update ai
-        for (int i = 0; i < MAX_CURRENT_AI; i++) {
-            tankAis[i].update(dt);
-
-            if (tankAis[i].isAlive) {
-                if (this.checkTankCollision(tankAis[i])) {
-                    tankAis[i].rollBack();
-                    tankAis[i].randomNewDirection();
+                if (tankAis[i].isAlive) {
+                    if (this.checkTankCollision(tankAis[i])) {
+                        tankAis[i].rollBack();
+                        tankAis[i].randomNewDirection();
+                    }
                 }
             }
         }
-
         //particle
         ParticalManager.getInstance().Update();
     }
@@ -611,7 +644,7 @@ public class MainGameView implements GameView {
 
         gl.glEnable(GL.GL_MULTISAMPLE);
 
-        if (bTest) {
+        if (bTest || bSliding) {
             glu.gluLookAt(cameraFo.x, cameraFo.y, cameraFo.z, cameraFo.lookAtX, cameraFo.lookAtY, cameraFo.lookAtZ, cameraFo.upX, cameraFo.upY, cameraFo.upZ);
         } else {
             glu.gluLookAt(

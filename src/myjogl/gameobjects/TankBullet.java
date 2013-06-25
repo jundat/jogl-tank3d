@@ -76,7 +76,7 @@ public class TankBullet {
     public void explode() {
         Vector3 a = getPosition().Clone();
         float scale = 0.03f;
-        float time = 0.3f;
+        float time = 0.2f;
         Explo shootParticle = new Explo(a, time, scale);
         shootParticle.LoadingTexture();
         ParticalManager.getInstance().Add(shootParticle);
