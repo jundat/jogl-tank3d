@@ -54,7 +54,7 @@ public class Tank3D implements GLEventListener {
         }
 
         canvas = new GLCanvas();
-        canvas.setAutoSwapBufferMode(false);
+        canvas.setAutoSwapBufferMode(true);
         
         GameEngine engine = GameEngine.getInst();
         engine.init(this);
@@ -99,6 +99,7 @@ public class Tank3D implements GLEventListener {
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         gl.glClearDepth(1.0f);
         gl.glEnable(GL.GL_DEPTH_TEST);
+        //gl.glEnable(GL.GL_CULL_FACE);
         gl.glDepthFunc(GL.GL_LEQUAL);
         gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
         
@@ -146,7 +147,7 @@ public class Tank3D implements GLEventListener {
         
         // Flush all drawing operations to the graphics card
         gl.glFlush();
-        canvas.swapBuffers();
+        //canvas.swapBuffers();
     }
 
     public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {

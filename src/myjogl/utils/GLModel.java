@@ -395,7 +395,8 @@ public class GLModel {
 
         this.skin.enable();
         this.skin.bind();
-
+        
+        gl.glColor3f(1, 1, 1);
         gl.glCallList(objectlist);
         gl.glDisable(GL.GL_COLOR_MATERIAL);
 
