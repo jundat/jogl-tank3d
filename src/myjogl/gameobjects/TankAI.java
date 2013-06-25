@@ -29,7 +29,17 @@ public class TankAI extends Tank {
         super(pos, dir);
         counterFire = 0;
     }
-
+    
+    public void reset() {
+//        super.reset(new Vector3(10, 0, 10), CDirections.DOWN);
+//        this.isAlive = false;
+        
+        isAlive = false;
+        for (int i = 0; i < TANK_NUMBER_BULLETS; i++) {
+            bullets[i].isAlive = false;
+        }
+    }
+    
     @Override
     public void load() {
         super.load();
