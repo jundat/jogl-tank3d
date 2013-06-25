@@ -23,7 +23,7 @@ import myjogl.utils.ResourceManager;
 
 public class Tank {
 
-    public final static float TANK_FIRE_TIME = 400; //millisecond between 2 fire time
+    public final static float TANK_FIRE_TIME = 500; //millisecond between 2 fire time
     public final static float TANK_VELOCITY = 0.25f; //do not change it
     public final static float TANK_VELOCITY_SLOW = 0.15f; //do not change it
     public final static float TANK_WIDTH = 2.75f;
@@ -178,7 +178,7 @@ public class Tank {
 
             Vector3 bpos = new Vector3(position);
             bpos.x += TANK_WIDTH / 2 - TankBullet.BULLET_WIDTH / 2;
-            bpos.y = 2;
+            bpos.y = 1;
             bpos.z += TANK_HEIGHT / 2 - TankBullet.BULLET_HEIGHT / 2;
 
             for (int i = 0; i < TANK_NUMBER_BULLETS; i++) {

@@ -4,6 +4,8 @@
  */
 package myjogl.gameobjects;
 
+import java.awt.geom.Rectangle2D;
+
 /**
  * My rectangle
  *
@@ -24,18 +26,12 @@ public class CRectangle {
         this.h = h;
     }
 
-    private boolean valueInRange(float value, float min, float max) {
-        return (value >= min) && (value <= max);
+    private Rectangle2D toRect() {
+        return new Rectangle2D.Double(x,y,w,h);
     }
-
+    
     public boolean isIntersect(CRectangle B) {
-        boolean xOverlap = valueInRange(this.x, B.x, B.x + B.w)
-                || valueInRange(B.x, this.x, this.x + this.w);
-
-        boolean yOverlap = valueInRange(this.y, B.y, B.y + B.h)
-                || valueInRange(B.y, this.y, this.y + B.h);
-
-        return xOverlap && yOverlap;
+        return this.toRect().intersects(B.toRect());
     }
 
     public int getCollisionDirection(CRectangle _rect2) {
@@ -61,5 +57,10 @@ public class CRectangle {
         }
 
         return CDirections.NONE;
+    }
+    
+    @Override
+    public String toString() {
+        return "(" + x + "," + y + "," + w + "," + h + "," +")";
     }
 }

@@ -37,7 +37,12 @@ public class TankMap {
     //
     private static Texture ttGachTuong = null;
     private static Texture ttGachTuong2 = null;
+    
     private static Texture ttGachMen = null;
+    private static Texture ttGachMen1 = null;
+    private static Texture ttGachMen2 = null;
+    private static Texture ttGachMen3 = null;
+        
     private static Texture ttRockTop = null;
     private static Texture ttRockEdge = null;
     private static Texture ttWater = null;
@@ -62,7 +67,11 @@ public class TankMap {
     private TankMap() {
         ttGachTuong = ResourceManager.getInst().getTexture("data/game/gach_tuong.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
         ttGachTuong2 = ResourceManager.getInst().getTexture("data/game/gach_tuong2.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
-        ttGachMen = ResourceManager.getInst().getTexture("data/game/gach_men.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
+        
+        ttGachMen1 = ResourceManager.getInst().getTexture("data/game/gach_men1.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
+        ttGachMen2 = ResourceManager.getInst().getTexture("data/game/gach_men2.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
+        ttGachMen3 = ResourceManager.getInst().getTexture("data/game/gach_men3.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
+        
         ttRockTop = ResourceManager.getInst().getTexture("data/game/rock_top.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
         ttRockEdge = ResourceManager.getInst().getTexture("data/game/rock_edge.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
         ttWater = ResourceManager.getInst().getTexture("data/game/water.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
@@ -167,11 +176,22 @@ public class TankMap {
     }
 
     //only use png file
-    public void LoadMap(String fileName) {
-        if (!fileName.endsWith("png")) {
-            System.err.println("Map.LoadMap(): only use PNG map! - Close");
-            return;
+    public void LoadMap(int mapNumber) {        
+        switch(mapNumber % 3) {
+            case 0:
+                ttGachMen = ttGachMen1;
+                break;
+                
+            case 1:
+                ttGachMen = ttGachMen2;
+                break;
+                
+            case 2:
+                ttGachMen = ttGachMen3;
+                break;
         }
+        
+        String fileName = "data/map/MAP" + mapNumber + ".png";
 
         try {
             InputStream is = getClass().getResourceAsStream(fileName);
@@ -224,7 +244,8 @@ public class TankMap {
     public void Render() { /*float w, float h*/
         GL gl = Global.drawable.getGL();
 
-        this.drawPlane(-(int) TILE_BORDER, -(int) TILE_BORDER, width + (int) TILE_BORDER, height + (int) TILE_BORDER);
+        //this.drawPlane(-(int) TILE_BORDER, -(int) TILE_BORDER, width + (int) TILE_BORDER, height + (int) TILE_BORDER);
+        this.drawPlane(0, 0, width, height);
         this.drawBorder();
 
         int blue = 0;
@@ -304,32 +325,32 @@ public class TankMap {
     }
 
     private void drawBorder() {
-        int border = (int) TILE_BORDER;
-        for (int i = -border; i < height + border; ++i) //z
-        {
-            this.drawRock(-border, 0, i * TILE_WIDTH,
-                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-            this.drawRock(-border + 1, 0, i * TILE_WIDTH,
-                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-            this.drawRock(width + border - 1, 0, i * TILE_WIDTH,
-                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-            this.drawRock(width + border - 2, 0, i * TILE_WIDTH,
-                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-        }
-
-        for (int i = -border; i < width + border; i++) {
-            this.drawRock(i * TILE_WIDTH, 0, -border,
-                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-            this.drawRock(i * TILE_WIDTH, 0, -border + 1,
-                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-            this.drawRock(i * TILE_WIDTH, 0, height + border - 1,
-                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-            this.drawRock(i * TILE_WIDTH, 0, height + border - 2,
-                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-        }
+//        int border = (int) TILE_BORDER;
+//        for (int i = -border; i < height + border; ++i) //z
+//        {
+//            this.drawRock(-border, 0, i * TILE_WIDTH,
+//                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+//            this.drawRock(-border + 1, 0, i * TILE_WIDTH,
+//                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+//            this.drawRock(width + border - 1, 0, i * TILE_WIDTH,
+//                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+//            this.drawRock(width + border - 2, 0, i * TILE_WIDTH,
+//                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+//        }
+//
+//        for (int i = -border; i < width + border; i++) {
+//            this.drawRock(i * TILE_WIDTH, 0, -border,
+//                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+//            this.drawRock(i * TILE_WIDTH, 0, -border + 1,
+//                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+//            this.drawRock(i * TILE_WIDTH, 0, height + border - 1,
+//                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+//            this.drawRock(i * TILE_WIDTH, 0, height + border - 2,
+//                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
+//        }
     }
 
-    private void drawPlane(int x, int z, int w, int h) {
+    private void drawPlane(float x, float z, float w, float h) {
         GL gl = Global.drawable.getGL();
 
         ttGachMen.enable();
@@ -338,21 +359,22 @@ public class TankMap {
         gl.glBegin(GL.GL_QUADS);
         {
             gl.glNormal3f(0.0f, 1.0f, 0.0f);
-
-            gl.glTexCoord2f(1, 0);
-            gl.glVertex3f(w + x, PLANE_HEIGHT, h + z);
-
-            gl.glTexCoord2f(1, 1);
-            gl.glVertex3f(w + x, PLANE_HEIGHT, z);
-
-            gl.glTexCoord2f(0, 1);
-            gl.glVertex3f(x, PLANE_HEIGHT, z);
-
+            
             gl.glTexCoord2f(0, 0);
-            gl.glVertex3f(x, PLANE_HEIGHT, h + z);
+            gl.glVertex3f(x, PLANE_HEIGHT, z);
+            
+            gl.glTexCoord2f(w/3, 0);
+            gl.glVertex3f(x + w, PLANE_HEIGHT, z);
+            
+            gl.glTexCoord2f(w/3, h/3);
+            gl.glVertex3f(x + w, PLANE_HEIGHT, z + h);
+
+            gl.glTexCoord2f(0, h/3);
+            gl.glVertex3f(x, PLANE_HEIGHT, z + h);
         }
         gl.glEnd();
-
+        ttGachMen.disable();
+        
         //reset color
         gl.glColor4f(1, 1, 1, 1);
     }

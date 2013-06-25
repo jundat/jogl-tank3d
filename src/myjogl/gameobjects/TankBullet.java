@@ -22,9 +22,9 @@ import myjogl.utils.ResourceManager;
  */
 public class TankBullet {
 
-    public static final float BULLET_VELOCITY = 0.5f; //do not change it
-    public static final float BULLET_WIDTH = 0.9f;
-    public static final float BULLET_HEIGHT = 0.9f;
+    public static final float BULLET_VELOCITY = 0.45f; //do not change it
+    public static final float BULLET_WIDTH = 0.6f;//0.9f;
+    public static final float BULLET_HEIGHT = 0.6f;//0.9f;
     public boolean isAlive;
     private Vector3 position;
     private int direction;
@@ -142,14 +142,17 @@ public class TankBullet {
             if (TankMap.getInst().isIntersect(this.getBound())) {
                 position = lastPos;
 
-                for (int i = -1; i <= 2; i++) {
-                    for (int j = -1; j <= 2; j++) {
-                        TankMap.getInst().delete((int) position.z + i, (int) position.x + j);
+                float dx = BULLET_WIDTH / 2;
+                float dz = BULLET_HEIGHT / 2;
+
+                for (int i = -1; i <= 1; i++) {
+                    for (int j = -1; j <= 1; j++) {
+                        TankMap.getInst().delete((int) (position.z + dz) + i, (int) (position.x + dx) + j);
                     }
                 }
 
                 this.explode();
-                isAlive = false;
+                this.isAlive = false;
             }
         }
     }
@@ -161,24 +164,13 @@ public class TankBullet {
         if (this.isAlive) {
             GL gl = Global.drawable.getGL();
 
-            tt.enable();
-            tt.bind();
-            gl.glBegin(GL.GL_QUADS);
-            {
-                gl.glTexCoord2f(0, 0);
-                gl.glVertex3f(position.x + BULLET_WIDTH / 4, Tank.TANK_WIDTH / 2, position.z);
-
-                gl.glTexCoord2f(1, 0);
-                gl.glVertex3f(position.x + BULLET_WIDTH/2 + BULLET_WIDTH / 4, Tank.TANK_WIDTH / 2, position.z);
-
-                gl.glTexCoord2f(1, 1);
-                gl.glVertex3f(position.x + BULLET_WIDTH /2 + BULLET_WIDTH / 4, Tank.TANK_WIDTH / 2, position.z + BULLET_HEIGHT / 2);
-
-                gl.glTexCoord2f(0, 1);
-                gl.glVertex3f(position.x + BULLET_WIDTH / 4, Tank.TANK_WIDTH / 2, position.z + BULLET_HEIGHT / 2);
+            if (direction == CDirections.UP || direction == CDirections.DOWN) {
+                Global.drawCube(tt, position.x, position.y, position.z, BULLET_WIDTH / 2, BULLET_WIDTH / 2, BULLET_HEIGHT);
+            } else {
+                Global.drawCube(tt, position.x, position.y, position.z, BULLET_HEIGHT, BULLET_WIDTH / 2, BULLET_WIDTH / 2);
             }
-            gl.glEnd();
-            tt.disable();
+
+            //tt.disable();
             gl.glColor3f(1, 1, 1);
         }
     }

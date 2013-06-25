@@ -24,6 +24,7 @@ import myjogl.particles.Explo;
  */
 public class MainGameView implements GameView {
 
+    public final static long TIME_CREATE_AI = 1234; //millisecond
     public final static int SCORE_DELTA = 10;
     public final static int NUMBER_OF_LIEF = 3;
     public final static int MAX_CURRENT_AI = 4; //maximum current TankAI in 1 screen, at a moment
@@ -214,7 +215,7 @@ public class MainGameView implements GameView {
 
         try {
             //init map
-            TankMap.getInst().LoadMap("data/map/MAP" + Global.level + ".png");
+            TankMap.getInst().LoadMap(level);
 
             //boss
             this.bossPosition = TankMap.getInst().bossPosition.Clone();
@@ -228,7 +229,7 @@ public class MainGameView implements GameView {
 
             numberOfLife = NUMBER_OF_LIEF;
 
-            lastTanks = 20; //so tank chua ra
+            lastTanks = 2; //so tank chua ra
             currentTank = 0; //so tank dang online
 
             for (int i = 0; i < MAX_CURRENT_AI; i++) {
@@ -270,7 +271,7 @@ public class MainGameView implements GameView {
         sBackground = ResourceManager.getInst().getSound("sound/bg_game.wav", true);
         sBackground.stop();
         sBackground.play();
-        
+
 
         //----------------
 
@@ -307,61 +308,67 @@ public class MainGameView implements GameView {
         //ResourceManager.getInst().deleteTexture("data/skybox/front.jpg");
         //ResourceManager.getInst().deleteTexture("data/skybox/back.jpg");
     }
+    long timeCreateAi = System.currentTimeMillis();
 
     private void createNewAi() {
 
-        //tankAI
-        if (currentTank < MAX_CURRENT_AI && lastTanks > 0) { //create new
-            for (int i = 0; i < MAX_CURRENT_AI; i++) {
-                if (tankAis[i].isAlive == false) {
-                    boolean isok = false; //check if have a position for it
+        if (System.currentTimeMillis() - timeCreateAi >= TIME_CREATE_AI) {
+            timeCreateAi = System.currentTimeMillis();
 
-                    //get position
-                    for (Object v : TankMap.getInst().listTankAiPosition) {
-                        Vector3 pos = new Vector3((Vector3) v);
-                        tankAis[i].setPosition(pos);
 
-                        //check collision
-                        //player tank
-                        if (tankAis[i].getBound().isIntersect(playerTank.getBound())) {
-                            continue;
-                        } else { //list current tank AI
-                            boolean isok2 = true;
-                            for (int j = 0; j < MAX_CURRENT_AI; j++) {
-                                if (tankAis[j].isAlive == true) {
-                                    if (tankAis[i].getBound().isIntersect(tankAis[j].getBound())) {
-                                        isok2 = false;
-                                        break;
+            //tankAI
+            if (currentTank < MAX_CURRENT_AI && lastTanks > 0) { //create new
+                for (int i = 0; i < MAX_CURRENT_AI; i++) {
+                    if (tankAis[i].isAlive == false) {
+                        boolean isok = false; //check if have a position for it
+
+                        //get position
+                        for (Object v : TankMap.getInst().listTankAiPosition) {
+                            Vector3 pos = new Vector3((Vector3) v);
+                            tankAis[i].setPosition(pos);
+
+                            //check collision
+                            //player tank
+                            if (tankAis[i].getBound().isIntersect(playerTank.getBound())) {
+                                continue;
+                            } else { //list current tank AI
+                                boolean isok2 = true;
+                                for (int j = 0; j < MAX_CURRENT_AI; j++) {
+                                    if (tankAis[j].isAlive == true) {
+                                        if (tankAis[i].getBound().isIntersect(tankAis[j].getBound())) {
+                                            isok2 = false;
+                                            break;
+                                        }
                                     }
                                 }
-                            }
 
-                            if (isok2) {
-                                isok = true;
-                                break;
+                                if (isok2) {
+                                    isok = true;
+                                    break;
+                                }
                             }
                         }
-                    }
 
-                    if (isok) {
-                        tankAis[i].isAlive = true;
-                        tankAis[i].setDirection(Global.random.nextInt(CDirections.NUMBER_DIRECTION));
-                        lastTanks--;
-                        currentTank++;
-                        break;
+                        if (isok) {
+                            tankAis[i].isAlive = true;
+                            tankAis[i].setDirection(Global.random.nextInt(CDirections.NUMBER_DIRECTION));
+                            lastTanks--;
+                            currentTank++;
+                            break;
+                        }
                     }
                 }
-            }
 
+            }
         }
     }
+
     //
     // end initialize
     //
     //
     // check game change
     //
-
     private void checkGameOver() {
         if (numberOfLife <= 0) { //gameover
             GameEngine.getInst().attach(new GameOverView(this));
@@ -459,10 +466,17 @@ public class MainGameView implements GameView {
                 //vs Boss
                 if (bullet.isAlive && boss.isAlive) {
                     if (bullet.getBound().isIntersect(boss.getBound())) {
+                        CRectangle rbu = bullet.getBound();
+                        CRectangle rbo = boss.getBound();
+
                         boss.explode();
                         bullet.isAlive = false;
                         boss.isAlive = false;
                         this.isPause = true;
+
+                        System.out.println("COLLISION! ");
+                        System.out.println("BULLET: " + bullet.getBound().toString());
+                        System.out.println("BOSS: " + boss.getBound().toString());
                         GameEngine.getInst().attach(new GameOverView(this));
                         return;
                     }
@@ -580,36 +594,33 @@ public class MainGameView implements GameView {
         }
 
         cameraFo.Update();
-        
-        if (bSliding)
-        {
+
+        if (bSliding) {
             cameraFo.beta -= deltaBeta;
             cameraFo.r += deltaR;
-            if (cameraFo.r > 15.0f)
+            if (cameraFo.r > 15.0f) {
                 deltaBeta -= 0.0005;
-            if (deltaBeta < 0)
-            {
+            }
+            if (deltaBeta < 0) {
                 deltaBeta = 0;
                 deltaR = 0;
                 delayTime++;
-                if (delayTime > DELAY_TIME)
-                {
+                if (delayTime > DELAY_TIME) {
                     bSliding = false;
                     TestParticle();
                 }
             }
             System.out.println(cameraFo.r);
-        } else
-        {
+        } else {
             handleInput();
-            //check bullet collisiotn
-            this.checkBulletCollision();
-
+            
             //tank
             playerTank.update(dt);
 
-            //tankAI
-            createNewAi();
+            //check bullet collisiotn
+            this.checkBulletCollision();
+            
+            this.createNewAi();
 
             //update ai
             for (int i = 0; i < MAX_CURRENT_AI; i++) {
