@@ -50,6 +50,13 @@ public class PauseView implements GameView {
                 mainGameView.isPause = false;
                 GameEngine.getInst().detach(this);
             }
+        } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            itMenu.setIsClick(true);
+            GameEngine.sClick.play();
+            //
+            GameEngine.getInst().attach(new MenuView());
+            GameEngine.getInst().detach(mainGameView);
+            GameEngine.getInst().detach(this);
         }
     }
 

@@ -22,9 +22,9 @@ import myjogl.utils.ResourceManager;
  */
 public class TankBullet {
 
-    public static final float BULLET_VELOCITY = 0.45f; //do not change it
-    public static final float BULLET_WIDTH = 0.6f;//0.9f;
-    public static final float BULLET_HEIGHT = 0.6f;//0.9f;
+    public static final float BULLET_VELOCITY = 0.9f;
+    public static final float BULLET_WIDTH = 0.5f;
+    public static final float BULLET_HEIGHT = 0.5f;
     public boolean isAlive;
     private Vector3 position;
     private int direction;

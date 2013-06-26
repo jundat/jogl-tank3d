@@ -22,7 +22,7 @@ public class Global {
     public static int level = 1; //start at level 1
     public static int score = 0; //start at score 0
     public static boolean isFullScreen = false;
-    public static int FPS = 1000;
+    public static int FPS = 60;
     public static int wndWidth = 1024; //1030 - 6
     public static int wndHeight = 640; //676 - 36
     public static GLAutoDrawable drawable = null;
@@ -63,16 +63,16 @@ public class Global {
             gl.glTexCoord2f(1, 0.0f);
             gl.glVertex3f(sx, sy, sz);    // Bottom Right Of The Quad (Top)
             
-            gl.glNormal3f(0, -1, 0);
-            //glColor3f(1.0f,0.5f,0.0f);    // Color Orange
-            gl.glTexCoord2f(1, 1);
-            gl.glVertex3f(sx, 0, sz);    // Top Right Of The Quad (Bottom)
-            gl.glTexCoord2f(0.0f, 1);
-            gl.glVertex3f(0, 0, sz);    // Top Left Of The Quad (Bottom)
-            gl.glTexCoord2f(0.0f, 0.0f);
-            gl.glVertex3f(0, 0, 0);    // Bottom Left Of The Quad (Bottom)
-            gl.glTexCoord2f(1, 0.0f);
-            gl.glVertex3f(sx, 0, 0);    // Bottom Right Of The Quad (Bottom)
+//            gl.glNormal3f(0, -1, 0);
+//            //glColor3f(1.0f,0.5f,0.0f);    // Color Orange
+//            gl.glTexCoord2f(1, 1);
+//            gl.glVertex3f(sx, 0, sz);    // Top Right Of The Quad (Bottom)
+//            gl.glTexCoord2f(0.0f, 1);
+//            gl.glVertex3f(0, 0, sz);    // Top Left Of The Quad (Bottom)
+//            gl.glTexCoord2f(0.0f, 0.0f);
+//            gl.glVertex3f(0, 0, 0);    // Bottom Left Of The Quad (Bottom)
+//            gl.glTexCoord2f(1, 0.0f);
+//            gl.glVertex3f(sx, 0, 0);    // Bottom Right Of The Quad (Bottom)
 
             gl.glNormal3f(0, 0, 1);
             //glColor3f(1.0f,0.0f,0.0f);    // Color Red    
