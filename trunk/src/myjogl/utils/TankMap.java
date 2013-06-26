@@ -354,7 +354,7 @@ public class TankMap {
         for (int i = y; i < b; i++) {
             for (int j = x; j < r; j++) {
                 if (j >= 0 && j < width && i >= 0 && i < height) {
-                    if (board[i][j] == ID.BRICK || board[i][j] == ID.ROCK) {
+                    if (board[i][j] == ID.BRICK || board[i][j] == ID.ROCK ) {
                         return true;
                     }
                 }
