@@ -26,8 +26,8 @@ public class MainGameView implements GameView {
 
     public final static long TIME_CREATE_AI = 1234; //millisecond
     public final static int SCORE_DELTA = 10;
-    public final static int NUMBER_OF_LIEF = 3;
-    public final static int MAX_CURRENT_AI = 2; //maximum current TankAI in 1 screen, at a moment
+    public final static int NUMBER_OF_LIEF = 5;
+    public final static int MAX_CURRENT_AI = 4; //maximum current TankAI in 1 screen, at a moment
     public final static int DELAY_TIME = 50;
     public final static float DELTA_BETA = 0.0513f;
     public final static float DELTA_R = 0.25f;
