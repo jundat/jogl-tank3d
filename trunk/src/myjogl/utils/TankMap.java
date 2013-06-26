@@ -18,7 +18,7 @@ import myjogl.Global;
 import myjogl.gameobjects.CRectangle;
 
 public class TankMap {
-
+    //
     public static final float TILE_WIDTH = 1;
     public static final float TILE_HEIGHT = 2;
     public static final float TILE_BORDER = 2;
@@ -30,20 +30,33 @@ public class TankMap {
     public int width;
     public int height;
     //
+    public boolean hasTankAIFast = false;
+    public boolean hasTankAISlow = false;
+    //
     public ArrayList listTankAiPosition;
+    public ArrayList listTankAiFastPosition;
+    public ArrayList listTankAiSlowPosition;
     public ArrayList listTankPosition;
     public Vector3 bossPosition;
     public Vector3 bossAiPosition;
     //
     private static Texture ttGachTuong = null;
+    private static Texture ttGachTuong0 = null;
+    private static Texture ttGachTuong1 = null;
     private static Texture ttGachTuong2 = null;
+    private static Texture ttGachTuong3 = null;
+    private static Texture ttGachTuong4 = null;
+    //
     private static Texture ttGachMen = null;
     private static Texture ttGachMen1 = null;
     private static Texture ttGachMen2 = null;
     private static Texture ttGachMen3 = null;
+    private static Texture ttGachMen4 = null;
+    //
     private static Texture ttRockTop = null;
     private static Texture ttRockEdge = null;
     private static Texture ttWater = null;
+    private static Texture ttIce = null;
     //
     final float[] redLightColor = {1.0f, 1.0f, 1.0f, 1.0f}; //red
     final float[] redLightPos = {0.0f, 0.0f, 0.0f, 1.0f};
@@ -64,20 +77,29 @@ public class TankMap {
     }
 
     private TankMap() {
-        ttGachTuong = ResourceManager.getInst().getTexture("data/game/gach_tuong.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
+        ttGachTuong0 = ResourceManager.getInst().getTexture("data/game/gach_tuong0.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
+        ttGachTuong1 = ResourceManager.getInst().getTexture("data/game/gach_tuong1.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
         ttGachTuong2 = ResourceManager.getInst().getTexture("data/game/gach_tuong2.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
-
+        ttGachTuong3 = ResourceManager.getInst().getTexture("data/game/gach_tuong3.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
+        ttGachTuong4 = ResourceManager.getInst().getTexture("data/game/gach_tuong4.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
+        ttGachTuong = ttGachTuong1;
+        //
         ttGachMen1 = ResourceManager.getInst().getTexture("data/game/gach_men1.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
         ttGachMen2 = ResourceManager.getInst().getTexture("data/game/gach_men2.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
         ttGachMen3 = ResourceManager.getInst().getTexture("data/game/gach_men3.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
-
+        ttGachMen4 = ResourceManager.getInst().getTexture("data/game/gach_men4.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
+        ttGachMen = ttGachMen1;
+        //
         ttRockTop = ResourceManager.getInst().getTexture("data/game/rock_top.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
         ttRockEdge = ResourceManager.getInst().getTexture("data/game/rock_edge.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
         ttWater = ResourceManager.getInst().getTexture("data/game/water.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
+        ttIce = ResourceManager.getInst().getTexture("data/game/ice.png", true, GL.GL_REPEAT, GL.GL_REPEAT, GL.GL_LINEAR_MIPMAP_LINEAR, GL.GL_LINEAR_MIPMAP_LINEAR);
 
         //
         listTankPosition = new ArrayList();
         listTankAiPosition = new ArrayList();
+        listTankAiFastPosition = new ArrayList();
+        listTankAiSlowPosition = new ArrayList();
 
         // Init list
         GL gl = Global.drawable.getGL();
@@ -189,7 +211,7 @@ public class TankMap {
             gl.glVertex3f(0, TILE_HEIGHT, TILE_WIDTH);    // Bottom Left Of The Quad (Top)
             gl.glTexCoord2f(1, 0.0f);
             gl.glVertex3f(TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);    // Bottom Right Of The Quad (Top)
-            
+
             gl.glNormal3f(0, -1, 0);
             //glColor3f(1.0f,0.5f,0.0f);    // Color Orange
             gl.glTexCoord2f(1, 1);
@@ -253,19 +275,31 @@ public class TankMap {
 
     //only use png file
     public void LoadMap(int mapNumber) {
-        switch (mapNumber % 3) {
+        switch (mapNumber % 4) {
             case 0:
                 ttGachMen = ttGachMen1;
+                ttGachTuong = ttGachTuong1;
                 break;
 
             case 1:
                 ttGachMen = ttGachMen2;
+                ttGachTuong = ttGachTuong2;
                 break;
 
             case 2:
                 ttGachMen = ttGachMen3;
+                ttGachTuong = ttGachTuong3;
+                break;
+
+            case 3:
+                ttGachMen = ttGachMen4;
+                ttGachTuong = ttGachTuong4;
                 break;
         }
+        
+        //reset
+        hasTankAIFast = false;
+        hasTankAISlow = false;        
 
         String fileName = "data/map/MAP" + mapNumber + ".png";
 
@@ -301,7 +335,13 @@ public class TankMap {
                         bossPosition = new Vector3(j, 0, i);
                     } else if (blue == ID.BOSS_AI) {
                         bossAiPosition = new Vector3(j, 0, i);
-                    }
+                    } else if(blue == ID.TANK_AI_FAST) {
+                        listTankAiFastPosition.add(new Vector3(j, 0, i));
+                        hasTankAIFast = true;
+                    } else if(blue == ID.TANK_AI_SLOW) {
+                        listTankAiSlowPosition.add(new Vector3(j, 0, i));
+                        hasTankAISlow = true;
+                    } 
                 }
             }
 
@@ -338,7 +378,10 @@ public class TankMap {
                     this.drawRock(j * TILE_WIDTH, 0, i * TILE_WIDTH,
                             TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
                 } else if (blue == ID.WATER) {
-                    this.drawWater(j * TILE_WIDTH, i * TILE_WIDTH,
+                    this.drawGround(ttWater, j * TILE_WIDTH, i * TILE_WIDTH,
+                            TILE_WIDTH, TILE_WIDTH);
+                } else if (blue == ID.ICE) {
+                    this.drawGround(ttIce, j * TILE_WIDTH, i * TILE_WIDTH,
                             TILE_WIDTH, TILE_WIDTH);
                 }
             }
@@ -400,32 +443,6 @@ public class TankMap {
         }
     }
 
-    private void drawBorder() {
-        int border = (int) TILE_BORDER;
-        for (int i = -border; i < height + border; ++i) //z
-        {
-            this.drawRock(-border, 0, i * TILE_WIDTH,
-                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-            this.drawRock(-border + 1, 0, i * TILE_WIDTH,
-                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-            this.drawRock(width + border - 1, 0, i * TILE_WIDTH,
-                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-            this.drawRock(width + border - 2, 0, i * TILE_WIDTH,
-                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-        }
-
-        for (int i = -border; i < width + border; i++) {
-            this.drawRock(i * TILE_WIDTH, 0, -border,
-                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-            this.drawRock(i * TILE_WIDTH, 0, -border + 1,
-                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-            this.drawRock(i * TILE_WIDTH, 0, height + border - 1,
-                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-            this.drawRock(i * TILE_WIDTH, 0, height + border - 2,
-                    TILE_WIDTH, TILE_HEIGHT, TILE_WIDTH);
-        }
-    }
-
     private void drawPlane(float x, float z, float w, float h) {
         GL gl = Global.drawable.getGL();
 
@@ -462,15 +479,22 @@ public class TankMap {
         gl.glPushMatrix();
         gl.glTranslatef(x, y, z);
 
-        ttGachTuong2.enable();
-        ttGachTuong2.bind();
-        gl.glCallList(listTop);
-        ttGachTuong2.disable();
-
         ttGachTuong.enable();
         ttGachTuong.bind();
-        gl.glCallList(listNonTopNonBottom);
+        gl.glCallList(listTop);
         ttGachTuong.disable();
+
+        {
+            gl.glColor3f(0.5f, 0.5f, 0.5f);
+            gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_MODULATE);
+            
+            ttGachTuong.enable();
+            ttGachTuong.bind();
+            gl.glCallList(listNonTopNonBottom);
+            ttGachTuong.disable();
+            
+            gl.glTexEnvi(GL.GL_TEXTURE_ENV, GL.GL_TEXTURE_ENV_MODE, GL.GL_REPLACE);
+        }
 
         gl.glPopMatrix();
 
@@ -501,16 +525,16 @@ public class TankMap {
         gl.glColor4f(1, 1, 1, 1);
     }
 
-    public void drawWater(float x, float z, float sx, float sz) {
+    public void drawGround(Texture tt, float x, float z, float sx, float sz) {
         GL gl = Global.drawable.getGL();
 
         gl.glPushMatrix();
         gl.glTranslatef(x, 0, z);
 
-        ttWater.enable();
-        ttWater.bind();
+        tt.enable();
+        tt.bind();
         gl.glCallList(listBottom);
-        ttWater.disable();
+        tt.disable();
 
         gl.glPopMatrix();
 

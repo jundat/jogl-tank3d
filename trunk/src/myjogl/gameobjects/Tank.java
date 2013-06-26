@@ -4,7 +4,6 @@
  */
 package myjogl.gameobjects;
 
-import com.sun.opengl.util.texture.Texture;
 import javax.media.opengl.GL;
 import myjogl.GameEngine;
 import myjogl.Global;
@@ -15,29 +14,39 @@ import myjogl.particles.ParticalManager;
 import myjogl.particles.RoundSparks;
 import myjogl.utils.GLModel;
 import myjogl.utils.ID;
-import myjogl.utils.Md2;
 import myjogl.utils.ModelLoaderOBJ;
 import myjogl.utils.TankMap;
 import myjogl.utils.Vector3;
-import myjogl.utils.ResourceManager;
 
 public class Tank {
-
+    
+    public final static int TANK_SLOW_HIT = 3; //millisecond between 2 fire time
+    public final static int TANK_FAST_HIT = 1; //millisecond between 2 fire time
+    public final static int TANK_NORMAL_HIT = 1; //millisecond between 2 fire time
+    //
     public final static float TANK_FIRE_TIME = 500; //millisecond between 2 fire time
-    public final static float TANK_VELOCITY = 0.25f; //do not change it
+    public final static float TANK_VELOCITY_NORMAL = 0.35f; //do not change it
     public final static float TANK_VELOCITY_SLOW = 0.15f; //do not change it
+    public final static float TANK_VELOCITY_FAST = 0.6f; //do not change it
+    //
+    public final static float TANK_VELOCITY_SCALE_NORMAL = 1.0f;
+    public final static float TANK_VELOCITY_SCALE_SLOW = 0.5f;
+    public final static float TANK_VELOCITY_SCALE_FAST = 1.5f;
+    //
     public final static float TANK_WIDTH = 2.75f;
     public final static float TANK_HEIGHT = 2.75f;
     public final static int TANK_NUMBER_BULLETS = 10;
     //
-    public boolean isAlive;
-    private Vector3 position;
-    private int direction;
-    private Vector3 lastPosition;
-    private float velocity = TANK_VELOCITY;
+    public int hitToDie = 1; //number of hit before die
+    public int hitCounter = 1; //hit to die (counter)
+    private boolean isAlive;
+    protected Vector3 position;
+    protected int direction;
+    protected Vector3 lastPosition;
+    protected float velocity = TANK_VELOCITY_NORMAL;
+    protected float velocityScale = TANK_VELOCITY_SCALE_NORMAL;
     //
     public TankBullet bullets[];
-    protected Texture texture;
     protected long fireTime = 0;
     GLModel model = null;
 
@@ -77,12 +86,8 @@ public class Tank {
             bullets[i].isAlive = false; //start by false
         }
 
-        //
-        texture = ResourceManager.getInst().getTexture("data/game/tank.png");
-        //
-
-        model = ModelLoaderOBJ.LoadModel("data/model/HK-Tank.obj",
-                "data/model/HK-Tank.mtl", "data/model/t0026_0.png", Global.drawable);
+        model = ModelLoaderOBJ.LoadModel("data/model/tank.obj",
+                "data/model/tank.mtl", "data/model/tank.png", Global.drawable);
 
         Vector3 a = getPosition().Clone();
         float scale = 0.1f;
@@ -109,8 +114,8 @@ public class Tank {
     /**
      * Change direction If have same direction, let's move tank
      */
-    public boolean move(int dir) {
-
+    public boolean move(int dir, long deltaTime) {
+        float scale = (float) deltaTime / 40.0f;
         this.lastPosition = this.position.Clone();
         //
         Vector3 tempLastPos = new Vector3(position);
@@ -120,7 +125,7 @@ public class Tank {
         } else {
             switch (direction) {
                 case CDirections.UP:
-                    position.z -= velocity;
+                    position.z -= velocityScale * velocity * scale;
                     if (position.z <= 0) {
                         position.z = 0;
                         return false;
@@ -128,7 +133,7 @@ public class Tank {
                     break;
 
                 case CDirections.DOWN:
-                    position.z += velocity;
+                    position.z += velocityScale * velocity * scale;
                     if (position.z > TankMap.getInst().height - TANK_HEIGHT) {
                         position.z = TankMap.getInst().height - TANK_HEIGHT;
                         return false;
@@ -136,7 +141,7 @@ public class Tank {
                     break;
 
                 case CDirections.LEFT:
-                    position.x -= velocity;
+                    position.x -= velocityScale * velocity * scale;
                     if (position.x <= 0) {
                         position.x = 0;
                         return false;
@@ -144,7 +149,7 @@ public class Tank {
                     break;
 
                 case CDirections.RIGHT:
-                    position.x += velocity;
+                    position.x += velocityScale * velocity * scale;
                     if (position.x > TankMap.getInst().width - TANK_WIDTH) {
                         position.x = TankMap.getInst().width - TANK_WIDTH;
                         return false;
@@ -159,13 +164,13 @@ public class Tank {
             }
 
             if (TankMap.getInst().isIntersectItem(this.getBound(), ID.WATER)) {
-                velocity = TANK_VELOCITY_SLOW;
+                velocityScale = TANK_VELOCITY_SCALE_SLOW;
+            } else if (TankMap.getInst().isIntersectItem(this.getBound(), ID.ICE)) {
+                velocityScale = TANK_VELOCITY_SCALE_FAST;
             } else {
-                velocity = TANK_VELOCITY;
+                velocityScale = TANK_VELOCITY_SCALE_NORMAL;
             }
-
         }
-
         return true;
     }
 
@@ -192,6 +197,20 @@ public class Tank {
         }
 
         return false;
+    }
+
+    /**
+     * set a hit to tank
+     *
+     * @return true: if die now, else false
+     */
+    public boolean hit() {
+        hitCounter++;
+        if (hitCounter >= hitToDie) {
+            this.setAlive(false);
+        }
+
+        return (isAlive() == false);
     }
 
     public void explode() {
@@ -221,7 +240,8 @@ public class Tank {
      * If tank is dead, it will be reset at start position
      */
     public void reset(Vector3 pos, int dir) {
-        isAlive = true;
+        this.isAlive = true;
+        hitCounter = 0;
         position.Copy(pos);
         direction = dir;
         for (int i = 0; i < TANK_NUMBER_BULLETS; i++) {
@@ -242,10 +262,6 @@ public class Tank {
                 bullets[i].update(dt);
             }
         }
-
-        //tank
-        if (this.isAlive) {
-        }
     }
 
     /**
@@ -260,7 +276,7 @@ public class Tank {
         }
 
         //draw tank
-        if (this.isAlive) {
+        if (this.isAlive()) {
             //tank
             GL gl = Global.drawable.getGL();
             gl.glPushMatrix();
@@ -269,7 +285,7 @@ public class Tank {
                 //Global.drawCube(texture, 0, 0, 0, Tank.TANK_WIDTH, 2, Tank.TANK_HEIGHT);
 
                 float scale = 0.002f;
-                gl.glTranslatef(Tank.TANK_WIDTH / 2, TANK_HEIGHT/2 - 0.2f, Tank.TANK_WIDTH / 2);
+                gl.glTranslatef(Tank.TANK_WIDTH / 2, TANK_HEIGHT / 2 - 0.2f, Tank.TANK_WIDTH / 2);
                 gl.glScalef(scale, scale, scale);
                 float angle = 0;
                 if (direction == CDirections.UP) {
@@ -282,11 +298,12 @@ public class Tank {
 
                 gl.glRotatef(angle, 0, 1, 0);
                 model.opengldraw(Global.drawable);
+                //modelMd2.DrawModel(gl, 0);
             }
             gl.glPopMatrix();
         }
     }
-
+    
     //
     //get and set
     //
@@ -331,5 +348,19 @@ public class Tank {
      */
     public void setDirection(int direction) {
         this.direction = direction;
+    }
+
+    /**
+     * @return the isAlive
+     */
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    /**
+     * @param isAlive the isAlive to set
+     */
+    public void setAlive(boolean isAlive) {
+        this.isAlive = isAlive;
     }
 }
