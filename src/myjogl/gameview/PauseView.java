@@ -41,6 +41,16 @@ public class PauseView implements GameView {
     }
 
     public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (itRetry.isClicked == false) {
+                itRetry.setIsClick(true);
+                GameEngine.sClick.play();
+                //
+                mainGameView.sBackground.setVolume(Sound.MAX_VOLUME);
+                mainGameView.isPause = false;
+                GameEngine.getInst().detach(this);
+            }
+        }
     }
 
     public void keyReleased(KeyEvent e) {
@@ -84,7 +94,7 @@ public class PauseView implements GameView {
             GameEngine.getInst().attach(new MenuView());
             GameEngine.getInst().detach(mainGameView);
             GameEngine.getInst().detach(this);
-        } else if(rectRetry.contains(e.getX(), e.getY())) {
+        } else if (rectRetry.contains(e.getX(), e.getY())) {
             itRetry.setIsClick(true);
             GameEngine.sClick.play();
             //
@@ -101,10 +111,10 @@ public class PauseView implements GameView {
                 ResourceManager.getInst().getTexture("data/menu/btn_press.png"));
         itRetry = new MenuItem(ResourceManager.getInst().getTexture("data/menu/btn.png"),
                 ResourceManager.getInst().getTexture("data/menu/btn_press.png"));
-        
+
         itMenu.SetPosition(rectMenu.x, rectMenu.y);
         itRetry.SetPosition(rectRetry.x, rectRetry.y);
-        
+
         //
         GameEngine.getInst().saveHighscore();
     }
@@ -115,7 +125,7 @@ public class PauseView implements GameView {
 
     public void update(long elapsedTime) {
         time += elapsedTime;
-        
+
         while (mainGameView.sBackground.getVolume() >= Sound.MIN_VOLUME + 1.0f) {
             mainGameView.sBackground.setVolume(mainGameView.sBackground.getVolume() - 1.0f);
         }
@@ -129,13 +139,13 @@ public class PauseView implements GameView {
 
         Renderer.Render(ttBg, pBg.x, pBg.y * delta);
         //
-        itMenu.SetPosition(rectMenu.x, (int)(rectMenu.y * delta));
-        itRetry.SetPosition(rectRetry.x, (int)(rectRetry.y * delta));
+        itMenu.SetPosition(rectMenu.x, (int) (rectMenu.y * delta));
+        itRetry.SetPosition(rectRetry.x, (int) (rectRetry.y * delta));
         itMenu.Render();
         itRetry.Render();
         //
         GameEngine.writer.Render("PAUSE", pGame.x, pGame.y * delta, 0.9f, 0.9f);
-        GameEngine.writer.Render("MENU", rectMenu.x + 24, (rectMenu.y + 12 )  * delta, 0.85f, 0.85f);
-        GameEngine.writer.Render("RESUME", rectRetry.x + 16, (rectRetry.y + 12 )  * delta, 0.66f, 0.85f);
+        GameEngine.writer.Render("MENU", rectMenu.x + 24, (rectMenu.y + 12) * delta, 0.85f, 0.85f);
+        GameEngine.writer.Render("RESUME", rectRetry.x + 16, (rectRetry.y + 12) * delta, 0.66f, 0.85f);
     }
 }

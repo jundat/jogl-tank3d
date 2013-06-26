@@ -45,6 +45,16 @@ public class GameOverView implements GameView {
     }
 
     public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (itRetry.isClicked == false) {
+                itRetry.setIsClick(true);
+                GameEngine.sClick.play();
+                //
+                mainGameView.isPause = false;
+                mainGameView.loadLevel(Global.level);
+                GameEngine.getInst().detach(this);
+            }
+        }
     }
 
     public void keyReleased(KeyEvent e) {
@@ -119,10 +129,10 @@ public class GameOverView implements GameView {
     public void unload() {
         ResourceManager.getInst().deleteTexture("data/common/bg_dialog.png");
     }
-    
+
     public void update(long elapsedTime) {
         time += elapsedTime;
-        
+
         while (mainGameView.sBackground.getVolume() >= Sound.MIN_VOLUME + 1.0f) {
             mainGameView.sBackground.setVolume(mainGameView.sBackground.getVolume() - 1.0f);
         }
