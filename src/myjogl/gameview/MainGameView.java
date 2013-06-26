@@ -27,7 +27,7 @@ public class MainGameView implements GameView {
     public final static long TIME_CREATE_AI = 1234; //millisecond
     public final static int SCORE_DELTA = 10;
     public final static int NUMBER_OF_LIEF = 3;
-    public final static int MAX_CURRENT_AI = 4; //maximum current TankAI in 1 screen, at a moment
+    public final static int MAX_CURRENT_AI = 3; //maximum current TankAI in 1 screen, at a moment
     public final static int DELAY_TIME = 50;
     public final static float DELTA_BETA = 0.0513f;
     public final static float DELTA_R = 0.25f;
@@ -229,7 +229,7 @@ public class MainGameView implements GameView {
 
             numberOfLife = NUMBER_OF_LIEF;
 
-            lastTanks = 2; //so tank chua ra
+            lastTanks = 20; //so tank chua ra
             currentTank = 0; //so tank dang online
 
             for (int i = 0; i < MAX_CURRENT_AI; i++) {
@@ -588,6 +588,10 @@ public class MainGameView implements GameView {
         ParticalManager.getInstance().Add(shootParticle1);
     }
 
+    /**
+     *
+     * @param dt
+     */
     public void update(long dt) {
         if (isPause) {
             return;
