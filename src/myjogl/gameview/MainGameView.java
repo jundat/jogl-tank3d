@@ -184,6 +184,47 @@ public class MainGameView implements GameView {
                 }
             }
         }
+        
+        //this.camera.Position_Camera(DELTA_R, DELTA_R, DELTA_R, DELTA_R, DELTA_R, DELTA_R, DELTA_R, DELTA_R, DELTA_R);
+        Vector3 up = new Vector3(0, 1, 0);//camera.mView.x, camera.mView.y, camera.mView.z);
+        float dxzView = 5;
+        float dxzPos = 2;
+        float dyPos = 4;
+        float viewx = 0, viewy = 0, viewz = 0;
+        viewy = dyPos / 2;
+        Vector3 pos = playerTank.getCenter().Clone();
+        pos.y = dyPos;
+        switch(playerTank.getDirection()) {
+            case CDirections.UP:
+                pos.z += dxzPos;
+                //
+                viewx = pos.x;
+                viewz = pos.z - dxzView;
+                break;
+                
+            case CDirections.DOWN:
+                pos.z -= dxzPos;
+                //
+                viewx = pos.x;
+                viewz = pos.z + dxzView;
+                break;
+                
+            case CDirections.LEFT:
+                pos.x += dxzPos;
+                //
+                viewx = pos.x - dxzView;
+                viewz = pos.z;
+                break;
+                
+            case CDirections.RIGHT:
+                pos.x -= dxzPos;
+                //
+                viewx = pos.x + dxzView;
+                viewz = pos.z;
+                break;
+        }
+        
+        this.camera.Position_Camera(pos.x, pos.y, pos.z, viewx, viewy, viewz, up.x, up.y, up.z);
     }
 
     //
@@ -590,6 +631,10 @@ public class MainGameView implements GameView {
         if (isPause) {
             return;
         }
+        
+        //
+        
+        //
 
         cameraFo.Update();
 

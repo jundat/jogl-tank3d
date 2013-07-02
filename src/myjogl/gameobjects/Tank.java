@@ -119,7 +119,7 @@ public class Tank {
         this.lastPosition = this.position.Clone();
         //
         Vector3 tempLastPos = new Vector3(position);
-
+        
         if (direction != dir) {
             direction = dir;
         } else {
@@ -307,6 +307,14 @@ public class Tank {
     //
     //get and set
     //
+    public Vector3 getCenter() {
+        Vector3 pos = position.Clone();
+        pos.x += TANK_WIDTH / 2;
+        pos.z += TANK_HEIGHT / 2;
+        
+        return pos;
+    }
+    
     /**
      * Return bound rect to check collision
      *

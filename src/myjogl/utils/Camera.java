@@ -169,6 +169,21 @@ public class Camera {
         mView = new Vector3(view_x, view_y, view_z); // set view
         mUp = new Vector3(up_x, up_y, up_z); // set the up vector
     }
+    
+    public void SetEyePoint(float x, float y, float z) {
+        mPos = new Vector3(x, y, z);
+    }
+    
+    
+    public void SetViewPoint(float x, float y, float z) {
+        mView = new Vector3(x, y, z);
+    }
+    
+    
+    public void SetVectorUp(float x, float y, float z) {
+        mUp = new Vector3(x, y, z);
+    }
+    
 
     /**
      * Angle rotate in y axis
