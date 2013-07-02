@@ -25,7 +25,7 @@ import myjogl.utils.Writer;
 public class IntroView implements GameView {
 
     float scaleWind = Global.wndWidth / 800.0f;
-    float scaleLogo = 0.99911f;
+    float scaleLogo = 0.89911f;
     Sound sound;
     float x = 0, y = 0;
     float w, h;
