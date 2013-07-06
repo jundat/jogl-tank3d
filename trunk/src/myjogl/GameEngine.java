@@ -64,9 +64,9 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
         this.listOldView = new ArrayList();
 
         tank3d.canvas.addKeyListener(KeyboardState.getState());
-
+        tank3d.frame.setTitle("Battle City");
         //--------
-        this.attach(new MenuView());
+        this.attach(new IntroView());
     }
 
     public void loadResource(GLAutoDrawable drawable) {
@@ -198,7 +198,7 @@ public class GameEngine implements KeyListener, MouseListener, MouseMotionListen
             this.display();
 
             //System.out.println("FPS: " + (float)1000 / (currentTime - localTime));
-            tank3d.frame.setTitle("FPS: " + (float) 1000 / (currentTime - localTime));
+            //tank3d.frame.setTitle("FPS: " + (float) 1000 / (currentTime - localTime));
 
             localTime = currentTime;
         }
