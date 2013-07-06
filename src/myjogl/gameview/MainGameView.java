@@ -91,9 +91,11 @@ public class MainGameView implements GameView {
                     GameEngine.sFire.clone().play();
                 }
             }
-        } else if (e.getKeyCode() == KeyEvent.VK_A) {
-            TestParticle();
-        } else if (e.getKeyCode() == KeyEvent.VK_T) {
+        }
+        // else if (e.getKeyCode() == KeyEvent.VK_A) {
+        //   TestParticle();
+        //} 
+        else if (e.getKeyCode() == KeyEvent.VK_T) {
             bTest = !bTest;
         } else if (e.getKeyCode() == KeyEvent.VK_Z) {
             cameraFo.r += 2;
@@ -104,7 +106,7 @@ public class MainGameView implements GameView {
         //cheat
         if (e.getKeyCode() == KeyEvent.VK_N) {
             this.loadLevel(Global.level + 1);
-        } else if (e.getKeyCode() == KeyEvent.VK_L) {
+        } else if (e.getKeyCode() == KeyEvent.VK_P) {
             this.loadLevel(Global.level - 1);
         }
     }
@@ -184,47 +186,10 @@ public class MainGameView implements GameView {
                 }
             }
         }
-        
-        //this.camera.Position_Camera(DELTA_R, DELTA_R, DELTA_R, DELTA_R, DELTA_R, DELTA_R, DELTA_R, DELTA_R, DELTA_R);
-        Vector3 up = new Vector3(0, 1, 0);//camera.mView.x, camera.mView.y, camera.mView.z);
-        float dxzView = 5;
-        float dxzPos = 2;
-        float dyPos = 4;
-        float viewx = 0, viewy = 0, viewz = 0;
-        viewy = dyPos / 2;
-        Vector3 pos = playerTank.getCenter().Clone();
-        pos.y = dyPos;
-        switch(playerTank.getDirection()) {
-            case CDirections.UP:
-                pos.z += dxzPos;
-                //
-                viewx = pos.x;
-                viewz = pos.z - dxzView;
-                break;
-                
-            case CDirections.DOWN:
-                pos.z -= dxzPos;
-                //
-                viewx = pos.x;
-                viewz = pos.z + dxzView;
-                break;
-                
-            case CDirections.LEFT:
-                pos.x += dxzPos;
-                //
-                viewx = pos.x - dxzView;
-                viewz = pos.z;
-                break;
-                
-            case CDirections.RIGHT:
-                pos.x -= dxzPos;
-                //
-                viewx = pos.x + dxzView;
-                viewz = pos.z;
-                break;
-        }
-        
-        this.camera.Position_Camera(pos.x, pos.y, pos.z, viewx, viewy, viewz, up.x, up.y, up.z);
+
+        //this.camera.SetViewPoint(playerTank.getCenter().x, playerTank.getCenter().y + 3, playerTank.getCenter().z);
+        //this.camera.SetEyePoint(playerTank.getCenter().x, playerTank.getCenter().y + 5, playerTank.getCenter().z + 8);
+
     }
 
     //
@@ -371,12 +336,12 @@ public class MainGameView implements GameView {
                         }
 
                         if (isok) {
-                            if(TankMap.getInst().hasTankAIFast && TankMap.getInst().hasTankAISlow == false) { //fast
+                            if (TankMap.getInst().hasTankAIFast && TankMap.getInst().hasTankAISlow == false) { //fast
                                 tankAis[i].reset(Global.random.nextInt(2) + ID.TANK_AI);
-                            } else if(TankMap.getInst().hasTankAIFast && TankMap.getInst().hasTankAISlow) {
+                            } else if (TankMap.getInst().hasTankAIFast && TankMap.getInst().hasTankAISlow) {
                                 tankAis[i].reset(Global.random.nextInt(3) + ID.TANK_AI);
                             }
-                            
+
                             tankAis[i].setAlive(true);
                             tankAis[i].setDirection(Global.random.nextInt(CDirections.NUMBER_DIRECTION));
                             lastTanks--;
@@ -419,7 +384,7 @@ public class MainGameView implements GameView {
 
                 if (isOK == true) {
                     numberOfLife--;
-                    
+
                     //-----particle
                     ParticleEntrance(v);
                     //-----particle
@@ -613,7 +578,7 @@ public class MainGameView implements GameView {
         shootParticle1.LoadingTexture();
         ParticalManager.getInstance().Add(shootParticle1);
     }
-    
+
     public void ParticleEntrance(Vector3 position) {
         float scale = 0.4f;
         float time = 0.01f;
@@ -621,7 +586,6 @@ public class MainGameView implements GameView {
         shootParticle.LoadingTexture();
         ParticalManager.getInstance().Add(shootParticle);
     }
-            
 
     /**
      *
@@ -631,9 +595,9 @@ public class MainGameView implements GameView {
         if (isPause) {
             return;
         }
-        
+
         //
-        
+
         //
 
         cameraFo.Update();
