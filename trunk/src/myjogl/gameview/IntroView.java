@@ -25,7 +25,7 @@ import myjogl.utils.Writer;
 public class IntroView implements GameView {
 
     float scaleWind = Global.wndWidth / 800.0f;
-    float scaleLogo = 0.89911f;
+    float scaleLogo = 0.9965f;
     Sound sound;
     float x = 0, y = 0;
     float w, h;
@@ -111,9 +111,10 @@ public class IntroView implements GameView {
         if (w > ttLogo.getWidth() * scaleWind && h > ttLogo.getHeight() * scaleWind) {
             float tempw = w;
             float temph = h;
+            
             w *= scaleLogo;
             h *= scaleLogo;
-
+            
             x += (tempw - w) / 2;
             y += (temph - h) / 2;
         }
