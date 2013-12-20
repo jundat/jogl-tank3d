@@ -29,14 +29,15 @@ public class MainGameView implements GameView {
     public final static long TIME_CREATE_AI = 1234; //millisecond
     public final static int SCORE_DELTA = 10;
     public final static int NUMBER_OF_LIEF = 5;
-    public final static int MAX_CURRENT_AI = 4; //maximum current TankAI in 1 screen, at a moment
-    public final static int DELAY_TIME = 50;
+    public final static int MAX_CURRENT_AI = 2; //4; //maximum current TankAI in 1 screen, at a moment
+    public final static int DELAY_TIME = 0;
     public final static float DELTA_BETA = 0.0513f;
     public final static float DELTA_R = 0.25f;
     //
     public boolean isPause;
     private int numberOfLife = NUMBER_OF_LIEF;
     //tankAI
+    private int DEFAUL_LAST_TANK = 4;
     private int lastTanks; //so tang con lai, chwa dwa ra
     private int currentTank; //number of tank in screen at a moment
     //
@@ -223,7 +224,7 @@ public class MainGameView implements GameView {
 
             numberOfLife = NUMBER_OF_LIEF;
 
-            lastTanks = 10; //so tank chua ra
+            lastTanks = DEFAUL_LAST_TANK; //so tank chua ra
             currentTank = 0; //so tank dang online
 
             for (int i = 0; i < MAX_CURRENT_AI; i++) {
